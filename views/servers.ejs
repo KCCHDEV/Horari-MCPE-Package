@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= meta.title %></title>
+    <meta name="description" content="<%= meta.description %>">
+    <link rel="canonical" href="<%= meta.canonical %>">
+    <link rel="icon" href="<%= meta.icon %>">
+    <link rel="apple-touch-icon" href="<%= meta.icon %>">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="<%= meta.siteName %>">
+    <meta property="og:title" content="<%= meta.title %>">
+    <meta property="og:description" content="<%= meta.description %>">
+    <meta property="og:url" content="<%= meta.canonical %>">
+    <meta property="og:image" content="<%= meta.image %>">
+    <meta property="og:image:alt" content="<%= meta.siteName %> logo">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="<%= meta.title %>">
+    <meta name="twitter:description" content="<%= meta.description %>">
+    <meta name="twitter:image" content="<%= meta.image %>">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://code.iconify.design/3/3.1.0/iconify.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Noto+Sans+Thai:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/css/styles.css">
+    <style>
+        :root {
+            --brand: <%= settings.primaryColor %>;
+            --brand-2: <%= settings.secondaryColor %>;
+        }
+    </style>
+</head>
+<body>
+    <nav class="site-nav">
+        <a class="brand-lockup" href="/" aria-label="<%= settings.shopName %>">
+            <span class="brand-mark">
+                <% if (settings.logoUrl) { %>
+                    <img src="<%= settings.logoUrl %>" alt="<%= settings.shopName %> logo">
+                <% } else { %>
+                    <span><%= settings.logoText %></span>
+                <% } %>
+            </span>
+            <span>
+                <strong><%= settings.shopName %></strong>
+                <small><%= settings.tagline %></small>
+            </span>
+        </a>
+
+        <div class="nav-links">
+            <a href="/">แพ็กเกจ</a>
+            <a href="/servers" class="active">รายการเซิร์ฟเวอร์</a>
+            <a href="/terms">ข้อตกลง</a>
+            <a href="/privacy">ความเป็นส่วนตัว</a>
+            <a href="/contact">ติดต่อ</a>
+        </div>
+
+        <a class="nav-action" href="/contact">
+            <span class="iconify" data-icon="mdi:message-text-outline"></span>
+            <span><%= settings.contactLabel %></span>
+        </a>
+    </nav>
+
+    <main>
+        <section class="page-header">
+            <p class="eyebrow">Server Infrastructure</p>
+            <h1>รายการเครื่องที่ให้บริการ</h1>
+            <p>ตรวจสอบสเปกเครื่องหลักที่ใช้รองรับแพ็กเกจ เพื่อเลือกบริการให้เหมาะกับจำนวนผู้เล่นและลักษณะการใช้งาน</p>
+        </section>
+
+        <section class="server-grid">
+            <% servers.forEach((server) => { %>
+                <article class="server-card">
+                    <div class="server-title">
+                        <div>
+                            <h2><%= server.name %></h2>
+                            <p><%= server.location %></p>
+                        </div>
+                        <span class="server-status"><%= server.status %></span>
+                    </div>
+
+                    <div class="server-specs">
+                        <div>
+                            <span>CPU Model</span>
+                            <strong><%= server.cpuModel %></strong>
+                        </div>
+                        <div>
+                            <span>CPU</span>
+                            <strong><%= server.cpu %></strong>
+                        </div>
+                        <div>
+                            <span>RAM</span>
+                            <strong><%= server.ram %></strong>
+                        </div>
+                        <div>
+                            <span>SSD</span>
+                            <strong><%= server.ssd %></strong>
+                        </div>
+                        <div>
+                            <span>Bandwidth</span>
+                            <strong><%= server.bandwidth %></strong>
+                        </div>
+                        <% if (server.ip) { %>
+                            <div>
+                                <span>IP</span>
+                                <strong><%= server.ip %></strong>
+                            </div>
+                        <% } %>
+                    </div>
+
+                    <p class="server-description"><%= server.description %></p>
+                </article>
+            <% }); %>
+        </section>
+    </main>
+
+    <footer class="site-footer">
+        <div>
+            <strong><%= settings.shopName %></strong>
+            <span><%= settings.footerText %></span>
+        </div>
+        <nav>
+            <a href="/">แพ็กเกจ</a>
+            <a href="/terms">ข้อตกลง</a>
+            <a href="/privacy">ความเป็นส่วนตัว</a>
+            <a href="/contact">ติดต่อ</a>
+        </nav>
+    </footer>
+
+    <script src="/js/app.js"></script>
+</body>
+</html>

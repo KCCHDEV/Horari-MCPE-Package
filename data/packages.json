@@ -1,0 +1,617 @@
+{
+  "XEON E5-2660 V4": [
+    {
+      "id": "Coal",
+      "name": "Coal",
+      "subtitle": "สำหรับเล่นกับเพื่อน",
+      "price": 50,
+      "image": "https://ccvaults.com/assets/10.%20Items/11.%20Materials/Coal.png",
+      "iconBg": "rgba(113,113,122,0.1)",
+      "buttonText": "เลือกแพ็กเกจ",
+      "specs": [
+        {
+          "label": "CPU",
+          "value": "1 Core"
+        },
+        {
+          "label": "RAM",
+          "value": "1 GB"
+        },
+        {
+          "label": "SSD",
+          "value": "10 GB"
+        },
+        {
+          "label": "Backup",
+          "value": "1 slot"
+        }
+      ],
+      "popular": false,
+      "defaultSelected": false
+    },
+    {
+      "id": "Iron",
+      "name": "Iron",
+      "subtitle": "สำหรับกลุ่มเล็ก",
+      "price": 100,
+      "image": "https://ccvaults.com/assets/10.%20Items/11.%20Materials/Iron_Ingot.png",
+      "iconBg": "rgba(180,180,190,0.08)",
+      "buttonText": "เลือกแพ็กเกจ",
+      "specs": [
+        {
+          "label": "CPU",
+          "value": "2 Cores"
+        },
+        {
+          "label": "RAM",
+          "value": "2 GB"
+        },
+        {
+          "label": "SSD",
+          "value": "20 GB"
+        },
+        {
+          "label": "Backup",
+          "value": "1 slot"
+        }
+      ],
+      "popular": false,
+      "defaultSelected": false
+    },
+    {
+      "id": "Gold",
+      "name": "Gold",
+      "subtitle": "สำหรับเซิร์ฟเวอร์ขนาดกลาง",
+      "price": 200,
+      "image": "https://ccvaults.com/assets/10.%20Items/11.%20Materials/Gold_Ingot.png",
+      "iconBg": "rgba(96,165,250,0.08)",
+      "buttonText": "เลือกแพ็กเกจ",
+      "specs": [
+        {
+          "label": "CPU",
+          "value": "3 Cores"
+        },
+        {
+          "label": "RAM",
+          "value": "4 GB"
+        },
+        {
+          "label": "SSD",
+          "value": "30 GB"
+        },
+        {
+          "label": "Backup",
+          "value": "1 slot"
+        }
+      ],
+      "popular": true,
+      "defaultSelected": true
+    },
+    {
+      "id": "Diamond",
+      "name": "Diamond",
+      "subtitle": "สำหรับเซิร์ฟเวอร์ขนาดกลาง",
+      "price": 300,
+      "image": "https://ccvaults.com/assets/10.%20Items/11.%20Materials/Diamond.png",
+      "iconBg": "rgba(180,180,190,0.08)",
+      "buttonText": "เลือกแพ็กเกจ",
+      "specs": [
+        {
+          "label": "CPU",
+          "value": "4 Cores"
+        },
+        {
+          "label": "RAM",
+          "value": "6 GB"
+        },
+        {
+          "label": "SSD",
+          "value": "50 GB"
+        },
+        {
+          "label": "Backup",
+          "value": "1 slot"
+        }
+      ],
+      "popular": false,
+      "defaultSelected": false
+    },
+    {
+      "id": "Emerald",
+      "name": "Emerald",
+      "subtitle": "สำหรับเซิร์ฟเวอร์ที่เริ่มมีระบบและผู้เล่นประจำ",
+      "price": 400,
+      "image": "https://ccvaults.com/assets/10.%20Items/11.%20Materials/Emerald.png",
+      "iconBg": "rgba(16,185,129,0.1)",
+      "buttonText": "เลือกแพ็กเกจ",
+      "specs": [
+        {
+          "label": "CPU",
+          "value": "5 Cores"
+        },
+        {
+          "label": "RAM",
+          "value": "8 GB"
+        },
+        {
+          "label": "SSD",
+          "value": "70 GB"
+        },
+        {
+          "label": "Backup",
+          "value": "2 slot"
+        }
+      ],
+      "popular": false,
+      "defaultSelected": false
+    },
+    {
+      "id": "Netherite",
+      "name": "Netherite",
+      "subtitle": "สำหรับคอมมูนิตี้ที่มีปลั๊กอินและระบบหลายส่วน",
+      "price": 550,
+      "image": "https://ccvaults.com/assets/10.%20Items/11.%20Materials/Netherite_Ingot.png",
+      "iconBg": "rgba(75,85,99,0.12)",
+      "buttonText": "เลือกแพ็กเกจ",
+      "specs": [
+        {
+          "label": "CPU",
+          "value": "6 Cores"
+        },
+        {
+          "label": "RAM",
+          "value": "12 GB"
+        },
+        {
+          "label": "SSD",
+          "value": "100 GB"
+        },
+        {
+          "label": "Backup",
+          "value": "2 slot"
+        }
+      ],
+      "popular": false,
+      "defaultSelected": false
+    },
+    {
+      "id": "Obsidian",
+      "name": "Obsidian",
+      "subtitle": "สำหรับเซิร์ฟเวอร์ใหญ่ที่ต้องการทรัพยากรสำรองไว้เติบโต",
+      "price": 700,
+      "image": "https://ccvaults.com/assets/10.%20Items/11.%20Materials/Obsidian.png",
+      "iconBg": "rgba(88,28,135,0.1)",
+      "buttonText": "เลือกแพ็กเกจ",
+      "specs": [
+        {
+          "label": "CPU",
+          "value": "8 Cores"
+        },
+        {
+          "label": "RAM",
+          "value": "16 GB"
+        },
+        {
+          "label": "SSD",
+          "value": "140 GB"
+        },
+        {
+          "label": "Backup",
+          "value": "2 slot"
+        }
+      ],
+      "popular": false,
+      "defaultSelected": false
+    }
+  ],
+  "AMD EPYC 7XXX": [
+    {
+      "id": "Coal",
+      "name": "Coal",
+      "subtitle": "สำหรับเล่นกับเพื่อน",
+      "price": 100,
+      "image": "https://ccvaults.com/assets/10.%20Items/11.%20Materials/Coal.png",
+      "iconBg": "rgba(113,113,122,0.1)",
+      "buttonText": "เลือกแพ็กเกจ",
+      "specs": [
+        {
+          "label": "CPU",
+          "value": "1 Core"
+        },
+        {
+          "label": "RAM",
+          "value": "1 GB"
+        },
+        {
+          "label": "SSD",
+          "value": "10 GB"
+        },
+        {
+          "label": "Backup",
+          "value": "1 slot"
+        }
+      ],
+      "popular": false,
+      "defaultSelected": false
+    },
+    {
+      "id": "Iron",
+      "name": "Iron",
+      "subtitle": "สำหรับกลุ่มเล็ก",
+      "price": 150,
+      "image": "https://ccvaults.com/assets/10.%20Items/11.%20Materials/Iron_Ingot.png",
+      "iconBg": "rgba(180,180,190,0.08)",
+      "buttonText": "เลือกแพ็กเกจ",
+      "specs": [
+        {
+          "label": "CPU",
+          "value": "2 Cores"
+        },
+        {
+          "label": "RAM",
+          "value": "2 GB"
+        },
+        {
+          "label": "SSD",
+          "value": "20 GB"
+        },
+        {
+          "label": "Backup",
+          "value": "1 slot"
+        }
+      ],
+      "popular": false,
+      "defaultSelected": false
+    },
+    {
+      "id": "Gold",
+      "name": "Gold",
+      "subtitle": "สำหรับเซิร์ฟเวอร์ขนาดกลาง",
+      "price": 250,
+      "image": "https://ccvaults.com/assets/10.%20Items/11.%20Materials/Gold_Ingot.png",
+      "iconBg": "rgba(96,165,250,0.08)",
+      "buttonText": "เลือกแพ็กเกจ",
+      "specs": [
+        {
+          "label": "CPU",
+          "value": "3 Cores"
+        },
+        {
+          "label": "RAM",
+          "value": "4 GB"
+        },
+        {
+          "label": "SSD",
+          "value": "30 GB"
+        },
+        {
+          "label": "Backup",
+          "value": "1 slot"
+        }
+      ],
+      "popular": true,
+      "defaultSelected": true
+    },
+    {
+      "id": "Diamond",
+      "name": "Diamond",
+      "subtitle": "สำหรับเซิร์ฟเวอร์ขนาดกลาง",
+      "price": 350,
+      "image": "https://ccvaults.com/assets/10.%20Items/11.%20Materials/Diamond.png",
+      "iconBg": "rgba(180,180,190,0.08)",
+      "buttonText": "เลือกแพ็กเกจ",
+      "specs": [
+        {
+          "label": "CPU",
+          "value": "4 Cores"
+        },
+        {
+          "label": "RAM",
+          "value": "6 GB"
+        },
+        {
+          "label": "SSD",
+          "value": "50 GB"
+        },
+        {
+          "label": "Backup",
+          "value": "1 slot"
+        }
+      ],
+      "popular": false,
+      "defaultSelected": false
+    },
+    {
+      "id": "Emerald",
+      "name": "Emerald",
+      "subtitle": "สำหรับเซิร์ฟเวอร์ที่เริ่มมีระบบและผู้เล่นประจำ",
+      "price": 450,
+      "image": "https://ccvaults.com/assets/10.%20Items/11.%20Materials/Emerald.png",
+      "iconBg": "rgba(16,185,129,0.1)",
+      "buttonText": "เลือกแพ็กเกจ",
+      "specs": [
+        {
+          "label": "CPU",
+          "value": "5 Cores"
+        },
+        {
+          "label": "RAM",
+          "value": "8 GB"
+        },
+        {
+          "label": "SSD",
+          "value": "70 GB"
+        },
+        {
+          "label": "Backup",
+          "value": "2 slot"
+        }
+      ],
+      "popular": false,
+      "defaultSelected": false
+    },
+    {
+      "id": "Netherite",
+      "name": "Netherite",
+      "subtitle": "สำหรับคอมมูนิตี้ที่มีปลั๊กอินและระบบหลายส่วน",
+      "price": 650,
+      "image": "https://ccvaults.com/assets/10.%20Items/11.%20Materials/Netherite_Ingot.png",
+      "iconBg": "rgba(75,85,99,0.12)",
+      "buttonText": "เลือกแพ็กเกจ",
+      "specs": [
+        {
+          "label": "CPU",
+          "value": "6 Cores"
+        },
+        {
+          "label": "RAM",
+          "value": "12 GB"
+        },
+        {
+          "label": "SSD",
+          "value": "100 GB"
+        },
+        {
+          "label": "Backup",
+          "value": "2 slot"
+        }
+      ],
+      "popular": false,
+      "defaultSelected": false
+    },
+    {
+      "id": "Obsidian",
+      "name": "Obsidian",
+      "subtitle": "สำหรับเซิร์ฟเวอร์ใหญ่ที่ต้องการทรัพยากรสำรองไว้เติบโต",
+      "price": 850,
+      "image": "https://ccvaults.com/assets/10.%20Items/11.%20Materials/Obsidian.png",
+      "iconBg": "rgba(88,28,135,0.1)",
+      "buttonText": "เลือกแพ็กเกจ",
+      "specs": [
+        {
+          "label": "CPU",
+          "value": "8 Cores"
+        },
+        {
+          "label": "RAM",
+          "value": "16 GB"
+        },
+        {
+          "label": "SSD",
+          "value": "140 GB"
+        },
+        {
+          "label": "Backup",
+          "value": "2 slot"
+        }
+      ],
+      "popular": false,
+      "defaultSelected": false
+    }
+  ],
+  "Ryzen 9 5950X": [
+    {
+      "id": "Coal",
+      "name": "Coal",
+      "subtitle": "สำหรับเล่นกับเพื่อน",
+      "price": 150,
+      "image": "https://ccvaults.com/assets/10.%20Items/11.%20Materials/Coal.png",
+      "iconBg": "rgba(113,113,122,0.1)",
+      "buttonText": "เลือกแพ็กเกจ",
+      "specs": [
+        {
+          "label": "CPU",
+          "value": "1 Core"
+        },
+        {
+          "label": "RAM",
+          "value": "1 GB"
+        },
+        {
+          "label": "SSD",
+          "value": "10 GB"
+        },
+        {
+          "label": "Backup",
+          "value": "3 slot"
+        }
+      ],
+      "popular": false,
+      "defaultSelected": false
+    },
+    {
+      "id": "Iron",
+      "name": "Iron",
+      "subtitle": "สำหรับกลุ่มเล็ก",
+      "price": 300,
+      "image": "https://ccvaults.com/assets/10.%20Items/11.%20Materials/Iron_Ingot.png",
+      "iconBg": "rgba(180,180,190,0.08)",
+      "buttonText": "เลือกแพ็กเกจ",
+      "specs": [
+        {
+          "label": "CPU",
+          "value": "2 Cores"
+        },
+        {
+          "label": "RAM",
+          "value": "2 GB"
+        },
+        {
+          "label": "SSD",
+          "value": "20 GB"
+        },
+        {
+          "label": "Backup",
+          "value": "3 slot"
+        }
+      ],
+      "popular": false,
+      "defaultSelected": false
+    },
+    {
+      "id": "Gold",
+      "name": "Gold",
+      "subtitle": "สำหรับเซิร์ฟเวอร์ขนาดกลาง",
+      "price": 400,
+      "image": "https://ccvaults.com/assets/10.%20Items/11.%20Materials/Gold_Ingot.png",
+      "iconBg": "rgba(96,165,250,0.08)",
+      "buttonText": "เลือกแพ็กเกจ",
+      "specs": [
+        {
+          "label": "CPU",
+          "value": "3 Cores"
+        },
+        {
+          "label": "RAM",
+          "value": "4 GB"
+        },
+        {
+          "label": "SSD",
+          "value": "30 GB"
+        },
+        {
+          "label": "Backup",
+          "value": "3 slot"
+        }
+      ],
+      "popular": true,
+      "defaultSelected": true
+    },
+    {
+      "id": "Diamond",
+      "name": "Diamond",
+      "subtitle": "สำหรับเซิร์ฟเวอร์ขนาดกลาง",
+      "price": 500,
+      "image": "https://ccvaults.com/assets/10.%20Items/11.%20Materials/Diamond.png",
+      "iconBg": "rgba(180,180,190,0.08)",
+      "buttonText": "เลือกแพ็กเกจ",
+      "specs": [
+        {
+          "label": "CPU",
+          "value": "4 Cores"
+        },
+        {
+          "label": "RAM",
+          "value": "6 GB"
+        },
+        {
+          "label": "SSD",
+          "value": "50 GB"
+        },
+        {
+          "label": "Backup",
+          "value": "3 slot"
+        }
+      ],
+      "popular": false,
+      "defaultSelected": false
+    },
+    {
+      "id": "Emerald",
+      "name": "Emerald",
+      "subtitle": "สำหรับเซิร์ฟเวอร์ที่เริ่มมีระบบและผู้เล่นประจำ",
+      "price": 650,
+      "image": "https://ccvaults.com/assets/10.%20Items/11.%20Materials/Emerald.png",
+      "iconBg": "rgba(16,185,129,0.1)",
+      "buttonText": "เลือกแพ็กเกจ",
+      "specs": [
+        {
+          "label": "CPU",
+          "value": "5 Cores"
+        },
+        {
+          "label": "RAM",
+          "value": "8 GB"
+        },
+        {
+          "label": "SSD",
+          "value": "70 GB"
+        },
+        {
+          "label": "Backup",
+          "value": "4 slot"
+        }
+      ],
+      "popular": false,
+      "defaultSelected": false
+    },
+    {
+      "id": "Netherite",
+      "name": "Netherite",
+      "subtitle": "สำหรับคอมมูนิตี้ที่มีปลั๊กอินและระบบหลายส่วน",
+      "price": 850,
+      "image": "https://ccvaults.com/assets/10.%20Items/11.%20Materials/Netherite_Ingot.png",
+      "iconBg": "rgba(75,85,99,0.12)",
+      "buttonText": "เลือกแพ็กเกจ",
+      "specs": [
+        {
+          "label": "CPU",
+          "value": "6 Cores"
+        },
+        {
+          "label": "RAM",
+          "value": "12 GB"
+        },
+        {
+          "label": "SSD",
+          "value": "100 GB"
+        },
+        {
+          "label": "Backup",
+          "value": "4 slot"
+        }
+      ],
+      "popular": false,
+      "defaultSelected": false
+    },
+    {
+      "id": "Obsidian",
+      "name": "Obsidian",
+      "subtitle": "สำหรับเซิร์ฟเวอร์ใหญ่ที่ต้องการทรัพยากรสำรองไว้เติบโต",
+      "price": 1050,
+      "image": "https://ccvaults.com/assets/10.%20Items/11.%20Materials/Obsidian.png",
+      "iconBg": "rgba(88,28,135,0.1)",
+      "buttonText": "เลือกแพ็กเกจ",
+      "specs": [
+        {
+          "label": "CPU",
+          "value": "8 Cores"
+        },
+        {
+          "label": "RAM",
+          "value": "16 GB"
+        },
+        {
+          "label": "SSD",
+          "value": "140 GB"
+        },
+        {
+          "label": "Backup",
+          "value": "4 slot"
+        }
+      ],
+      "popular": false,
+      "defaultSelected": false
+    }
+  ]
+}

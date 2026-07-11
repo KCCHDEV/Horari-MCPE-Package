@@ -1,0 +1,63 @@
+[
+  {
+    "name": "น้อง มาจามิ",
+    "location": "Bangkok, Thailand",
+    "status": "Online",
+    "themeColor": "rgba(249, 115, 22, 0.16)",
+    "cpuModel": "XEON E5-2660 V4",
+    "cpu": "14 Cores / 28 Threads ",
+    "ram": "32 GB",
+    "ssd": "1024 GB",
+    "bandwidth": "1 Gbps",
+    "description": "เซิร์ฟเวอร์เริ่มต้นที่เหมาะสำหรับเพื่อนเล่น และเกมพื้นฐาน"
+  },
+  {
+    "name": "น้อง มาริมะ",
+    "location": "Bangkok, Thailand",
+    "status": "Online",
+    "themeColor": "rgba(59, 130, 246, 0.16)",
+    "cpuModel": "XEON E5-2680 V4",
+    "cpu": "14 Cores / 28 Threads ",
+    "ram": "32 GB",
+    "ssd": "1024 GB",
+    "bandwidth": "1 Gbps",
+    "description": "เซิร์ฟเวอร์สำหรับใช้งานหนักขึ้น และรองรับผู้เล่นจำนวนมากขึ้น"
+  },
+  {
+    "name": "น้อง ยูนะ",
+    "location": "Singapore (SG), Singapore",
+    "status": "Online",
+    "themeColor": "rgba(59, 130, 246, 0.16)",
+    "cpuModel": "AMD EPYC 7282",
+    "cpu": "16 Cores / 32 Threads ",
+    "ram": "64 GB",
+    "ssd": "1024 GB",
+    "bandwidth": "1 Gbps",
+    "description": "เซิร์ฟเวอร์สำหรับใช้งานหนักขึ้น และรองรับผู้เล่นจำนวนมากขึ้น"
+  },
+  {
+    "name": "น้อง มากินะ",
+    "location": "Singapore (SG), Singapore",
+    "status": "Online",
+    "themeColor": "rgba(59, 130, 246, 0.16)",
+    "cpuModel": "AMD Ryzen 9 5950X",
+    "cpu": "16 Cores / 32 Threads ",
+    "ram": "32 GB",
+    "ssd": "1024 GB",
+    "bandwidth": "1 Gbps",
+    "description": "เซิร์ฟเวอร์สำหรับใช้งานหนักขึ้น และรองรับผู้เล่นจำนวนมากขึ้น"
+  },
+  {
+    "name": "น้อง มิโอะ (Datacenter)",
+    "location": "Singapore (SG), Singapore",
+    "status": "Online",
+    "themeColor": "rgba(59, 130, 246, 0.16)",
+    "cpuModel": "Core ultra 3rd Gen",
+    "cpu": "-",
+    "ram": "16 GB",
+    "ssd": "4 TB",
+    "bandwidth": "1 Gbps",
+    "description": "เซิร์ฟเวอร์สำหรับเก็บข้อมูลและสำรองข้อมูลขนาดใหญ่ รองรับการใช้งานหนักและมีความเสถียรสูง"
+  }
+
+]
