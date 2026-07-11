@@ -553,6 +553,76 @@ main {
     color: var(--brand);
 }
 
+.billing-toggle-wrap {
+    display: grid;
+    gap: 12px;
+    margin: -8px 0 28px;
+}
+
+.billing-toggle {
+    display: inline-flex;
+    align-self: flex-start;
+    gap: 4px;
+    padding: 4px;
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    background: var(--surface-strong);
+}
+
+.billing-option {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    min-height: 42px;
+    padding: 0 16px;
+    border: 0;
+    border-radius: 8px;
+    background: transparent;
+    color: var(--muted);
+    font-size: 13px;
+    font-weight: 750;
+    cursor: pointer;
+    transition: background 0.15s ease, color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.billing-option .iconify {
+    font-size: 18px;
+}
+
+.billing-option.active {
+    background: var(--brand);
+    color: oklch(99% 0.004 245);
+    box-shadow: 0 8px 18px oklch(62% 0.18 55 / 22%);
+}
+
+.billing-hint {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin: 0;
+    color: var(--muted);
+    font-size: 13px;
+    line-height: 1.5;
+}
+
+.billing-hint .iconify {
+    flex: 0 0 auto;
+    font-size: 18px;
+    color: var(--brand);
+}
+
+.billing-hint-daily {
+    color: var(--ink);
+}
+
+.price-savings {
+    margin: -10px 0 14px;
+    color: var(--brand);
+    font-size: 12px;
+    font-weight: 750;
+    line-height: 1.4;
+}
+
 .spec-list {
     display: grid;
     gap: 0;

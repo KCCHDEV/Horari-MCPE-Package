@@ -1,3 +1,129 @@
+const BILLING = {
+    period: 'monthly',
+    daysPerMonth: 30,
+    dailyMultiplier: 1.35,
+    dailyMin: 2
+};
+
+function roundDailyPrice(value) {
+    return Math.round(value * 10) / 10;
+}
+
+function calcDailyPrice(monthlyPrice) {
+    const monthly = Number(monthlyPrice);
+    if (!Number.isFinite(monthly) || monthly <= 0) return 0;
+    const raw = (monthly / BILLING.daysPerMonth) * BILLING.dailyMultiplier;
+    return Math.max(BILLING.dailyMin, roundDailyPrice(raw));
+}
+
+function getBillingLabel(period = BILLING.period) {
+    return period === 'daily' ? 'รายวัน' : 'รายเดือน';
+}
+
+function getPricePeriodSuffix(period = BILLING.period) {
+    return period === 'daily' ? '/วัน' : '/เดือน';
+}
+
+function getDisplayPrice(monthlyPrice, period = BILLING.period) {
+    return period === 'daily' ? calcDailyPrice(monthlyPrice) : Number(monthlyPrice);
+}
+
+function getMonthlySavingsPercent(monthlyPrice) {
+    const monthly = Number(monthlyPrice);
+    const daily = calcDailyPrice(monthly);
+    const dailyMonthTotal = daily * BILLING.daysPerMonth;
+    if (!monthly || !dailyMonthTotal) return 0;
+    return Math.round(((dailyMonthTotal - monthly) / dailyMonthTotal) * 100);
+}
+
+function formatPrice(value) {
+    const num = Number(value);
+    if (!Number.isFinite(num)) return '0';
+
+    if (Number.isInteger(num)) {
+        return num.toLocaleString('th-TH', { maximumFractionDigits: 0 });
+    }
+
+    return num.toLocaleString('th-TH', { minimumFractionDigits: 1, maximumFractionDigits: 1 });
+}
+
+function updateBillingHint() {
+    const hintText = document.getElementById('billingHintText');
+    const hint = document.getElementById('billingHint');
+    if (!hintText || !hint) return;
+
+    if (BILLING.period === 'monthly') {
+        hintText.textContent = 'รายเดือนถูกกว่ารายวัน — เหมาะสำหรับใช้งานต่อเนื่อง';
+        hint.classList.remove('billing-hint-daily');
+    } else {
+        hintText.textContent = 'รายวันสะดวกสำหรับทดลองหรือใช้สั้น ๆ แต่รายเดือนถูกกว่าเมื่อใช้ต่อเนื่อง';
+        hint.classList.add('billing-hint-daily');
+    }
+}
+
+function updatePackagePrices() {
+    document.querySelectorAll('.pkg-card').forEach((card) => {
+        const button = card.querySelector('.btn-cta');
+        const monthlyPrice = button?.dataset.packageMonthlyPrice;
+        if (!monthlyPrice) return;
+
+        const displayPrice = getDisplayPrice(monthlyPrice);
+        const priceValue = card.querySelector('[data-price-display]');
+        const pricePeriod = card.querySelector('[data-price-period]');
+        const priceSavings = card.querySelector('[data-price-savings]');
+
+        if (priceValue) priceValue.textContent = formatPrice(displayPrice);
+        if (pricePeriod) pricePeriod.textContent = getPricePeriodSuffix();
+        if (button) button.dataset.packagePrice = String(displayPrice);
+
+        if (priceSavings) {
+            const savings = getMonthlySavingsPercent(monthlyPrice);
+            if (BILLING.period === 'monthly' && savings > 0) {
+                priceSavings.hidden = false;
+                priceSavings.textContent = `ประหยัดกว่ารายวัน ~${savings}%`;
+            } else if (BILLING.period === 'daily') {
+                priceSavings.hidden = false;
+                priceSavings.textContent = `รายเดือน ฿${formatPrice(monthlyPrice)} ถูกกว่า`;
+            } else {
+                priceSavings.hidden = true;
+                priceSavings.textContent = '';
+            }
+        }
+    });
+
+    if (selectedOrderPackage?.monthlyPrice) {
+        selectedOrderPackage.price = String(getDisplayPrice(selectedOrderPackage.monthlyPrice));
+        selectedOrderPackage.billingPeriod = BILLING.period;
+        updateOrderModalSummary();
+        updateOrderMessage();
+    }
+}
+
+function setupBillingToggle() {
+    const options = document.querySelectorAll('.billing-option[data-billing]');
+    if (!options.length) return;
+
+    options.forEach((option) => {
+        option.addEventListener('click', () => {
+            const period = option.dataset.billing;
+            if (!period || period === BILLING.period) return;
+
+            BILLING.period = period;
+            options.forEach((item) => {
+                const isActive = item.dataset.billing === period;
+                item.classList.toggle('active', isActive);
+                item.setAttribute('aria-pressed', isActive ? 'true' : 'false');
+            });
+
+            updateBillingHint();
+            updatePackagePrices();
+        });
+    });
+
+    updateBillingHint();
+    updatePackagePrices();
+}
+
 function selectPackage(pkg) {
     document.querySelectorAll('.pkg-card').forEach((card) => {
         const isSelected = card.dataset.package === pkg;
@@ -14,10 +140,14 @@ let selectedOrderPackage = null;
 let selectedDiscordContact = null;
 
 function orderPackageFromButton(button) {
+    const monthlyPrice = button.dataset.packageMonthlyPrice || button.dataset.packagePrice || '-';
+
     selectedOrderPackage = {
         id: button.dataset.packageId || '',
         name: button.dataset.packageName || '-',
-        price: button.dataset.packagePrice || '-',
+        monthlyPrice,
+        price: String(getDisplayPrice(monthlyPrice)),
+        billingPeriod: BILLING.period,
         cpuModel: button.dataset.packageCpuModel || '-',
         cpu: button.dataset.packageCpu || '-',
         ram: button.dataset.packageRam || '-',
@@ -50,6 +180,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     startEventCountdown();
+    setupBillingToggle();
     setupOrderModal();
 });
 
@@ -118,19 +249,24 @@ function setupOrderModal() {
 function openOrderModal() {
     const modal = document.getElementById('orderModal');
     const panel = document.getElementById('discordOrderPanel');
-    const summary = document.getElementById('orderPackageSummary');
 
     if (!modal || !selectedOrderPackage) return;
 
-    if (summary) {
-        summary.textContent = `${selectedOrderPackage.name} • ฿${selectedOrderPackage.price}/เดือน • ${selectedOrderPackage.cpuModel}`;
-    }
+    updateOrderModalSummary();
 
     if (panel) panel.hidden = true;
     modal.classList.add('open');
     modal.setAttribute('aria-hidden', 'false');
     document.body.classList.add('modal-open');
     updateOrderMessage();
+}
+
+function updateOrderModalSummary() {
+    const summary = document.getElementById('orderPackageSummary');
+    if (!summary || !selectedOrderPackage) return;
+
+    const periodSuffix = selectedOrderPackage.billingPeriod === 'daily' ? '/วัน' : '/เดือน';
+    summary.textContent = `${selectedOrderPackage.name} • ฿${formatPrice(selectedOrderPackage.price)}${periodSuffix} (${getBillingLabel(selectedOrderPackage.billingPeriod)}) • ${selectedOrderPackage.cpuModel}`;
 }
 
 function closeOrderModal() {
@@ -211,12 +347,20 @@ function buildOrderMessage() {
         ? `ช่องทาง Discord ที่เลือก: ${selectedDiscordContact.name}`
         : 'ช่องทาง Discord ที่เลือก: ยังไม่ได้เลือก';
 
-    return [
+    const lines = [
         'สวัสดีครับ/ค่ะ ต้องการสั่งซื้อแพ็กเกจเซิร์ฟเวอร์ Minecraft',
         '',
         'รายละเอียดแพ็กเกจ',
         `• แพ็กเกจ: ${selectedOrderPackage.name}`,
-        `• ราคา: ฿${selectedOrderPackage.price}/เดือน`,
+        `• รอบบิล: ${getBillingLabel(selectedOrderPackage.billingPeriod)}`,
+        `• ราคา: ฿${formatPrice(selectedOrderPackage.price)}${selectedOrderPackage.billingPeriod === 'daily' ? '/วัน' : '/เดือน'}`
+    ];
+
+    if (selectedOrderPackage.billingPeriod === 'daily') {
+        lines.push(`• ราคารายเดือน (ถูกกว่า): ฿${formatPrice(selectedOrderPackage.monthlyPrice)}/เดือน`);
+    }
+
+    return lines.concat([
         `• CPU Model: ${selectedOrderPackage.cpuModel}`,
         `• CPU: ${selectedOrderPackage.cpu}`,
         `• RAM: ${selectedOrderPackage.ram}`,
@@ -233,7 +377,7 @@ function buildOrderMessage() {
         '• หมายเหตุเพิ่มเติม:',
         '',
         'รบกวนแจ้งขั้นตอนต่อไปและยอดชำระให้หน่อยครับ/ค่ะ'
-    ].join('\n');
+    ]).join('\n');
 }
 
 function updateOrderMessage() {
