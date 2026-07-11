@@ -613,5 +613,118 @@
       "popular": false,
       "defaultSelected": false
     }
+  ],
+  "Roleplay VIP · Ryzen 9 5950X": [
+    {
+      "id": "RP-Town",
+      "name": "RP Town",
+      "subtitle": "เริ่มต้นเมือง Roleplay พร้อมทีมดูแลพื้นฐาน",
+      "price": 800,
+      "image": "https://ccvaults.com/assets/10.%20Items/11.%20Materials/Emerald.png",
+      "iconBg": "rgba(16,185,129,0.12)",
+      "buttonText": "เลือกแพ็กเกจ Roleplay",
+      "specs": [
+        {
+          "label": "CPU",
+          "value": "4 Cores"
+        },
+        {
+          "label": "RAM",
+          "value": "8 GB"
+        },
+        {
+          "label": "SSD",
+          "value": "80 GB"
+        },
+        {
+          "label": "Backup",
+          "value": "5 slot"
+        },
+        {
+          "label": "เครื่อง",
+          "value": "น้อง ฟ้าใส (RP VIP)"
+        },
+        {
+          "label": "ดูแล",
+          "value": "ตรวจสอบรายสัปดาห์, ช่วยติดตั้งปลั๊กอิน/addon พื้นฐาน, รีสตาร์ทอัตโนมัติ"
+        }
+      ],
+      "popular": false,
+      "defaultSelected": false
+    },
+    {
+      "id": "RP-City",
+      "name": "RP City",
+      "subtitle": "เมือง Roleplay ขนาดกลาง พร้อมดูแล performance",
+      "price": 1200,
+      "image": "https://ccvaults.com/assets/10.%20Items/11.%20Materials/Diamond.png",
+      "iconBg": "rgba(96,165,250,0.12)",
+      "buttonText": "เลือกแพ็กเกจ Roleplay",
+      "specs": [
+        {
+          "label": "CPU",
+          "value": "6 Cores"
+        },
+        {
+          "label": "RAM",
+          "value": "12 GB"
+        },
+        {
+          "label": "SSD",
+          "value": "120 GB"
+        },
+        {
+          "label": "Backup",
+          "value": "6 slot"
+        },
+        {
+          "label": "เครื่อง",
+          "value": "น้อง ฟ้าใส (RP VIP)"
+        },
+        {
+          "label": "ดูแล",
+          "value": "optimize TPS, ดูแล backup รายวัน, ช่วยแก้ปลั๊กอิน/addon, support ลำดับความสำคัญ"
+        }
+      ],
+      "popular": true,
+      "defaultSelected": false
+    },
+    {
+      "id": "RP-VIP",
+      "name": "RP VIP",
+      "subtitle": "เซิร์ฟเวอร์ Roleplay เต็มรูปแบบ ดูแลใกล้ชิด",
+      "price": 1700,
+      "image": "https://ccvaults.com/assets/10.%20Items/11.%20Materials/Netherite_Ingot.png",
+      "iconBg": "rgba(168,85,247,0.14)",
+      "buttonText": "เลือกแพ็กเกจ Roleplay",
+      "specs": [
+        {
+          "label": "CPU",
+          "value": "8 Cores"
+        },
+        {
+          "label": "RAM",
+          "value": "16 GB"
+        },
+        {
+          "label": "SSD",
+          "value": "180 GB"
+        },
+        {
+          "label": "Backup",
+          "value": "8 slot"
+        },
+        {
+          "label": "เครื่อง",
+          "value": "น้อง ฟ้าใส (RP VIP)"
+        },
+        {
+          "label": "ดูแล",
+          "value": "ดูแลเต็มรูปแบบ, ช่วยตั้ง economy/job, monitor 24/7, ย้ายข้อมูล, consult ก่อนอัปเดต"
+        }
+      ],
+      "popular": false,
+      "defaultSelected": false
+    }
   ]
 }

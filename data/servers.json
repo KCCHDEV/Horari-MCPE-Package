@@ -48,6 +48,18 @@
     "description": "เซิร์ฟเวอร์สำหรับใช้งานหนักขึ้น และรองรับผู้เล่นจำนวนมากขึ้น"
   },
   {
+    "name": "น้อง ฟ้าใส (Role Play VIP)",
+    "location": "Bangkok, Thailand",
+    "status": "Online",
+    "themeColor": "rgba(168, 85, 247, 0.16)",
+    "cpuModel": "AMD Ryzen 9 5950X",
+    "cpu": "16 Cores / 32 Threads",
+    "ram": "32 GB",
+    "ssd": "512 GB",
+    "bandwidth": "1 Gbps",
+    "description": "เครื่องเฉพาะสำหรับเซิร์ฟเวอร์ Roleplay พร้อมทีมดูแลระบบ economy, job, addon และ performance"
+  },
+  {
     "name": "น้อง มิโอะ (Datacenter)",
     "location": "Singapore (SG), Singapore",
     "status": "Online",
