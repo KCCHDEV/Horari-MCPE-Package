@@ -579,14 +579,22 @@ main {
     border-radius: 8px;
     background: transparent;
     color: var(--muted);
+    font: inherit;
     font-size: 13px;
     font-weight: 750;
     cursor: pointer;
+    appearance: none;
+    -webkit-appearance: none;
+    white-space: nowrap;
     transition: background 0.15s ease, color 0.15s ease, box-shadow 0.15s ease;
 }
 
-.billing-option .iconify {
+.billing-option .iconify,
+.billing-option svg {
+    flex: 0 0 auto;
     font-size: 18px;
+    width: 18px;
+    height: 18px;
 }
 
 .billing-option.active {

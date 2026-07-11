@@ -1,4 +1,5 @@
 import { serve } from 'bun';
+import { createHash } from 'crypto';
 import { existsSync, readFileSync } from 'fs';
 import { join } from 'path';
 import ejs from 'ejs';
@@ -20,6 +21,22 @@ const mimeTypes: Record<string, string> = {
   '.svg': 'image/svg+xml',
   '.ico': 'image/x-icon'
 };
+
+function hashAsset(relativePath: string) {
+  try {
+    const content = readFileSync(join(publicDir, relativePath));
+    return createHash('md5').update(content).digest('hex').slice(0, 8);
+  } catch {
+    return 'dev';
+  }
+}
+
+function buildAssets() {
+  return {
+    css: hashAsset('css/styles.css'),
+    js: hashAsset('js/app.js')
+  };
+}
 
 function buildPackageGroups(packages: Array<Record<string, any>> | Record<string, Array<Record<string, any>>>) {
   if (Array.isArray(packages)) {
@@ -233,7 +250,7 @@ function renderIndex(origin: string) {
   const packageGroups = buildPackageGroups(packages);
   const settings = readSettings();
   const meta = buildMeta(settings, origin, '/', `${settings.shopName} | Minecraft Server Hosting`, settings.heroSubtitle);
-  return ejs.render(template, { packages, packageGroups, settings, meta });
+  return ejs.render(template, { packages, packageGroups, settings, meta, assets: buildAssets() });
 }
 
 function renderServers(origin: string) {
@@ -242,7 +259,7 @@ function renderServers(origin: string) {
   const servers = readJSON(join(dataDir, 'servers.json'), []);
   const settings = readSettings();
   const meta = buildMeta(settings, origin, '/servers', `รายการเซิร์ฟเวอร์ | ${settings.shopName}`, 'ตรวจสอบสเปกเครื่องหลักที่ใช้รองรับแพ็กเกจ Minecraft Server Hosting');
-  return ejs.render(template, { servers, settings, meta, serversJSON: JSON.stringify(servers, null, 2) });
+  return ejs.render(template, { servers, settings, meta, serversJSON: JSON.stringify(servers, null, 2), assets: buildAssets() });
 }
 
 function renderContentPage(kind: 'terms' | 'privacy', origin: string) {
@@ -254,7 +271,7 @@ function renderContentPage(kind: 'terms' | 'privacy', origin: string) {
     : { title: settings.privacyTitle, content: settings.privacyContent, eyebrow: 'Privacy Policy' };
   const meta = buildMeta(settings, origin, `/${kind}`, `${page.title} | ${settings.shopName}`, page.content);
 
-  return ejs.render(template, { settings, page, meta, activePath: `/${kind}` });
+  return ejs.render(template, { settings, page, meta, activePath: `/${kind}`, assets: buildAssets() });
 }
 
 function renderContact(origin: string) {
@@ -262,7 +279,7 @@ function renderContact(origin: string) {
   const template = readFileSync(templatePath, 'utf8');
   const settings = readSettings();
   const meta = buildMeta(settings, origin, '/contact', `${settings.contactPageTitle} | ${settings.shopName}`, settings.contactPageIntro);
-  return ejs.render(template, { settings, meta });
+  return ejs.render(template, { settings, meta, assets: buildAssets() });
 }
 
 const server = serve({

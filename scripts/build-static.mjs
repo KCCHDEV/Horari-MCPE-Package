@@ -1,4 +1,5 @@
 import ejs from 'ejs';
+import { createHash } from 'crypto';
 import { cpSync, existsSync, mkdirSync, readFileSync, rmSync, writeFileSync } from 'fs';
 import { dirname, join } from 'path';
 import { fileURLToPath } from 'url';
@@ -166,7 +167,23 @@ function renderTemplate(name, data) {
   return ejs.render(template, data);
 }
 
-function renderPages() {
+function hashAsset(baseDir, relativePath) {
+  try {
+    const content = readFileSync(join(baseDir, relativePath));
+    return createHash('md5').update(content).digest('hex').slice(0, 8);
+  } catch {
+    return '1';
+  }
+}
+
+function buildAssets(baseDir) {
+  return {
+    css: hashAsset(baseDir, 'css/styles.css'),
+    js: hashAsset(baseDir, 'js/app.js')
+  };
+}
+
+function renderPages(assets) {
   const settings = readJSON(join(dataDir, 'settings.json'), {});
   const packages = readJSON(join(dataDir, 'packages.json'), []);
   const servers = readJSON(join(dataDir, 'servers.json'), []);
@@ -178,7 +195,8 @@ function renderPages() {
       packages,
       packageGroups,
       settings,
-      meta: buildMeta(settings, '/', `${settings.shopName} | Minecraft Server Hosting`, settings.heroSubtitle)
+      meta: buildMeta(settings, '/', `${settings.shopName} | Minecraft Server Hosting`, settings.heroSubtitle),
+      assets
     })
   );
 
@@ -188,7 +206,8 @@ function renderPages() {
       servers,
       settings,
       serversJSON: JSON.stringify(servers, null, 2),
-      meta: buildMeta(settings, '/servers', `รายการเซิร์ฟเวอร์ | ${settings.shopName}`, 'ตรวจสอบสเปกเครื่องหลักที่ใช้รองรับแพ็กเกจ Minecraft Server Hosting')
+      meta: buildMeta(settings, '/servers', `รายการเซิร์ฟเวอร์ | ${settings.shopName}`, 'ตรวจสอบสเปกเครื่องหลักที่ใช้รองรับแพ็กเกจ Minecraft Server Hosting'),
+      assets
     })
   );
 
@@ -203,7 +222,8 @@ function renderPages() {
         settings,
         page,
         activePath: `/${kind}`,
-        meta: buildMeta(settings, `/${kind}`, `${page.title} | ${settings.shopName}`, page.content)
+        meta: buildMeta(settings, `/${kind}`, `${page.title} | ${settings.shopName}`, page.content),
+        assets
       })
     );
   }
@@ -212,7 +232,8 @@ function renderPages() {
     join(distDir, 'contact', 'index.html'),
     renderTemplate('contact.ejs', {
       settings,
-      meta: buildMeta(settings, '/contact', `${settings.contactPageTitle} | ${settings.shopName}`, settings.contactPageIntro)
+      meta: buildMeta(settings, '/contact', `${settings.contactPageTitle} | ${settings.shopName}`, settings.contactPageIntro),
+      assets
     })
   );
 
@@ -227,5 +248,6 @@ if (existsSync(publicDir)) {
   cpSync(publicDir, distDir, { recursive: true });
 }
 
-renderPages();
+const assets = buildAssets(distDir);
+renderPages(assets);
 console.log(`Built static site in dist using origin ${siteOrigin}`);

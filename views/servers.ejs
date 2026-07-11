@@ -22,7 +22,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://code.iconify.design/3/3.1.0/iconify.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Noto+Sans+Thai:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="/css/styles.css">
+    <link rel="stylesheet" href="/css/styles.css?v=<%= assets.css %>">
     <style>
         :root {
             --brand: <%= settings.primaryColor %>;
@@ -126,6 +126,6 @@
         </nav>
     </footer>
 
-    <script src="/js/app.js"></script>
+    <script src="/js/app.js?v=<%= assets.js %>"></script>
 </body>
 </html>
