@@ -21,7 +21,7 @@
     <meta name="twitter:image" content="<%= meta.image %>">
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://code.iconify.design/3/3.1.0/iconify.min.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Noto+Sans+Thai:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Thai:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="/css/styles.css?v=<%= assets.css %>">
     <style>
         :root {
@@ -47,8 +47,12 @@
         </a>
 
         <div class="nav-links">
-            <a href="/">แพ็กเกจ</a>
-            <a href="/servers" class="active">รายการเซิร์ฟเวอร์</a>
+            <a href="/">หน้าแรก</a>
+            <a href="/minecraft">Minecraft</a>
+            <a href="/webhosting">WebHosting</a>
+            <a href="/codehosting">CodeHosting</a>
+            <a href="/codeserver">CodeServer</a>
+            <a href="/servers" class="active">เซิร์ฟเวอร์</a>
             <a href="/terms">ข้อตกลง</a>
             <a href="/privacy">ความเป็นส่วนตัว</a>
             <a href="/contact">ติดต่อ</a>
@@ -62,9 +66,9 @@
 
     <main>
         <section class="page-header">
-            <p class="eyebrow">Server Infrastructure</p>
-            <h1>รายการเครื่องที่ให้บริการ</h1>
-            <p>ตรวจสอบสเปกเครื่องหลักที่ใช้รองรับแพ็กเกจ เพื่อเลือกบริการให้เหมาะกับจำนวนผู้เล่นและลักษณะการใช้งาน</p>
+            <p class="eyebrow page-entry page-entry-1">Server Infrastructure</p>
+            <h1 class="page-entry page-entry-2"><span class="hero-highlight">Servers</span> <span class="typewriter-inline"><span id="typewriterText" data-typewriter='["6 เครื่องพร้อมใช้งาน","XEON / EPYC / Ryzen","NVMe SSD ทุกเครื่อง","พร้อมให้บริการ 24 ชม.","ดูแลหลังการขาย"]'>6 เครื่องพร้อมใช้งาน</span><span class="typewriter-cursor"></span></span></h1>
+            <p class="page-entry page-entry-3">ตรวจสอบสเปกเครื่องหลักที่ใช้รองรับแพ็กเกจ เพื่อเลือกบริการให้เหมาะกับจำนวนผู้เล่นและลักษณะการใช้งาน</p>
         </section>
 
         <section class="server-grid">
@@ -119,7 +123,11 @@
             <span><%= settings.footerText %></span>
         </div>
         <nav>
-            <a href="/">แพ็กเกจ</a>
+            <a href="/">หน้าแรก</a>
+            <a href="/minecraft">Minecraft</a>
+            <a href="/webhosting">WebHosting</a>
+            <a href="/codehosting">CodeHosting</a>
+            <a href="/codeserver">CodeServer</a>
             <a href="/terms">ข้อตกลง</a>
             <a href="/privacy">ความเป็นส่วนตัว</a>
             <a href="/contact">ติดต่อ</a>

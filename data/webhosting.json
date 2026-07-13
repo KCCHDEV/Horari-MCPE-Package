@@ -1,0 +1,99 @@
+{
+  "Shared Hosting": [
+    {
+      "id": "WH-Starter",
+      "name": "Starter",
+      "subtitle": "สำหรับเว็บไซต์ส่วนตัวหรือหน้า Landing Page",
+      "price": 99,
+      "image": "https://api.iconify.design/mdi/web.svg",
+      "iconBg": "rgba(59,130,246,0.1)",
+      "buttonText": "เลือกแพ็กเกจ",
+      "specs": [
+        { "label": "Storage", "value": "1 GB" },
+        { "label": "Bandwidth", "value": "10 GB" },
+        { "label": "Domains", "value": "1 Domain" },
+        { "label": "PHP/HTML", "value": "✓" },
+        { "label": "Database", "value": "1 MySQL" }
+      ],
+      "popular": false,
+      "defaultSelected": false
+    },
+    {
+      "id": "WH-Basic",
+      "name": "Basic",
+      "subtitle": "สำหรับเว็บไซต์ธุรกิจขนาดเล็กถึงกลาง",
+      "price": 199,
+      "image": "https://api.iconify.design/mdi/server.svg",
+      "iconBg": "rgba(96,165,250,0.08)",
+      "buttonText": "เลือกแพ็กเกจ",
+      "specs": [
+        { "label": "Storage", "value": "3 GB" },
+        { "label": "Bandwidth", "value": "30 GB" },
+        { "label": "Domains", "value": "3 Domains" },
+        { "label": "PHP/HTML", "value": "✓" },
+        { "label": "Database", "value": "3 MySQL" }
+      ],
+      "popular": true,
+      "defaultSelected": true
+    }
+  ],
+  "Business Hosting": [
+    {
+      "id": "WH-Business",
+      "name": "Business",
+      "subtitle": "สำหรับร้านค้าหรือองค์กรที่ต้องการเสถียรภาพ",
+      "price": 399,
+      "image": "https://api.iconify.design/mdi/domain.svg",
+      "iconBg": "rgba(180,180,190,0.08)",
+      "buttonText": "เลือกแพ็กเกจ",
+      "specs": [
+        { "label": "Storage", "value": "10 GB" },
+        { "label": "Bandwidth", "value": "100 GB" },
+        { "label": "Domains", "value": "10 Domains" },
+        { "label": "PHP/HTML", "value": "✓" },
+        { "label": "Database", "value": "10 MySQL" }
+      ],
+      "popular": false,
+      "defaultSelected": false
+    },
+    {
+      "id": "WH-Pro",
+      "name": "Pro",
+      "subtitle": "สำหรับเว็บไซต์ที่มีทราฟฟิกสูงและหลายโปรเจกต์",
+      "price": 699,
+      "image": "https://api.iconify.design/mdi/shield-check.svg",
+      "iconBg": "rgba(250,204,21,0.08)",
+      "buttonText": "เลือกแพ็กเกจ",
+      "specs": [
+        { "label": "Storage", "value": "25 GB" },
+        { "label": "Bandwidth", "value": "250 GB" },
+        { "label": "Domains", "value": "25 Domains" },
+        { "label": "PHP/HTML", "value": "✓" },
+        { "label": "Database", "value": "25 MySQL" }
+      ],
+      "popular": false,
+      "defaultSelected": false
+    }
+  ],
+  "Enterprise Hosting": [
+    {
+      "id": "WH-Enterprise",
+      "name": "Enterprise",
+      "subtitle": "สำหรับแพลตฟอร์มขนาดใหญ่และองค์กรที่ต้องการทรัพยากรสูง",
+      "price": 1299,
+      "image": "https://api.iconify.design/mdi/cloud-check.svg",
+      "iconBg": "rgba(16,185,129,0.1)",
+      "buttonText": "เลือกแพ็กเกจ",
+      "specs": [
+        { "label": "Storage", "value": "50 GB" },
+        { "label": "Bandwidth", "value": "500 GB" },
+        { "label": "Domains", "value": "50 Domains" },
+        { "label": "PHP/HTML", "value": "✓" },
+        { "label": "Database", "value": "50 MySQL" },
+        { "label": "Email", "value": "Unlimited" }
+      ],
+      "popular": false,
+      "defaultSelected": false
+    }
+  ]
+}

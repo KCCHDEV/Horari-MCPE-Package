@@ -1,0 +1,78 @@
+{
+  "Basic": [
+    {
+      "id": "CS-Basic",
+      "name": "Basic",
+      "subtitle": "สำหรับนักพัฒนาที่ต้องการ VS Code ในเบราว์เซอร์",
+      "price": 199,
+      "image": "https://api.iconify.design/mdi/laptop.svg",
+      "iconBg": "rgba(59,130,246,0.1)",
+      "buttonText": "เลือกแพ็กเกจ",
+      "specs": [
+        { "label": "CPU", "value": "1 Core" },
+        { "label": "RAM", "value": "1 GB" },
+        { "label": "Storage", "value": "5 GB" },
+        { "label": "Users", "value": "1 User" },
+        { "label": "Extensions", "value": "✓" }
+      ],
+      "popular": false,
+      "defaultSelected": false
+    },
+    {
+      "id": "CS-Standard",
+      "name": "Standard",
+      "subtitle": "สำหรับนักพัฒนาที่ทำงานหลายภาษาและโปรเจกต์พร้อมกัน",
+      "price": 399,
+      "image": "https://api.iconify.design/mdi/monitor-dashboard.svg",
+      "iconBg": "rgba(148,163,184,0.08)",
+      "buttonText": "เลือกแพ็กเกจ",
+      "specs": [
+        { "label": "CPU", "value": "2 Cores" },
+        { "label": "RAM", "value": "2 GB" },
+        { "label": "Storage", "value": "10 GB" },
+        { "label": "Users", "value": "1 User" },
+        { "label": "Extensions", "value": "✓" }
+      ],
+      "popular": true,
+      "defaultSelected": true
+    }
+  ],
+  "Pro": [
+    {
+      "id": "CS-Pro",
+      "name": "Pro",
+      "subtitle": "สำหรับนักพัฒนาที่ต้องการประสิทธิภาพสูงและพื้นที่เยอะ",
+      "price": 799,
+      "image": "https://api.iconify.design/mdi/developer-board.svg",
+      "iconBg": "rgba(250,204,21,0.08)",
+      "buttonText": "เลือกแพ็กเกจ",
+      "specs": [
+        { "label": "CPU", "value": "3 Cores" },
+        { "label": "RAM", "value": "4 GB" },
+        { "label": "Storage", "value": "25 GB" },
+        { "label": "Users", "value": "2 Users" },
+        { "label": "Extensions", "value": "✓" }
+      ],
+      "popular": false,
+      "defaultSelected": false
+    },
+    {
+      "id": "CS-Team",
+      "name": "Team",
+      "subtitle": "สำหรับทีมพัฒนาที่ต้องการพื้นที่ทำงานร่วมกัน",
+      "price": 1499,
+      "image": "https://api.iconify.design/mdi/account-group.svg",
+      "iconBg": "rgba(168,85,247,0.12)",
+      "buttonText": "เลือกแพ็กเกจ",
+      "specs": [
+        { "label": "CPU", "value": "4 Cores" },
+        { "label": "RAM", "value": "8 GB" },
+        { "label": "Storage", "value": "50 GB" },
+        { "label": "Users", "value": "5 Users" },
+        { "label": "Extensions", "value": "✓" }
+      ],
+      "popular": false,
+      "defaultSelected": false
+    }
+  ]
+}

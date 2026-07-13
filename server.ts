@@ -246,10 +246,18 @@ function renderOgCard() {
 function renderIndex(origin: string) {
   const templatePath = join(viewsDir, 'index.ejs');
   const template = readFileSync(templatePath, 'utf8');
+  const settings = readSettings();
+  const meta = buildMeta(settings, origin, '/', `${settings.shopName} | Online Services`, settings.heroSubtitle);
+  return ejs.render(template, { settings, meta, assets: buildAssets() });
+}
+
+function renderMinecraft(origin: string) {
+  const templatePath = join(viewsDir, 'minecraft.ejs');
+  const template = readFileSync(templatePath, 'utf8');
   const packages = readJSON(join(dataDir, 'packages.json'), []);
   const packageGroups = buildPackageGroups(packages);
   const settings = readSettings();
-  const meta = buildMeta(settings, origin, '/', `${settings.shopName} | Minecraft Server Hosting`, settings.heroSubtitle);
+  const meta = buildMeta(settings, origin, '/minecraft', `${settings.shopName} | Minecraft Server Hosting`, 'เช่าเซิร์ฟเวอร์ Minecraft PE/BE พร้อมดูแล');
   return ejs.render(template, { packages, packageGroups, settings, meta, assets: buildAssets() });
 }
 
@@ -282,6 +290,22 @@ function renderContact(origin: string) {
   return ejs.render(template, { settings, meta, assets: buildAssets() });
 }
 
+function renderServicePage(kind: 'webhosting' | 'codehosting' | 'codeserver', origin: string) {
+  const templatePath = join(viewsDir, `${kind}.ejs`);
+  const template = readFileSync(templatePath, 'utf8');
+  const packages = readJSON(join(dataDir, `${kind}.json`), {});
+  const packageGroups = buildPackageGroups(packages);
+  const settings = readSettings();
+  const labels: Record<string, { title: string; description: string }> = {
+    webhosting: { title: 'Web Hosting', description: 'บริการเช่า Web Hosting รองรับ PHP/HTML' },
+    codehosting: { title: 'Code Hosting', description: 'บริการ Code Hosting สำหรับรัน backend, API, bot' },
+    codeserver: { title: 'Code Server', description: 'บริการ VS Code Server สำหรับพัฒนาในเบราว์เซอร์' }
+  };
+  const label = labels[kind];
+  const meta = buildMeta(settings, origin, `/${kind}`, `${label.title} | ${settings.shopName}`, label.description);
+  return ejs.render(template, { packages, packageGroups, settings, meta, assets: buildAssets() });
+}
+
 const server = serve({
   port: Number(process.env.PORT || 3002),
   async fetch(req) {
@@ -310,6 +334,11 @@ const server = serve({
       return new Response(html, { headers: { 'Content-Type': 'text/html; charset=utf-8' } });
     }
 
+    if (url.pathname === '/minecraft') {
+      const html = renderMinecraft(url.origin);
+      return new Response(html, { headers: { 'Content-Type': 'text/html; charset=utf-8' } });
+    }
+
     if (url.pathname === '/servers') {
       const html = renderServers(url.origin);
       return new Response(html, { headers: { 'Content-Type': 'text/html; charset=utf-8' } });
@@ -327,6 +356,12 @@ const server = serve({
 
     if (url.pathname === '/contact') {
       const html = renderContact(url.origin);
+      return new Response(html, { headers: { 'Content-Type': 'text/html; charset=utf-8' } });
+    }
+
+    if (url.pathname === '/webhosting' || url.pathname === '/codehosting' || url.pathname === '/codeserver') {
+      const kind = url.pathname.slice(1) as 'webhosting' | 'codehosting' | 'codeserver';
+      const html = renderServicePage(kind, url.origin);
       return new Response(html, { headers: { 'Content-Type': 'text/html; charset=utf-8' } });
     }
 

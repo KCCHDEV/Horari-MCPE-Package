@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= meta.title %></title>
+    <meta name="description" content="<%= meta.description %>">
+    <link rel="canonical" href="<%= meta.canonical %>">
+    <link rel="icon" href="<%= meta.icon %>">
+    <link rel="apple-touch-icon" href="<%= meta.icon %>">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="<%= meta.siteName %>">
+    <meta property="og:title" content="<%= meta.title %>">
+    <meta property="og:description" content="<%= meta.description %>">
+    <meta property="og:url" content="<%= meta.canonical %>">
+    <meta property="og:image" content="<%= meta.image %>">
+    <meta property="og:image:alt" content="<%= meta.siteName %> logo">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="<%= meta.title %>">
+    <meta name="twitter:description" content="<%= meta.description %>">
+    <meta name="twitter:image" content="<%= meta.image %>">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://code.iconify.design/3/3.1.0/iconify.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Thai:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/css/styles.css?v=<%= assets.css %>">
+    <style>
+        :root {
+            --brand: <%= settings.primaryColor %>;
+            --brand-2: <%= settings.secondaryColor %>;
+        }
+
+        .billing-toggle-wrap {
+            display: grid;
+            gap: 12px;
+            margin: -8px 0 28px;
+        }
+
+        .billing-toggle {
+            display: inline-flex;
+            align-self: flex-start;
+            gap: 4px;
+            padding: 4px;
+            border: 1px solid var(--line, #dbe4f0);
+            border-radius: 12px;
+            background: var(--surface-strong, #fff);
+        }
+
+        .billing-option {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            min-height: 42px;
+            padding: 0 16px;
+            border: 0;
+            border-radius: 8px;
+            background: transparent;
+            color: var(--muted, #64748b);
+            font: inherit;
+            font-size: 13px;
+            font-weight: 750;
+            cursor: pointer;
+            appearance: none;
+            -webkit-appearance: none;
+            white-space: nowrap;
+        }
+
+        .billing-option .iconify,
+        .billing-option svg {
+            flex: 0 0 auto;
+            font-size: 18px;
+            width: 18px;
+            height: 18px;
+        }
+
+        .billing-option.active {
+            background: var(--brand);
+            color: #fff;
+            box-shadow: 0 8px 18px color-mix(in srgb, var(--brand) 22%, transparent);
+        }
+
+        .billing-hint {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin: 0;
+            color: var(--muted, #64748b);
+            font-size: 13px;
+            line-height: 1.5;
+        }
+
+        .billing-hint .iconify,
+        .billing-hint svg {
+            flex: 0 0 auto;
+            font-size: 18px;
+            color: var(--brand);
+        }
+    </style>
+</head>
+<body>
+    <nav class="site-nav">
+        <a class="brand-lockup" href="/" aria-label="<%= settings.shopName %>">
+            <span class="brand-mark">
+                <% if (settings.logoUrl) { %>
+                    <img src="<%= settings.logoUrl %>" alt="<%= settings.shopName %> logo">
+                <% } else { %>
+                    <span><%= settings.logoText %></span>
+                <% } %>
+            </span>
+            <span>
+                <strong><%= settings.shopName %></strong>
+                <small><%= settings.tagline %></small>
+            </span>
+        </a>
+
+        <div class="nav-links" aria-label="เมนูหลัก">
+            <a href="/">หน้าแรก</a>
+            <a href="/minecraft" class="active">Minecraft</a>
+            <a href="/webhosting">WebHosting</a>
+            <a href="/codehosting">CodeHosting</a>
+            <a href="/codeserver">CodeServer</a>
+            <a href="/servers">เซิร์ฟเวอร์</a>
+            <a href="/terms">ข้อตกลง</a>
+            <a href="/privacy">ความเป็นส่วนตัว</a>
+            <a href="/contact">ติดต่อ</a>
+        </div>
+
+        <a class="nav-action" href="/contact">
+            <span class="iconify" data-icon="mdi:message-text-outline"></span>
+            <span><%= settings.contactLabel %></span>
+        </a>
+    </nav>
+
+    <main>
+        <section class="hero-section">
+            <div class="hero-copy">
+                <p class="eyebrow hero-entry hero-entry-1"><%= settings.announcement %></p>
+                <h1 class="hero-entry hero-entry-2"><span class="hero-highlight">Minecraft</span> <span class="typewriter-inline"><span id="typewriterText" data-typewriter='["PE/BE พร้อม Ptero Panel","NVMe SSD ความเร็วสูง","เริ่มต้นเพียง ฿50","ทีมดูแลหลังการขาย"]'>PE/BE พร้อม Ptero Panel</span><span class="typewriter-cursor"></span></span></h1>
+                <p class="hero-subtitle hero-entry hero-entry-3">แพ็กเกจพร้อมใช้งานสำหรับผู้เล่นทั่วไป คอมมูนิตี้ และร้านค้าที่ต้องการเซิร์ฟเวอร์เสถียร รองรับการเติบโต พร้อมทีมดูแลหลังการขาย</p>
+
+                <div class="hero-actions hero-entry hero-entry-4">
+                    <a class="primary-button" href="#packages">
+                        <span class="iconify" data-icon="mdi:server-plus"></span>
+                        <span>ดูแพ็กเกจ</span>
+                    </a>
+                    <a class="secondary-button" href="/servers">
+                        <span class="iconify" data-icon="mdi:server-network"></span>
+                        <span>ดูเครื่องที่ให้บริการ</span>
+                    </a>
+                </div>
+            </div>
+
+        </section>
+
+        <section class="feature-strip" id="features">
+            <div class="feature-entry feature-entry-1">
+                <span class="iconify" data-icon="mdi:shield-check-outline"></span>
+                <strong>พร้อมเปิดเซิร์ฟเวอร์ได้เร็วขึ้น</strong>
+                <p>ทีมงานช่วยเตรียมระบบพื้นฐานให้เหมาะกับแพ็กเกจ ลดเวลาตั้งค่า และพร้อมเริ่มใช้งานอย่างเป็นระเบียบ</p>
+            </div>
+            <div class="feature-entry feature-entry-2">
+                <span class="iconify" data-icon="mdi:database-sync-outline"></span>
+                <strong>สเปกชัดเจน พร้อมดูแลข้อมูลสำคัญ</strong>
+                <p>ระบุ CPU, RAM, SSD และรอบสำรองข้อมูลอย่างโปร่งใส เพื่อให้เลือกแพ็กเกจได้ตรงกับจำนวนผู้เล่นและรูปแบบเซิร์ฟเวอร์</p>
+            </div>
+            <div class="feature-entry feature-entry-3">
+                <span class="iconify" data-icon="mdi:account-tie-outline"></span>
+                <strong>จัดการเซิร์ฟเวอร์ได้สะดวก</strong>
+                <p>ดูแลไฟล์ ตั้งค่าเซิร์ฟเวอร์ รีสตาร์ทระบบ จัดการ backup และตรวจสอบการใช้งานผ่าน Ptero game panel ได้ง่าย เหมาะสำหรับทั้งมือใหม่และผู้ดูแลเซิร์ฟเวอร์</p>
+            </div>
+        </section>
+
+        <% if (settings.eventEnabled === 'true' && settings.eventDate) { %>
+            <section class="event-countdown" id="event" data-countdown-date="<%= settings.eventDate %>">
+                <div class="event-copy">
+                    <p class="eyebrow">Event Countdown</p>
+                    <h2><%= settings.eventTitle %></h2>
+                    <p><%= settings.eventDescription %></p>
+                </div>
+                <div class="countdown-wrap" aria-label="เวลานับถอยหลังอีเวนต์">
+                    <div class="countdown-item">
+                        <strong data-countdown-days>00</strong>
+                        <span>วัน</span>
+                    </div>
+                    <div class="countdown-item">
+                        <strong data-countdown-hours>00</strong>
+                        <span>ชั่วโมง</span>
+                    </div>
+                    <div class="countdown-item">
+                        <strong data-countdown-minutes>00</strong>
+                        <span>นาที</span>
+                    </div>
+                    <div class="countdown-item">
+                        <strong data-countdown-seconds>00</strong>
+                        <span>วินาที</span>
+                    </div>
+                </div>
+                <a class="primary-button event-button" href="<%= settings.eventButtonUrl %>">
+                    <span class="iconify" data-icon="mdi:calendar-star"></span>
+                    <span><%= settings.eventButtonLabel %></span>
+                </a>
+            </section>
+        <% } %>
+
+        <section class="package-section" id="packages">
+            <div class="section-heading">
+                <p>แพ็กเกจบริการ</p>
+                <h2>เลือกเครื่องตามสเปกและงบประมาณ</h2>
+            </div>
+
+            <div class="billing-toggle-wrap">
+                <div class="billing-toggle" role="group" aria-label="เลือกรอบบิล">
+                    <button type="button" class="billing-option active" data-billing="monthly" aria-pressed="true">
+                        <span class="iconify" data-icon="mdi:calendar-month-outline"></span>
+                        <span>รายเดือน</span>
+                    </button>
+                    <button type="button" class="billing-option" data-billing="daily" aria-pressed="false">
+                        <span class="iconify" data-icon="mdi:calendar-today-outline"></span>
+                        <span>รายวัน</span>
+                    </button>
+                </div>
+                <p class="billing-hint" id="billingHint">
+                    <span class="iconify" data-icon="mdi:tag-heart-outline"></span>
+                    <span id="billingHintText">รายเดือนถูกกว่ารายวัน — เหมาะสำหรับใช้งานต่อเนื่อง</span>
+                </p>
+            </div>
+
+            <div class="package-groups">
+                <% Object.entries(packageGroups).forEach(([cpuModel, groupPackages], index) => { %>
+                    <section class="package-group">
+                        <div class="group-heading">
+                            <div>
+                                <p>ระดับที่ <%= index + 1 %></p>
+                                <h3>CPU Model: <%= cpuModel %></h3>
+                            </div>
+                            <span><%= groupPackages.length %> แพ็กเกจ</span>
+                        </div>
+
+                        <div class="package-grid">
+                            <% groupPackages.forEach((pkg, pkgIndex) => {
+                                const packageKey = `${cpuModel}-${pkg.id}`;
+                                const specMap = Object.fromEntries((pkg.specs || []).map((spec) => [spec.label, spec.value]));
+                            %>
+                                <article class="pkg-card fade-in delay-<%= pkgIndex + 1 %> <%= pkg.defaultSelected ? 'selected' : '' %>" data-package="<%= packageKey %>" onclick="selectPackage('<%= packageKey %>')">
+                                    <% if (pkg.popular) { %>
+                                        <div class="popular-badge">ยอดนิยม</div>
+                                    <% } %>
+                                    <div class="pkg-top">
+                                        <div class="mc-icon" style="background:<%= pkg.iconBg %>;">
+                                            <img src="<%= pkg.image %>" alt="<%= pkg.name %>">
+                                        </div>
+                                        <div>
+                                            <h4><%= pkg.name %></h4>
+                                            <p><%= pkg.subtitle %></p>
+                                        </div>
+                                    </div>
+
+                                    <div class="price-line">
+                                        <span>฿</span>
+                                        <strong class="price-value" data-price-display><%= pkg.price %></strong>
+                                        <small class="price-period" data-price-period>/เดือน</small>
+                                    </div>
+                                    <p class="price-savings" data-price-savings hidden></p>
+
+                                    <div class="spec-list">
+                                        <% pkg.specs.forEach((spec) => { %>
+                                            <div class="spec-row">
+                                                <span><%= spec.label %></span>
+                                                <span class="spec-value"><%= spec.value %></span>
+                                            </div>
+                                        <% }); %>
+                                    </div>
+
+                                    <button
+                                        class="btn-cta <%= pkg.defaultSelected ? 'btn-cta-orange' : '' %>"
+                                        data-package-type="minecraft"
+                                        data-package-id="<%= packageKey %>"
+                                        data-package-name="<%= pkg.name %>"
+                                        data-package-monthly-price="<%= pkg.price %>"
+                                        data-package-price="<%= pkg.price %>"
+                                        data-package-cpu-model="<%= cpuModel %>"
+                                        data-package-cpu="<%= specMap.CPU || '-' %>"
+                                        data-package-ram="<%= specMap.RAM || '-' %>"
+                                        data-package-ssd="<%= specMap.SSD || '-' %>"
+                                        data-package-backup="<%= specMap.Backup || '-' %>"
+                                        data-package-specs='<%- JSON.stringify(pkg.specs) %>'
+                                        onclick="event.stopPropagation(); orderPackageFromButton(this)"
+                                    ><%= pkg.buttonText %></button>
+                                </article>
+                            <% }); %>
+                        </div>
+                    </section>
+                <% }); %>
+            </div>
+        </section>
+
+        <section class="faq-section" id="faq">
+            <div class="section-heading">
+                <p>ข้อมูลก่อนสั่งซื้อ</p>
+                <h2>คำถามที่พบบ่อย</h2>
+            </div>
+            <div class="faq-grid">
+                <div>
+                    <h3>ใช้ Panel อะไรในการจัดการเซิร์ฟเวอร์?</h3>
+                    <p>เราใช้ระบบ Ptero game panel สำหรับจัดการเซิร์ฟเวอร์ ลูกค้าสามารถเปิด ปิด รีสตาร์ท ดู console จัดการไฟล์ และตั้งค่าพื้นฐานได้ง่ายผ่านหน้าเว็บ</p>
+                </div>
+                <div>
+                    <h3>Ptero game panel ใช้งานยากไหม?</h3>
+                    <p>ใช้งานง่าย เหมาะสำหรับทั้งมือใหม่และคนที่เคยดูแลเซิร์ฟเวอร์มาก่อน เมนูหลักถูกจัดไว้ชัดเจน เช่น Console, Files, Databases, Schedules และ Backups</p>
+                </div>
+                <div>
+                    <h3>เหมาะกับ Minecraft เวอร์ชันไหน?</h3>
+                    <p>แพ็กเกจออกแบบมาสำหรับ Minecraft PE/BE เป็นหลัก หากต้องการใช้งานเวอร์ชันเฉพาะ แจ้งทีมงานก่อนสั่งซื้อเพื่อให้ช่วยตรวจสอบความเหมาะสมของสเปกได้</p>
+                </div>
+                <div>
+                    <h3>ขอทดลองเครื่องก่อนชำระเงินได้ไหม?</h3>
+                    <p>สามารถติดต่อขอเครื่องทดลองก่อนชำระเงินได้ เพื่อทดสอบความเสถียร ความเร็ว และความเหมาะสมกับเซิร์ฟเวอร์ของคุณ เงื่อนไขและระยะเวลาทดลองขึ้นอยู่กับการพิจารณาของร้าน</p>
+                </div>
+                <div>
+                    <h3>ชำระเงินแล้วขอเงินคืนได้ไหม?</h3>
+                    <p>เมื่อชำระเงินและเปิดบริการแล้ว ไม่สามารถขอเงินคืนได้ในทุกกรณี แนะนำให้ตรวจสอบแพ็กเกจ รายละเอียด และทดลองเครื่องก่อนตัดสินใจชำระเงิน</p>
+                </div>
+                <div>
+                    <h3>เปลี่ยนแพ็กเกจภายหลังได้ไหม?</h3>
+                    <p>สามารถอัปเกรดตามจำนวนผู้เล่นหรือขนาดโลกได้ โดยทีมงานช่วยแนะนำสเปกที่เหมาะสม</p>
+                </div>
+                <div>
+                    <h3>ควรเลือก RAM เท่าไหร่?</h3>
+                    <p>ขึ้นอยู่กับจำนวนผู้เล่น ขนาดโลก ปลั๊กอิน และม็อดที่ใช้งาน หากเป็นเซิร์ฟเวอร์เล็กเริ่มจากแพ็กเกจพื้นฐานได้ แต่ถ้ามีผู้เล่นมากหรือระบบเยอะควรเลือก RAM สูงขึ้น</p>
+                </div>
+                <div>
+                    <h3>CPU มีผลกับเซิร์ฟเวอร์ไหม?</h3>
+                    <p>มีผลมาก โดยเฉพาะเซิร์ฟเวอร์ที่มีผู้เล่นเยอะ มี entity จำนวนมาก หรือใช้ปลั๊กอินหลายตัว CPU ที่แรงและเสถียรช่วยลดอาการกระตุกและ TPS ตกได้</p>
+                </div>
+                <div>
+                    <h3>SSD ใช้ทำอะไร?</h3>
+                    <p>SSD ใช้เก็บไฟล์โลก ปลั๊กอิน ฐานข้อมูล และไฟล์เซิร์ฟเวอร์ทั้งหมด พื้นที่มากขึ้นเหมาะกับโลกขนาดใหญ่ มี backup หลายชุด หรือมีไฟล์เสริมจำนวนมาก</p>
+                </div>
+                <div>
+                    <h3>มี Backup ให้ไหม?</h3>
+                    <p>แพ็กเกจมีจำนวน backup slot ตามที่ระบุ ลูกค้าควรสำรองข้อมูลสำคัญเองเพิ่มเติมเสมอ เพราะ backup มีไว้ช่วยลดความเสี่ยง ไม่ใช่การรับประกันการกู้คืนได้ทุกกรณี</p>
+                </div>
+                <div>
+                    <h3>ทีมงานช่วยย้ายข้อมูลไหม?</h3>
+                    <p>สามารถแจ้งทีมงานให้ช่วยย้ายข้อมูลเบื้องต้นได้ เช่น world, plugin, config หรือไฟล์สำคัญอื่น ๆ ระยะเวลาในการย้ายขึ้นอยู่กับขนาดไฟล์และคิวงานในช่วงนั้น</p>
+                </div>
+                <div>
+                    <h3>ติดตั้งปลั๊กอินเองได้ไหม?</h3>
+                    <p>ทำได้ผ่าน Ptero game panel โดยอัปโหลดไฟล์และจัดการโฟลเดอร์ได้เอง หากไม่แน่ใจเรื่องปลั๊กอินหรือ config สามารถสอบถามทีมงานก่อนแก้ไขได้</p>
+                </div>
+                <div>
+                    <h3>รีสตาร์ทเซิร์ฟเวอร์เองได้ไหม?</h3>
+                    <p>ทำได้จาก panel ลูกค้าสามารถ start, stop, restart และดู console ได้ด้วยตัวเอง สะดวกสำหรับจัดการเซิร์ฟเวอร์โดยไม่ต้องรอทีมงานทุกครั้ง</p>
+                </div>
+                <div>
+                    <h3>ดู Console ได้ไหม?</h3>
+                    <p>ดูได้ผ่าน Ptero game panel สามารถอ่านข้อความ error, log การทำงาน และคำสั่งพื้นฐานได้ เหมาะสำหรับตรวจสอบปัญหาแบบรวดเร็ว</p>
+                </div>
+                <div>
+                    <h3>เปิดเซิร์ฟเวอร์ 24 ชั่วโมงไหม?</h3>
+                    <p>บริการออกแบบมาสำหรับเปิดใช้งานต่อเนื่อง แต่บางช่วงอาจมีการบำรุงรักษา อัปเดตระบบ หรือแก้ไขเหตุขัดข้อง ซึ่งทีมงานจะพยายามให้กระทบการใช้งานน้อยที่สุด</p>
+                </div>
+                <div>
+                    <h3>ถ้าเซิร์ฟเวอร์กระตุกควรทำอย่างไร?</h3>
+                    <p>ควรแจ้งเวลาเกิดปัญหา จำนวนผู้เล่น รายชื่อปลั๊กอินที่เพิ่งเพิ่ม และ error ใน console เพื่อให้ทีมงานช่วยตรวจสอบได้เร็วขึ้น บางกรณีอาจต้องปรับ config หรือต้องอัปเกรดแพ็กเกจ</p>
+                </div>
+                <div>
+                    <h3>รองรับผู้เล่นกี่คน?</h3>
+                    <p>จำนวนผู้เล่นที่รองรับขึ้นอยู่กับสเปก แผนที่ ระบบในเกม entity และปลั๊กอิน ไม่ได้ขึ้นกับ RAM อย่างเดียว หากต้องการประเมินแบบแม่นยำควรแจ้งรายละเอียดเซิร์ฟเวอร์ก่อนสั่งซื้อ</p>
+                </div>
+                <div>
+                    <h3>ต่ออายุบริการอย่างไร?</h3>
+                    <p>ติดต่อทีมงานผ่านช่องทางที่สะดวกก่อนวันหมดอายุ เพื่อยืนยันแพ็กเกจและชำระค่าบริการ หากเลยกำหนดนานเกินไป ระบบอาจถูกระงับหรือลบข้อมูลตามเงื่อนไขร้าน</p>
+                </div>
+                <div>
+                    <h3>สั่งซื้อผ่านช่องทางไหนได้บ้าง?</h3>
+                    <p>กดเลือกแพ็กเกจแล้วเลือกติดต่อผ่าน Discord หรือช่องทางอื่น หากเลือก Discord ระบบจะเตรียมข้อความสั่งซื้อให้ copy ไปวางได้ทันที</p>
+                </div>
+                <div>
+                    <h3>ต้องเตรียมข้อมูลอะไรตอนสั่งซื้อ?</h3>
+                    <p>ควรเตรียมชื่อแพ็กเกจ เวอร์ชัน Minecraft จำนวนผู้เล่นโดยประมาณ ความต้องการเรื่อง backup และข้อมูลว่าต้องการย้ายไฟล์เดิมหรือเริ่มเซิร์ฟเวอร์ใหม่</p>
+                </div>
+                <div>
+                    <h3>มีข้อห้ามการใช้งานไหม?</h3>
+                    <p>ห้ามใช้งานผิดกฎหมาย โจมตีระบบผู้อื่น ส่ง spam ทำ phishing ใช้ malware หรือใช้งานที่กระทบระบบส่วนรวม หากฝ่าฝืนร้านสามารถระงับบริการได้ตามข้อตกลง</p>
+                </div>
+                <div>
+                    <h3>อ่านเงื่อนไขเต็มได้ที่ไหน?</h3>
+                    <p>อ่านรายละเอียดเพิ่มเติมได้ที่หน้า ข้อตกลง และ ความเป็นส่วนตัว ก่อนสั่งซื้อ เพื่อให้เข้าใจเรื่องการทดลองใช้งาน การชำระเงิน การคืนเงิน และการดูแลข้อมูล</p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="site-footer">
+        <div>
+            <strong><%= settings.shopName %></strong>
+            <span><%= settings.footerText %></span>
+        </div>
+        <nav>
+            <a href="/">หน้าแรก</a>
+            <a href="/minecraft">Minecraft</a>
+            <a href="/webhosting">WebHosting</a>
+            <a href="/codehosting">CodeHosting</a>
+            <a href="/codeserver">CodeServer</a>
+            <a href="/terms">ข้อตกลง</a>
+            <a href="/privacy">ความเป็นส่วนตัว</a>
+            <a href="/contact">ติดต่อ</a>
+        </nav>
+    </footer>
+
+    <div class="toast" id="toast">
+        <span class="iconify" data-icon="mdi:check-circle"></span>
+        <span id="toastMessage"></span>
+    </div>
+
+    <div class="order-modal" id="orderModal" aria-hidden="true">
+        <div class="order-modal-backdrop" data-order-close></div>
+        <section class="order-dialog" role="dialog" aria-modal="true" aria-labelledby="orderModalTitle">
+            <button class="modal-close" type="button" data-order-close aria-label="ปิด">
+                <span class="iconify" data-icon="mdi:close"></span>
+            </button>
+
+            <div class="order-dialog-header">
+                <p class="eyebrow">เริ่มสั่งซื้อ</p>
+                <h2 id="orderModalTitle">เลือกช่องทางติดต่อ</h2>
+                <p id="orderPackageSummary">เลือกแพ็กเกจแล้ว กรุณาเลือกช่องทางที่สะดวก</p>
+            </div>
+
+            <div class="order-channel-grid">
+                <button class="channel-card" type="button" id="chooseDiscordButton">
+                    <span class="iconify" data-icon="mdi:discord"></span>
+                    <strong>Discord</strong>
+                    <small>เลือก Discord ที่ต้องการ แล้ว copy ข้อความไปวางเพื่อเริ่มสั่งซื้อ</small>
+                </button>
+                <a class="channel-card" href="/contact">
+                    <span class="iconify" data-icon="mdi:message-text-outline"></span>
+                    <strong>ช่องทางอื่น</strong>
+                    <small>ไปหน้าติดต่อเพื่อเลือก LINE, ticket, support หรือช่องทางอื่นของร้าน</small>
+                </a>
+            </div>
+
+            <div class="discord-order-panel" id="discordOrderPanel" hidden>
+                <div>
+                    <h3>เลือก Discord</h3>
+                    <div class="discord-list" id="discordList"></div>
+                </div>
+
+                <div>
+                    <div class="message-heading">
+                        <h3>ข้อความสำหรับส่งใน Discord</h3>
+                        <button class="copy-button" type="button" id="copyOrderMessage">
+                            <span class="iconify" data-icon="mdi:content-copy"></span>
+                            <span>Copy</span>
+                        </button>
+                    </div>
+                    <textarea class="order-message-box" id="orderMessageBox" rows="11" readonly></textarea>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <script type="application/json" id="discordContactsData"><%- JSON.stringify(settings.discordContacts || []) %></script>
+
+    <script src="/js/app.js?v=<%= assets.js %>"></script>
+</body>
+</html>

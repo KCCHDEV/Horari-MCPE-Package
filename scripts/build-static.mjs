@@ -192,10 +192,19 @@ function renderPages(assets) {
   writeFile(
     join(distDir, 'index.html'),
     renderTemplate('index.ejs', {
+      settings,
+      meta: buildMeta(settings, '/', `${settings.shopName} | Online Services`, settings.heroSubtitle),
+      assets
+    })
+  );
+
+  writeFile(
+    join(distDir, 'minecraft', 'index.html'),
+    renderTemplate('minecraft.ejs', {
       packages,
       packageGroups,
       settings,
-      meta: buildMeta(settings, '/', `${settings.shopName} | Minecraft Server Hosting`, settings.heroSubtitle),
+      meta: buildMeta(settings, '/minecraft', `${settings.shopName} | Minecraft Server Hosting`, 'เช่าเซิร์ฟเวอร์ Minecraft PE/BE พร้อมดูแล'),
       assets
     })
   );
@@ -210,6 +219,27 @@ function renderPages(assets) {
       assets
     })
   );
+
+  for (const kind of ['webhosting', 'codehosting', 'codeserver']) {
+    const labels = {
+      webhosting: { title: 'Web Hosting', description: 'บริการเช่า Web Hosting รองรับ PHP/HTML' },
+      codehosting: { title: 'Code Hosting', description: 'บริการ Code Hosting สำหรับรัน backend, API, bot' },
+      codeserver: { title: 'Code Server', description: 'บริการ VS Code Server สำหรับพัฒนาในเบราว์เซอร์' }
+    };
+    const label = labels[kind];
+    const data = readJSON(join(dataDir, `${kind}.json`), {});
+    const packageGroups = buildPackageGroups(data);
+    writeFile(
+      join(distDir, kind, 'index.html'),
+      renderTemplate(`${kind}.ejs`, {
+        packages: data,
+        packageGroups,
+        settings,
+        meta: buildMeta(settings, `/${kind}`, `${label.title} | ${settings.shopName}`, label.description),
+        assets
+      })
+    );
+  }
 
   for (const kind of ['terms', 'privacy']) {
     const page = kind === 'terms'

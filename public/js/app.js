@@ -141,18 +141,21 @@ let selectedDiscordContact = null;
 
 function orderPackageFromButton(button) {
     const monthlyPrice = button.dataset.packageMonthlyPrice || button.dataset.packagePrice || '-';
+    const type = button.dataset.packageType || 'minecraft';
 
     selectedOrderPackage = {
         id: button.dataset.packageId || '',
         name: button.dataset.packageName || '-',
+        type: type,
         monthlyPrice,
         price: String(getDisplayPrice(monthlyPrice)),
         billingPeriod: BILLING.period,
-        cpuModel: button.dataset.packageCpuModel || '-',
+        tier: button.dataset.packageTier || button.dataset.packageCpuModel || '-',
         cpu: button.dataset.packageCpu || '-',
         ram: button.dataset.packageRam || '-',
-        ssd: button.dataset.packageSsd || '-',
-        backup: button.dataset.packageBackup || '-'
+        storage: button.dataset.packageStorage || button.dataset.packageSsd || '-',
+        backup: button.dataset.packageBackup || '-',
+        specs: button.dataset.packageSpecs ? JSON.parse(button.dataset.packageSpecs) : []
     };
 
     if (selectedOrderPackage.id) {
@@ -182,6 +185,7 @@ document.addEventListener('DOMContentLoaded', () => {
     startEventCountdown();
     setupBillingToggle();
     setupOrderModal();
+    initTypewriter('typewriterText', null, { typeSpeed: 70, deleteSpeed: 35, pauseEnd: 2500 });
 });
 
 function startEventCountdown() {
@@ -266,7 +270,7 @@ function updateOrderModalSummary() {
     if (!summary || !selectedOrderPackage) return;
 
     const periodSuffix = selectedOrderPackage.billingPeriod === 'daily' ? '/วัน' : '/เดือน';
-    summary.textContent = `${selectedOrderPackage.name} • ฿${formatPrice(selectedOrderPackage.price)}${periodSuffix} (${getBillingLabel(selectedOrderPackage.billingPeriod)}) • ${selectedOrderPackage.cpuModel}`;
+    summary.textContent = `${selectedOrderPackage.name} • ฿${formatPrice(selectedOrderPackage.price)}${periodSuffix} (${getBillingLabel(selectedOrderPackage.billingPeriod)}) • ${selectedOrderPackage.tier}`;
 }
 
 function closeOrderModal() {
@@ -343,41 +347,70 @@ function renderDiscordList() {
 function buildOrderMessage() {
     if (!selectedOrderPackage) return '';
 
+    const pkg = selectedOrderPackage;
+
+    const typeLabels = {
+        minecraft: 'ต้องการสั่งซื้อแพ็กเกจเซิร์ฟเวอร์ Minecraft',
+        webhosting: 'ต้องการสั่งซื้อแพ็กเกจ Web Hosting',
+        codehosting: 'ต้องการสั่งซื้อแพ็กเกจ Code Hosting',
+        codeserver: 'ต้องการสั่งซื้อแพ็กเกจ Code Server'
+    };
+
+    const intro = typeLabels[pkg.type] || typeLabels.minecraft;
+
     const discordLine = selectedDiscordContact?.name
         ? `ช่องทาง Discord ที่เลือก: ${selectedDiscordContact.name}`
         : 'ช่องทาง Discord ที่เลือก: ยังไม่ได้เลือก';
 
     const lines = [
-        'สวัสดีครับ/ค่ะ ต้องการสั่งซื้อแพ็กเกจเซิร์ฟเวอร์ Minecraft',
+        'สวัสดีครับ/ค่ะ ' + intro,
         '',
         'รายละเอียดแพ็กเกจ',
-        `• แพ็กเกจ: ${selectedOrderPackage.name}`,
-        `• รอบบิล: ${getBillingLabel(selectedOrderPackage.billingPeriod)}`,
-        `• ราคา: ฿${formatPrice(selectedOrderPackage.price)}${selectedOrderPackage.billingPeriod === 'daily' ? '/วัน' : '/เดือน'}`
+        `• แพ็กเกจ: ${pkg.name}`,
+        `• ${pkg.type === 'minecraft' ? 'CPU Model' : 'ระดับ'}: ${pkg.tier}`,
+        `• รอบบิล: ${getBillingLabel(pkg.billingPeriod)}`,
+        `• ราคา: ฿${formatPrice(pkg.price)}${pkg.billingPeriod === 'daily' ? '/วัน' : '/เดือน'}`
     ];
 
-    if (selectedOrderPackage.billingPeriod === 'daily') {
-        lines.push(`• ราคารายเดือน (ถูกกว่า): ฿${formatPrice(selectedOrderPackage.monthlyPrice)}/เดือน`);
+    if (pkg.billingPeriod === 'daily') {
+        lines.push(`• ราคารายเดือน (ถูกกว่า): ฿${formatPrice(pkg.monthlyPrice)}/เดือน`);
     }
 
-    return lines.concat([
-        `• CPU Model: ${selectedOrderPackage.cpuModel}`,
-        `• CPU: ${selectedOrderPackage.cpu}`,
-        `• RAM: ${selectedOrderPackage.ram}`,
-        `• SSD: ${selectedOrderPackage.ssd}`,
-        `• Backup: ${selectedOrderPackage.backup}`,
-        '',
-        discordLine,
-        '',
-        'ข้อมูลที่ขอแจ้งเพิ่มเติม',
-        '• เวอร์ชัน Minecraft:',
-        '• จำนวนผู้เล่นประมาณ:',
-        '• ต้องการย้ายข้อมูลเดิมไหม:',
-        '• ต้องการทดลองเครื่องก่อนชำระเงินไหม:',
-        '• หมายเหตุเพิ่มเติม:',
-        '',
-        'รบกวนแจ้งขั้นตอนต่อไปและยอดชำระให้หน่อยครับ/ค่ะ'
-    ]).join('\n');
+    (pkg.specs || []).forEach((spec) => {
+        if (spec.label !== 'CPU Model') {
+            lines.push(`• ${spec.label}: ${spec.value}`);
+        }
+    });
+
+    lines.push('');
+    lines.push(discordLine);
+    lines.push('');
+    lines.push('ข้อมูลที่ขอแจ้งเพิ่มเติม');
+
+    if (pkg.type === 'minecraft') {
+        lines.push('• เวอร์ชัน Minecraft:');
+        lines.push('• จำนวนผู้เล่นประมาณ:');
+        lines.push('• ต้องการย้ายข้อมูลเดิมไหม:');
+        lines.push('• ต้องการทดลองเครื่องก่อนชำระเงินไหม:');
+    } else if (pkg.type === 'webhosting') {
+        lines.push('• ชื่อโดเมนที่ต้องการใช้:');
+        lines.push('• CMS หรือ framework ที่ใช้:');
+        lines.push('• ต้องการย้ายข้อมูลจากโฮสต์เดิมไหม:');
+    } else if (pkg.type === 'codehosting') {
+        lines.push('• ภาษาที่ต้องการใช้:');
+        lines.push('• GitHub/GitLab repo:');
+        lines.push('• ต้องใช้ database ไหม:');
+    } else if (pkg.type === 'codeserver') {
+        lines.push('• จำนวนผู้ใช้ที่ต้องการ:');
+        lines.push('• ภาษา/ framework ที่ใช้:');
+        lines.push('• ต้องการ extensions พิเศษไหม:');
+    }
+
+    lines.push('• หมายเหตุเพิ่มเติม:');
+    lines.push('');
+    lines.push('รบกวนแจ้งขั้นตอนต่อไปและยอดชำระให้หน่อยครับ/ค่ะ');
+
+    return lines.join('\n');
 }
 
 function updateOrderMessage() {
@@ -401,4 +434,58 @@ async function copyOrderMessage() {
     }
 
     showToast('คัดลอกข้อความสำหรับส่งใน Discord แล้ว');
+}
+
+function initTypewriter(elementId, phrases, options = {}) {
+    const el = document.getElementById(elementId);
+    if (!el) return;
+
+    const defaultPhrases = el.dataset.typewriter ? JSON.parse(el.dataset.typewriter) : null;
+    const activePhrases = phrases || defaultPhrases;
+    if (!activePhrases || !activePhrases.length) return;
+
+    const { typeSpeed = 80, deleteSpeed = 40, pauseEnd = 2000 } = options;
+    let phraseIndex = 0;
+    let charIndex = 0;
+    let isDeleting = false;
+    let timeout;
+
+    const existingText = el.textContent.trim();
+    if (existingText && activePhrases[0] && existingText === activePhrases[0]) {
+        charIndex = existingText.length;
+        isDeleting = true;
+        timeout = setTimeout(type, pauseEnd);
+        return () => clearTimeout(timeout);
+    }
+
+    function type() {
+        const current = activePhrases[phraseIndex];
+
+        if (isDeleting) {
+            el.textContent = current.substring(0, charIndex - 1);
+            charIndex--;
+        } else {
+            el.textContent = current.substring(0, charIndex + 1);
+            charIndex++;
+        }
+
+        if (!isDeleting && charIndex === current.length) {
+            isDeleting = true;
+            timeout = setTimeout(type, pauseEnd);
+            return;
+        }
+
+        if (isDeleting && charIndex === 0) {
+            isDeleting = false;
+            phraseIndex = (phraseIndex + 1) % activePhrases.length;
+            timeout = setTimeout(type, 500);
+            return;
+        }
+
+        timeout = setTimeout(type, isDeleting ? deleteSpeed : typeSpeed);
+    }
+
+    type();
+
+    return () => clearTimeout(timeout);
 }

@@ -1,0 +1,98 @@
+{
+  "Basic": [
+    {
+      "id": "CH-Basic",
+      "name": "Basic",
+      "subtitle": "สำหรับโปรเจกต์ส่วนตัวหรือทดลองเขียนโค้ด",
+      "price": 149,
+      "image": "https://api.iconify.design/mdi/code-tags.svg",
+      "iconBg": "rgba(113,113,122,0.1)",
+      "buttonText": "เลือกแพ็กเกจ",
+      "specs": [
+        { "label": "CPU", "value": "1 Core" },
+        { "label": "RAM", "value": "512 MB" },
+        { "label": "Storage", "value": "1 GB" },
+        { "label": "Languages", "value": "Node.js, Python" },
+        { "label": "Concurrent", "value": "1 Process" }
+      ],
+      "popular": false,
+      "defaultSelected": false
+    },
+    {
+      "id": "CH-Plus",
+      "name": "Plus",
+      "subtitle": "สำหรับแอปพลิเคชันขนาดเล็กที่ต้องการภาษาเพิ่มเติม",
+      "price": 249,
+      "image": "https://api.iconify.design/mdi/language-python.svg",
+      "iconBg": "rgba(55,118,171,0.08)",
+      "buttonText": "เลือกแพ็กเกจ",
+      "specs": [
+        { "label": "CPU", "value": "1 Core" },
+        { "label": "RAM", "value": "1 GB" },
+        { "label": "Storage", "value": "3 GB" },
+        { "label": "Languages", "value": "Node.js, Python, PHP" },
+        { "label": "Concurrent", "value": "2 Processes" }
+      ],
+      "popular": true,
+      "defaultSelected": true
+    }
+  ],
+  "Standard": [
+    {
+      "id": "CH-Standard",
+      "name": "Standard",
+      "subtitle": "สำหรับแอปพลิเคชันที่ต้องรัน background task",
+      "price": 449,
+      "image": "https://api.iconify.design/mdi/code-array.svg",
+      "iconBg": "rgba(180,180,190,0.08)",
+      "buttonText": "เลือกแพ็กเกจ",
+      "specs": [
+        { "label": "CPU", "value": "2 Cores" },
+        { "label": "RAM", "value": "2 GB" },
+        { "label": "Storage", "value": "5 GB" },
+        { "label": "Languages", "value": "Node.js, Python, PHP, Go" },
+        { "label": "Concurrent", "value": "5 Processes" }
+      ],
+      "popular": false,
+      "defaultSelected": false
+    },
+    {
+      "id": "CH-Advanced",
+      "name": "Advanced",
+      "subtitle": "สำหรับโปรเจกต์ที่ต้องการประสิทธิภาพสูงขึ้น",
+      "price": 649,
+      "image": "https://api.iconify.design/mdi/code-braces.svg",
+      "iconBg": "rgba(250,204,21,0.08)",
+      "buttonText": "เลือกแพ็กเกจ",
+      "specs": [
+        { "label": "CPU", "value": "3 Cores" },
+        { "label": "RAM", "value": "4 GB" },
+        { "label": "Storage", "value": "10 GB" },
+        { "label": "Languages", "value": "Node.js, Python, PHP, Go, Rust" },
+        { "label": "Concurrent", "value": "10 Processes" }
+      ],
+      "popular": false,
+      "defaultSelected": false
+    }
+  ],
+  "Pro": [
+    {
+      "id": "CH-Pro",
+      "name": "Pro",
+      "subtitle": "สำหรับงาน Production ที่ต้องการความเสถียรสูง",
+      "price": 999,
+      "image": "https://api.iconify.design/mdi/cog-refresh.svg",
+      "iconBg": "rgba(16,185,129,0.1)",
+      "buttonText": "เลือกแพ็กเกจ",
+      "specs": [
+        { "label": "CPU", "value": "4 Cores" },
+        { "label": "RAM", "value": "8 GB" },
+        { "label": "Storage", "value": "20 GB" },
+        { "label": "Languages", "value": "Node.js, Python, PHP, Go, Rust, Java" },
+        { "label": "Concurrent", "value": "20 Processes" }
+      ],
+      "popular": false,
+      "defaultSelected": false
+    }
+  ]
+}
