@@ -117,6 +117,10 @@
             </span>
         </a>
 
+        <button class="nav-toggle" type="button" aria-label="เปิดเมนู" aria-expanded="false">
+            <span class="iconify" data-icon="mdi:menu"></span>
+        </button>
+
         <div class="nav-links" aria-label="เมนูหลัก">
             <a href="/" class="active">หน้าแรก</a>
             <a href="/minecraft">Minecraft</a>
@@ -136,7 +140,14 @@
     </nav>
 
     <main>
-        <section class="hero-section">
+        <section class="hero-section reveal">
+            <div class="hero-particles" aria-hidden="true">
+                <div class="hero-particle"></div>
+                <div class="hero-particle"></div>
+                <div class="hero-particle"></div>
+                <div class="hero-particle"></div>
+                <div class="hero-particle"></div>
+            </div>
             <div class="hero-copy">
                 <p class="eyebrow hero-entry hero-entry-1"><%= settings.announcement %></p>
                 <h1 class="hero-entry hero-entry-2"><span class="hero-highlight">Horari Service</span> <span class="typewriter-inline"><span id="typewriterText" data-typewriter='["Minecraft Server Hosting","Web Hosting","Code Hosting","Code Server"]'>Minecraft Server Hosting</span><span class="typewriter-cursor"></span></span></h1>
@@ -156,14 +167,14 @@
 
         </section>
 
-        <section class="section-heading" style="margin-top: -18px;">
+        <section class="section-heading reveal reveal-delay-1" style="margin-top: -18px;">
             <div>
                 <p>บริการทั้งหมดของเรา</p>
                 <h2>เลือกบริการที่ใช่ สำหรับโปรเจกต์ของคุณ</h2>
             </div>
         </section>
 
-        <section class="landing-grid" id="services">
+        <section class="landing-grid reveal reveal-delay-2" id="services">
             <a class="service-card landing-minecraft card-entry card-entry-1" href="/minecraft">
                 <span class="iconify" data-icon="mdi:grass"></span>
                 <strong>Minecraft Server Hosting</strong>
@@ -193,7 +204,7 @@
             </a>
         </section>
 
-        <section class="feature-strip" id="features">
+        <section class="feature-strip reveal reveal-delay-3" id="features">
             <div class="feature-entry feature-entry-1">
                 <span class="iconify" data-icon="mdi:headset"></span>
                 <strong>Support หลังการขาย</strong>
@@ -228,5 +239,9 @@
             <a href="/contact">ติดต่อ</a>
         </nav>
     </footer>
+
+    <button class="back-to-top" type="button" aria-label="กลับด้านบน">
+        <span class="iconify" data-icon="mdi:chevron-up"></span>
+    </button>
 </body>
 </html>

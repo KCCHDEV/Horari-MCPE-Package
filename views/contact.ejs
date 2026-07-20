@@ -46,6 +46,10 @@
             </span>
         </a>
 
+        <button class="nav-toggle" type="button" aria-label="เปิดเมนู" aria-expanded="false">
+            <span class="iconify" data-icon="mdi:menu"></span>
+        </button>
+
         <div class="nav-links">
             <a href="/">หน้าแรก</a>
             <a href="/minecraft">Minecraft</a>
@@ -65,13 +69,13 @@
     </nav>
 
     <main>
-        <section class="page-header">
+        <section class="page-header reveal">
             <p class="eyebrow page-entry page-entry-1">Contact Channels</p>
             <h1 class="page-entry page-entry-2"><span class="hero-highlight">Contact</span> <span class="typewriter-inline"><span id="typewriterText" data-typewriter='["Discord","LINE","Facebook","Ticket","Inbox"]'>Discord</span><span class="typewriter-cursor"></span></span></h1>
             <p class="page-entry page-entry-3"><%= settings.contactPageIntro %></p>
         </section>
 
-        <section class="contact-card-grid">
+        <section class="contact-card-grid reveal reveal-delay-1">
             <% settings.contactCards.forEach((card) => { %>
                 <article class="contact-card">
                     <div class="contact-icon">
@@ -106,5 +110,9 @@
             <a href="/contact">ติดต่อ</a>
         </nav>
     </footer>
+
+    <button class="back-to-top" type="button" aria-label="กลับด้านบน">
+        <span class="iconify" data-icon="mdi:chevron-up"></span>
+    </button>
 </body>
 </html>

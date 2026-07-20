@@ -46,6 +46,10 @@
             </span>
         </a>
 
+        <button class="nav-toggle" type="button" aria-label="เปิดเมนู" aria-expanded="false">
+            <span class="iconify" data-icon="mdi:menu"></span>
+        </button>
+
         <div class="nav-links">
             <a href="/">หน้าแรก</a>
             <a href="/minecraft">Minecraft</a>
@@ -65,12 +69,12 @@
     </nav>
 
     <main>
-        <section class="page-header content-header">
+        <section class="page-header content-header reveal">
             <p class="eyebrow page-entry page-entry-1"><%= page.eyebrow %></p>
             <h1 class="page-entry page-entry-2"><span class="hero-highlight"><%= page.title %></span> <span class="typewriter-inline"><span id="typewriterText" data-typewriter='<%- activePath === "/terms" ? JSON.stringify(["ข้อตกลงการใช้บริการ","อ่านก่อนสั่งซื้อ","สงวนสิทธิ์ตามที่ระบุ","สอบถามเพิ่มเติม"]) : JSON.stringify(["นโยบายความเป็นส่วนตัว","ข้อมูลของคุณปลอดภัย","ติดต่อสอบถาม","สอบถามเพิ่มเติม"]) %>'><%= page.title %></span><span class="typewriter-cursor"></span></span></h1>
         </section>
 
-        <article class="content-card">
+        <article class="content-card reveal reveal-delay-1">
             <% page.content.split('\n').filter(Boolean).forEach((paragraph) => { %>
                 <p><%= paragraph %></p>
             <% }); %>
@@ -93,5 +97,9 @@
             <a href="/contact">ติดต่อ</a>
         </nav>
     </footer>
+
+    <button class="back-to-top" type="button" aria-label="กลับด้านบน">
+        <span class="iconify" data-icon="mdi:chevron-up"></span>
+    </button>
 </body>
 </html>

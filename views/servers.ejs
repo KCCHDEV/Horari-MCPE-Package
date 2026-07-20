@@ -46,6 +46,10 @@
             </span>
         </a>
 
+        <button class="nav-toggle" type="button" aria-label="เปิดเมนู" aria-expanded="false">
+            <span class="iconify" data-icon="mdi:menu"></span>
+        </button>
+
         <div class="nav-links">
             <a href="/">หน้าแรก</a>
             <a href="/minecraft">Minecraft</a>
@@ -65,13 +69,13 @@
     </nav>
 
     <main>
-        <section class="page-header">
+        <section class="page-header reveal">
             <p class="eyebrow page-entry page-entry-1">Server Infrastructure</p>
             <h1 class="page-entry page-entry-2"><span class="hero-highlight">Servers</span> <span class="typewriter-inline"><span id="typewriterText" data-typewriter='["6 เครื่องพร้อมใช้งาน","XEON / EPYC / Ryzen","NVMe SSD ทุกเครื่อง","พร้อมให้บริการ 24 ชม.","ดูแลหลังการขาย"]'>6 เครื่องพร้อมใช้งาน</span><span class="typewriter-cursor"></span></span></h1>
             <p class="page-entry page-entry-3">ตรวจสอบสเปกเครื่องหลักที่ใช้รองรับแพ็กเกจ เพื่อเลือกบริการให้เหมาะกับจำนวนผู้เล่นและลักษณะการใช้งาน</p>
         </section>
 
-        <section class="server-grid">
+        <section class="server-grid reveal reveal-delay-1">
             <% servers.forEach((server) => { %>
                 <article class="server-card">
                     <div class="server-title">
@@ -133,6 +137,10 @@
             <a href="/contact">ติดต่อ</a>
         </nav>
     </footer>
+
+    <button class="back-to-top" type="button" aria-label="กลับด้านบน">
+        <span class="iconify" data-icon="mdi:chevron-up"></span>
+    </button>
 
     <script src="/js/app.js?v=<%= assets.js %>"></script>
 </body>

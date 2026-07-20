@@ -112,6 +112,10 @@
             </span>
         </a>
 
+        <button class="nav-toggle" type="button" aria-label="เปิดเมนู" aria-expanded="false">
+            <span class="iconify" data-icon="mdi:menu"></span>
+        </button>
+
         <div class="nav-links" aria-label="เมนูหลัก">
             <a href="/">หน้าแรก</a>
             <a href="/minecraft">Minecraft</a>
@@ -131,7 +135,14 @@
     </nav>
 
     <main>
-        <section class="hero-section">
+        <section class="hero-section reveal">
+            <div class="hero-particles" aria-hidden="true">
+                <div class="hero-particle"></div>
+                <div class="hero-particle"></div>
+                <div class="hero-particle"></div>
+                <div class="hero-particle"></div>
+                <div class="hero-particle"></div>
+            </div>
             <div class="hero-copy">
                 <p class="eyebrow hero-entry hero-entry-1">Code Hosting</p>
                 <h1 class="hero-entry hero-entry-2"><span class="hero-highlight">Code Hosting</span> <span class="typewriter-inline"><span id="typewriterText" data-typewriter='["Node.js, Python และอื่นๆ","backend, API, bot","Concurrent Processes","GitHub Auto Deploy"]'>Node.js, Python และอื่นๆ</span><span class="typewriter-cursor"></span></span></h1>
@@ -151,7 +162,7 @@
 
         </section>
 
-        <section class="feature-strip" id="features">
+        <section class="feature-strip reveal reveal-delay-1" id="features">
             <div class="feature-entry feature-entry-1">
                 <span class="iconify" data-icon="mdi:language-python"></span>
                 <strong>รองรับหลายภาษา</strong>
@@ -170,7 +181,7 @@
         </section>
 
         <% if (settings.eventEnabled === 'true' && settings.eventDate) { %>
-            <section class="event-countdown" id="event" data-countdown-date="<%= settings.eventDate %>">
+            <section class="event-countdown reveal reveal-delay-2" id="event" data-countdown-date="<%= settings.eventDate %>">
                 <div class="event-copy">
                     <p class="eyebrow">Event Countdown</p>
                     <h2><%= settings.eventTitle %></h2>
@@ -201,10 +212,39 @@
             </section>
         <% } %>
 
-        <section class="package-section" id="packages">
+        <section class="package-section reveal reveal-delay-2" id="packages">
             <div class="section-heading">
                 <p>แพ็กเกจ Code Hosting</p>
                 <h2>เลือกแพ็กเกจตามขนาดแอปพลิเคชันของคุณ</h2>
+            </div>
+
+            <div class="pkg-filter-bar">
+                <span class="iconify" data-icon="mdi:filter-variant"></span>
+                <div class="pkg-filter-group">
+                    <label for="filterRAMCH">RAM</label>
+                    <select class="pkg-filter-select" id="filterRAMCH" data-filter="RAM">
+                        <option value="">ทั้งหมด</option>
+                        <option value="512 MB">512 MB</option>
+                        <option value="1 GB">1 GB</option>
+                        <option value="2 GB">2 GB</option>
+                        <option value="4 GB">4 GB</option>
+                        <option value="8 GB">8 GB</option>
+                    </select>
+                </div>
+                <div class="pkg-filter-group">
+                    <label for="filterPriceCH">ราคา</label>
+                    <select class="pkg-filter-select" id="filterPriceCH" data-filter="price">
+                        <option value="">ทั้งหมด</option>
+                        <option value="0-100">≤ ฿100</option>
+                        <option value="100-300">฿100 - ฿300</option>
+                        <option value="300-99999">≥ ฿300</option>
+                    </select>
+                </div>
+                <button class="pkg-filter-clear" type="button">
+                    <span class="iconify" data-icon="mdi:close"></span>
+                    ล้าง
+                </button>
+                <span class="pkg-filter-count"></span>
             </div>
 
             <div class="billing-toggle-wrap">
@@ -221,8 +261,10 @@
                 <p class="billing-hint" id="billingHint">
                     <span class="iconify" data-icon="mdi:tag-heart-outline"></span>
                     <span id="billingHintText">รายเดือนถูกกว่ารายวัน — เหมาะสำหรับใช้งานต่อเนื่อง</span>
-                </p>
-            </div>
+                        </p>
+                        </div>
+                    </div>
+                </div>
 
             <div class="package-groups">
                 <% Object.entries(packageGroups).forEach(([tier, groupPackages], index) => { %>
@@ -246,7 +288,7 @@
                                     <% } %>
                                     <div class="pkg-top">
                                         <div class="mc-icon" style="background:<%= pkg.iconBg %>;">
-                                            <img src="<%= pkg.image %>" alt="<%= pkg.name %>">
+                                            <img class="pkg-img" src="<%= pkg.image %>" alt="<%= pkg.name %>">
                                         </div>
                                         <div>
                                             <h4><%= pkg.name %></h4>
@@ -294,35 +336,77 @@
             </div>
         </section>
 
-        <section class="faq-section" id="faq">
+        <section class="faq-section reveal reveal-delay-3" id="faq">
             <div class="section-heading">
                 <p>ข้อมูลก่อนสั่งซื้อ</p>
                 <h2>คำถามที่พบบ่อย — Code Hosting</h2>
             </div>
             <div class="faq-grid">
-                <div>
-                    <h3>ภาษาไหนบ้างที่รองรับ?</h3>
-                    <p>รองรับ Node.js, Python, PHP, Go, Rust, และ Java แต่ละภาษาใช้ runtime เวอร์ชัน stable ล่าสุด</p>
+                <div class="faq-item">
+                    <button class="faq-question" type="button" aria-expanded="false">
+                        <span>ภาษาไหนบ้างที่รองรับ?</span>
+                        <span class="iconify" data-icon="mdi:chevron-down"></span>
+                    </button>
+                    <div class="faq-answer">
+                        <div class="faq-answer-inner">
+                            <p>รองรับ Node.js, Python, PHP, Go, Rust, และ Java แต่ละภาษาใช้ runtime เวอร์ชัน stable ล่าสุด</p>
+                        </div>
+                    </div>
                 </div>
-                <div>
-                    <h3>Deploy โค้ดจาก GitHub ได้ไหม?</h3>
-                    <p>ได้ รองรับการเชื่อมต่อ GitHub/GitLab ผ่าน webhook หรือ SSH key เพื่อ auto-deploy ทุกครั้งที่ push</p>
+                <div class="faq-item">
+                    <button class="faq-question" type="button" aria-expanded="false">
+                        <span>Deploy โค้ดจาก GitHub ได้ไหม?</span>
+                        <span class="iconify" data-icon="mdi:chevron-down"></span>
+                    </button>
+                    <div class="faq-answer">
+                        <div class="faq-answer-inner">
+                            <p>ได้ รองรับการเชื่อมต่อ GitHub/GitLab ผ่าน webhook หรือ SSH key เพื่อ auto-deploy ทุกครั้งที่ push</p>
+                        </div>
+                    </div>
                 </div>
-                <div>
-                    <h3>Concurrent process คืออะไร?</h3>
-                    <p>คือจำนวน process ที่สามารถทำงานพร้อมกันได้ เช่น รัน API + background worker + webhook ในเวลาเดียวกัน</p>
+                <div class="faq-item">
+                    <button class="faq-question" type="button" aria-expanded="false">
+                        <span>Concurrent process คืออะไร?</span>
+                        <span class="iconify" data-icon="mdi:chevron-down"></span>
+                    </button>
+                    <div class="faq-answer">
+                        <div class="faq-answer-inner">
+                            <p>คือจำนวน process ที่สามารถทำงานพร้อมกันได้ เช่น รัน API + background worker + webhook ในเวลาเดียวกัน</p>
+                        </div>
+                    </div>
                 </div>
-                <div>
-                    <h3>มี Database ให้ใช้ไหม?</h3>
-                    <p>สามารถติดตั้ง SQLite ในตัว หรือเชื่อมต่อกับ MySQL/MongoDB ภายนอกได้ อัปเกรดเพิ่ม database ได้</p>
+                <div class="faq-item">
+                    <button class="faq-question" type="button" aria-expanded="false">
+                        <span>มี Database ให้ใช้ไหม?</span>
+                        <span class="iconify" data-icon="mdi:chevron-down"></span>
+                    </button>
+                    <div class="faq-answer">
+                        <div class="faq-answer-inner">
+                            <p>สามารถติดตั้ง SQLite ในตัว หรือเชื่อมต่อกับ MySQL/MongoDB ภายนอกได้ อัปเกรดเพิ่ม database ได้</p>
+                        </div>
+                    </div>
                 </div>
-                <div>
-                    <h3>รองรับ WebSocket หรือไม่?</h3>
-                    <p>รองรับ WebSocket สำหรับแอปพลิเคชัน real-time เช่น chat, notification, live dashboard</p>
+                <div class="faq-item">
+                    <button class="faq-question" type="button" aria-expanded="false">
+                        <span>รองรับ WebSocket หรือไม่?</span>
+                        <span class="iconify" data-icon="mdi:chevron-down"></span>
+                    </button>
+                    <div class="faq-answer">
+                        <div class="faq-answer-inner">
+                            <p>รองรับ WebSocket สำหรับแอปพลิเคชัน real-time เช่น chat, notification, live dashboard</p>
+                        </div>
+                    </div>
                 </div>
-                <div>
-                    <h3>ถ้า process crash จะเกิดอะไรขึ้น?</h3>
-                    <p>ระบบมี autorestart ในตัว หาก process หยุดทำงานจะ restart อัตโนมัติภายในไม่กี่วินาที</p>
+                <div class="faq-item">
+                    <button class="faq-question" type="button" aria-expanded="false">
+                        <span>ถ้า process crash จะเกิดอะไรขึ้น?</span>
+                        <span class="iconify" data-icon="mdi:chevron-down"></span>
+                    </button>
+                    <div class="faq-answer">
+                        <div class="faq-answer-inner">
+                            <p>ระบบมี autorestart ในตัว หาก process หยุดทำงานจะ restart อัตโนมัติภายในไม่กี่วินาที</p>
+                        </div>
+                    </div>
                 </div>
             </div>
         </section>
@@ -344,6 +428,10 @@
             <a href="/contact">ติดต่อ</a>
         </nav>
     </footer>
+
+    <button class="back-to-top" type="button" aria-label="กลับด้านบน">
+        <span class="iconify" data-icon="mdi:chevron-up"></span>
+    </button>
 
     <div class="toast" id="toast">
         <span class="iconify" data-icon="mdi:check-circle"></span>
