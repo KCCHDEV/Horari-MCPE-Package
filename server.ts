@@ -1,8 +1,15 @@
 import { serve } from 'bun';
-import { createHash } from 'crypto';
+import { createHash, createHmac, timingSafeEqual } from 'crypto';
 import { existsSync, readFileSync } from 'fs';
 import { join } from 'path';
 import ejs from 'ejs';
+import { mongoConfigured } from './lib/db.ts';
+import { createUser, getCurrentUser, loginUser, logoutUser } from './lib/auth.ts';
+import { catalogFor } from './lib/catalog.ts';
+import { confirmPayment, createOrder, listOrders, provisionOrder } from './lib/orders.ts';
+import { attachCheckoutSession } from './lib/orders.ts';
+import { createStripeCheckout, stripePaymentEvent, verifyStripeWebhook } from './lib/payment.ts';
+import { pterodactylConfigured } from './lib/pterodactyl.ts';
 
 const root = import.meta.dir;
 const viewsDir = join(root, 'views');
@@ -149,6 +156,37 @@ function readSettings() {
   return { ...defaultSettings, ...readJSON(settingsPath, {}) };
 }
 
+async function jsonBody(req: Request) {
+  try { return await req.json(); } catch { return {}; }
+}
+
+function jsonResponse(data: unknown, status = 200, headers: Record<string, string> = {}) {
+  return new Response(JSON.stringify(data), { status, headers: { 'Content-Type': 'application/json; charset=utf-8', ...headers } });
+}
+
+function errorResponse(error: unknown, status = 400) {
+  return jsonResponse({ error: error instanceof Error ? error.message : String(error || 'เกิดข้อผิดพลาด') }, status);
+}
+
+function catalogForDashboard() {
+  const labels: Record<string, string> = { minecraft: 'Minecraft Server', webhosting: 'Web Hosting', codehosting: 'Code Hosting', codeserver: 'Code Server' };
+  return Object.entries(labels).map(([type, label]) => ({ type, label, packages: catalogFor(type) }));
+}
+
+function paymentCheckoutUrl(orderId: string) {
+  const template = String(process.env.PAYMENT_CHECKOUT_URL_TEMPLATE || '').trim();
+  return template ? template.replaceAll('{orderId}', encodeURIComponent(orderId)) : null;
+}
+
+function verifyWebhookSignature(rawBody: string, signature: string) {
+  const secret = String(process.env.PAYMENT_WEBHOOK_SECRET || '');
+  if (!secret || !signature) return false;
+  const expected = createHmac('sha256', secret).update(rawBody).digest('hex');
+  const a = Buffer.from(expected, 'utf8');
+  const b = Buffer.from(signature, 'utf8');
+  return a.length === b.length && timingSafeEqual(a, b);
+}
+
 function stripText(value: string, maxLength = 180) {
   return String(value || '')
     .replace(/\s+/g, ' ')
@@ -290,6 +328,18 @@ function renderContact(origin: string) {
   return ejs.render(template, { settings, meta, assets: buildAssets() });
 }
 
+function renderAuth(origin: string, register = false) {
+  const template = readFileSync(join(viewsDir, 'auth.ejs'), 'utf8');
+  const settings = readSettings();
+  return ejs.render(template, { settings, register, title: register ? 'สมัครสมาชิก' : 'เข้าสู่ระบบ', meta: buildMeta(settings, origin, register ? '/register' : '/login'), assets: buildAssets() });
+}
+
+function renderDashboard(origin: string, user: Record<string, string>) {
+  const template = readFileSync(join(viewsDir, 'dashboard.ejs'), 'utf8');
+  const settings = readSettings();
+  return ejs.render(template, { settings, user, catalog: catalogForDashboard(), meta: buildMeta(settings, origin, '/dashboard'), assets: buildAssets() });
+}
+
 function renderServicePage(kind: 'webhosting' | 'codehosting' | 'codeserver', origin: string) {
   const templatePath = join(viewsDir, `${kind}.ejs`);
   const template = readFileSync(templatePath, 'utf8');
@@ -310,6 +360,14 @@ const server = serve({
   port: Number(process.env.PORT || 3002),
   async fetch(req) {
     const url = new URL(req.url);
+
+    if (url.pathname === '/healthz' && req.method === 'GET') {
+      const stripeReady = String(process.env.PAYMENT_PROVIDER || '').toLowerCase() === 'stripe'
+        ? Boolean(process.env.STRIPE_SECRET_KEY && process.env.STRIPE_WEBHOOK_SECRET && process.env.APP_URL)
+        : Boolean(process.env.PAYMENT_WEBHOOK_SECRET);
+      const checks = { mongo: mongoConfigured(), pterodactyl: pterodactylConfigured(), payment: stripeReady };
+      return jsonResponse({ ok: Object.values(checks).every(Boolean), checks }, Object.values(checks).every(Boolean) ? 200 : 503);
+    }
 
     if (url.pathname === '/favicon.svg') {
       return new Response(renderFavicon(), {
@@ -332,6 +390,107 @@ const server = serve({
     if (url.pathname === '/') {
       const html = renderIndex(url.origin);
       return new Response(html, { headers: { 'Content-Type': 'text/html; charset=utf-8' } });
+    }
+
+    if (url.pathname === '/login' || url.pathname === '/register') {
+      const html = renderAuth(url.origin, url.pathname === '/register');
+      return new Response(html, { headers: { 'Content-Type': 'text/html; charset=utf-8' } });
+    }
+
+    if (url.pathname === '/dashboard') {
+      if (!mongoConfigured()) return new Response('ระบบสมาชิกยังไม่ได้เชื่อมต่อ MongoDB', { status: 503 });
+      try {
+        const user = await getCurrentUser(req);
+        if (!user) return Response.redirect(`${url.origin}/login`, 302);
+        const html = renderDashboard(url.origin, user);
+        return new Response(html, { headers: { 'Content-Type': 'text/html; charset=utf-8' } });
+      } catch (error) { return new Response(error instanceof Error ? error.message : 'Database unavailable', { status: 503 }); }
+    }
+
+    if (url.pathname === '/api/auth/register' && req.method === 'POST') {
+      if (!mongoConfigured()) return errorResponse('ระบบสมาชิกยังไม่ได้ตั้งค่า MongoDB', 503);
+      try {
+        const body = await jsonBody(req);
+        const user = await createUser(body.name, body.email, body.password);
+        const session = await loginUser(body.email, body.password);
+        return jsonResponse({ user }, 201, { 'Set-Cookie': session.cookie });
+      } catch (error) { return errorResponse(error, 400); }
+    }
+
+    if (url.pathname === '/api/auth/login' && req.method === 'POST') {
+      if (!mongoConfigured()) return errorResponse('ระบบสมาชิกยังไม่ได้ตั้งค่า MongoDB', 503);
+      try {
+        const body = await jsonBody(req);
+        const session = await loginUser(body.email, body.password);
+        return jsonResponse({ user: session.user }, 200, { 'Set-Cookie': session.cookie });
+      } catch (error) { return errorResponse(error, 401); }
+    }
+
+    if (url.pathname === '/api/auth/logout' && req.method === 'POST') {
+      try { return jsonResponse({ ok: true }, 200, { 'Set-Cookie': await logoutUser(req) }); }
+      catch (error) { return errorResponse(error, 503); }
+    }
+
+    if (url.pathname === '/api/orders' && req.method === 'GET') {
+      try {
+        const user = await getCurrentUser(req);
+        if (!user) return errorResponse('กรุณาเข้าสู่ระบบ', 401);
+        const orders = await listOrders(user.id);
+        return jsonResponse({ orders });
+      } catch (error) { return errorResponse(error, 503); }
+    }
+
+    if (url.pathname === '/api/orders' && req.method === 'POST') {
+      try {
+        const user = await getCurrentUser(req);
+        if (!user) return errorResponse('กรุณาเข้าสู่ระบบ', 401);
+        const body = await jsonBody(req);
+        const order = await createOrder(user.id, body.serviceType, body.packageId, body.serverName);
+        let payment = { provider: process.env.PAYMENT_PROVIDER || 'external-webhook', status: 'pending', checkoutUrl: paymentCheckoutUrl(order.id) as string | null };
+        if (String(process.env.PAYMENT_PROVIDER || '').toLowerCase() === 'stripe') {
+          const session = await createStripeCheckout({ orderId: order.id, email: user.email, packageName: `${order.package.name} Server`, amount: order.amount });
+          await attachCheckoutSession(order.id, session);
+          payment = { provider: 'stripe', status: 'checkout_created', checkoutUrl: session.url };
+        }
+        return jsonResponse({ order, payment }, 201);
+      } catch (error) { return errorResponse(error, 400); }
+    }
+
+    const provisionMatch = url.pathname.match(/^\/api\/orders\/([a-f0-9]{24})\/provision$/i);
+    if (provisionMatch && req.method === 'POST') {
+      try {
+        const user = await getCurrentUser(req);
+        if (!user) return errorResponse('กรุณาเข้าสู่ระบบ', 401);
+        const orders = await listOrders(user.id);
+        const owned = orders.find((order) => order._id?.toString() === provisionMatch[1]);
+        if (!owned) return errorResponse('ไม่พบคำสั่งซื้อของบัญชีนี้', 404);
+        const order = await provisionOrder(provisionMatch[1]);
+        return jsonResponse({ order });
+      } catch (error) { return errorResponse(error, 400); }
+    }
+
+    if (url.pathname === '/api/payments/webhook' && req.method === 'POST') {
+      const rawBody = await req.text();
+      if (String(process.env.PAYMENT_PROVIDER || '').toLowerCase() === 'stripe') {
+        if (!verifyStripeWebhook(rawBody, req.headers.get('stripe-signature') || '')) return errorResponse('ลายเซ็น Stripe webhook ไม่ถูกต้อง', 401);
+        try {
+          const event = stripePaymentEvent(rawBody);
+          if (!event) return jsonResponse({ ok: true, ignored: true });
+          const order = await confirmPayment(event.orderId, event.paymentId);
+          try { await provisionOrder(event.orderId); }
+          catch (error) { console.error('Provisioning deferred:', error); }
+          return jsonResponse({ ok: true, orderId: order?._id?.toString(), event: event.eventType });
+        } catch (error) { return errorResponse(error, 400); }
+      }
+      if (!verifyWebhookSignature(rawBody, req.headers.get('x-payment-signature') || '')) return errorResponse('ลายเซ็น webhook ไม่ถูกต้อง', 401);
+      try {
+        const body = JSON.parse(rawBody);
+        if (body.status !== 'paid' || !body.orderId || !body.paymentId) return errorResponse('ข้อมูล payment webhook ไม่ครบ', 400);
+        const order = await confirmPayment(String(body.orderId), String(body.paymentId));
+        try { await provisionOrder(String(body.orderId)); }
+        catch (error) { console.error('Provisioning deferred:', error); }
+        return jsonResponse({ ok: true, orderId: order?._id?.toString(), status: 'accepted' });
+      } catch (error) { return errorResponse(error, 400); }
     }
 
     if (url.pathname === '/minecraft') {

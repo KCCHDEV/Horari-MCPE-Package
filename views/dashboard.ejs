@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="th">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>แดชบอร์ด | <%= settings.shopName %></title>
+    <link rel="stylesheet" href="/css/styles.css?v=<%= assets.css %>">
+</head>
+<body>
+    <main class="dashboard-shell">
+        <header class="dashboard-header">
+            <div><p class="eyebrow">Customer Dashboard</p><h1>สวัสดี <%= user.name %></h1><p class="section-lead">จัดการคำสั่งซื้อและเซิร์ฟเวอร์ของคุณจากที่เดียว</p></div>
+            <button id="logoutButton" class="secondary-button" type="button">ออกจากระบบ</button>
+        </header>
+        <section class="dashboard-grid">
+            <div class="settings-panel">
+                <h2>สั่งซื้อบริการ</h2>
+                <form id="orderForm" class="settings-form">
+                    <label><span>บริการ</span><select id="serviceType" name="serviceType"><% catalog.forEach((group) => { %><option value="<%= group.type %>"><%= group.label %></option><% }) %></select></label>
+                    <label><span>แพ็กเกจ</span><select id="packageId" name="packageId"></select></label>
+                    <label><span>ชื่อเซิร์ฟเวอร์</span><input name="serverName" required minlength="3" maxlength="60" placeholder="เช่น Horari Survival"></label>
+                    <button class="primary-button" type="submit">สร้างคำสั่งซื้อ</button>
+                    <p id="orderMessage" class="form-message" role="status"></p>
+                </form>
+            </div>
+            <div class="settings-panel">
+                <h2>คำสั่งซื้อของฉัน</h2>
+                <div id="ordersList" class="dashboard-list"><p>กำลังโหลด...</p></div>
+            </div>
+        </section>
+    </main>
+    <script>
+        const catalog = <%- JSON.stringify(catalog) %>;
+        const serviceType = document.getElementById('serviceType');
+        const packageId = document.getElementById('packageId');
+        const orderMessage = document.getElementById('orderMessage');
+        function renderPackages() {
+            const group = catalog.find((item) => item.type === serviceType.value);
+            packageId.innerHTML = (group?.packages || []).map((item) => `<option value="${item.id}">${item.name} — ฿${item.price}</option>`).join('');
+        }
+        function esc(value) { return String(value ?? '').replace(/[&<>"']/g, (char) => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[char])); }
+        async function loadOrders() {
+            const response = await fetch('/api/orders');
+            const data = await response.json();
+            const list = document.getElementById('ordersList');
+            if (!response.ok) { list.innerHTML = `<p>${esc(data.error || 'โหลดข้อมูลไม่สำเร็จ')}</p>`; return; }
+            const statusLabel = {pending_payment:'รอชำระเงิน',payment_confirmed:'ชำระเงินแล้ว รอเปิดเครื่อง',provisioning:'กำลังเปิดเครื่อง',active:'ใช้งานได้',failed:'ผิดพลาด'};
+            list.innerHTML = data.orders.length ? data.orders.map((order) => `<article class="dashboard-order"><strong>${esc(order.serverName)}</strong><span>${esc(order.packageSnapshot?.name)} · ฿${esc(order.amount)}</span><b data-status="${esc(order.status)}">${esc(statusLabel[order.status] || order.status)}</b>${order.pterodactyl?.identifier ? `<small>Server: ${esc(order.pterodactyl.identifier)}</small>` : ''}${order.pterodactyl?.panelUrl ? `<a class="text-link" href="${esc(order.pterodactyl.panelUrl)}" target="_blank" rel="noreferrer">เปิด Pterodactyl Panel</a><small>ถ้ายังไม่มีรหัสผ่าน ให้กด Forgot password ใน Panel ด้วยอีเมล ${esc(order.pterodactyl.loginEmail)}</small>` : ''}${order.provisionError ? `<small>${esc(order.provisionError)}</small><button class="secondary-button retry-provision" data-order-id="${esc(order._id)}" type="button">ลองเปิดเครื่องอีกครั้ง</button>` : ''}</article>`).join('') : '<p>ยังไม่มีคำสั่งซื้อ</p>';
+            list.querySelectorAll('.retry-provision').forEach((button) => button.addEventListener('click', async () => { button.disabled = true; await fetch(`/api/orders/${button.dataset.orderId}/provision`, {method:'POST'}); loadOrders(); }));
+        }
+        serviceType.addEventListener('change', renderPackages);
+        document.getElementById('orderForm').addEventListener('submit', async (event) => {
+            event.preventDefault(); orderMessage.textContent = 'กำลังสร้างคำสั่งซื้อ...';
+            const form = new FormData(event.currentTarget);
+            const response = await fetch('/api/orders', { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify(Object.fromEntries(form)) });
+            const data = await response.json(); orderMessage.innerHTML = response.ok ? `สร้างคำสั่งซื้อแล้ว เลขที่ ${esc(data.order.id)} — ${data.payment.checkoutUrl ? `<a href="${esc(data.payment.checkoutUrl)}" target="_blank" rel="noreferrer">ไปชำระเงิน</a>` : 'รอช่องทางชำระเงินจากร้าน'}` : esc(data.error || 'สร้างคำสั่งซื้อไม่สำเร็จ');
+            if (response.ok) { event.currentTarget.reset(); renderPackages(); loadOrders(); }
+        });
+        document.getElementById('logoutButton').addEventListener('click', async () => { await fetch('/api/auth/logout', {method:'POST'}); location.href = '/'; });
+        renderPackages(); loadOrders();
+    </script>
+</body>
+</html>

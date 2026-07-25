@@ -19,7 +19,6 @@
     <meta name="twitter:title" content="<%= meta.title %>">
     <meta name="twitter:description" content="<%= meta.description %>">
     <meta name="twitter:image" content="<%= meta.image %>">
-    <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://code.iconify.design/3/3.1.0/iconify.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Thai:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="/css/styles.css?v=<%= assets.css %>">
@@ -282,7 +281,7 @@
                                 const packageKey = `${tier}-${pkg.id}`;
                                 const specMap = Object.fromEntries((pkg.specs || []).map((spec) => [spec.label, spec.value]));
                             %>
-                                <article class="pkg-card fade-in delay-<%= pkgIndex + 1 %> <%= pkg.defaultSelected ? 'selected' : '' %>" data-package="<%= packageKey %>" onclick="selectPackage('<%= packageKey %>')">
+                                <article class="pkg-card fade-in delay-<%= pkgIndex + 1 %> <%= pkg.defaultSelected ? 'selected' : '' %>" data-package="<%= packageKey %>" data-select-package>
                                     <% if (pkg.popular) { %>
                                         <div class="popular-badge">ยอดนิยม</div>
                                     <% } %>
@@ -327,7 +326,7 @@
                                         data-package-database="<%= specMap.Database || '-' %>"
                                         data-package-email="<%= specMap.Email || '-' %>"
                                         data-package-specs='<%- JSON.stringify(pkg.specs) %>'
-                                        onclick="event.stopPropagation(); orderPackageFromButton(this)"
+                                        data-order-package
                                     ><%= pkg.buttonText %></button>
                                 </article>
                             <% }); %>

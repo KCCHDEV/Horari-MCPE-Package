@@ -271,6 +271,7 @@ main {
 .hero-copy, .service-panel {
     position: relative;
     z-index: 1;
+    min-width: 0;
 }
 
 .hero-particles {
@@ -1509,6 +1510,90 @@ main {
     outline: none;
 }
 
+.auth-shell,
+.dashboard-shell {
+    width: min(1180px, calc(100% - 32px));
+    margin: 0 auto;
+    padding: 72px 0;
+}
+
+.auth-shell {
+    display: grid;
+    min-height: 100vh;
+    place-items: center;
+}
+
+.auth-card {
+    width: min(100%, 520px);
+}
+
+.auth-card h1,
+.dashboard-header h1 {
+    margin: 8px 0;
+    font-size: clamp(32px, 5vw, 52px);
+}
+
+.text-link,
+.auth-switch a {
+    color: var(--brand);
+    font-weight: 800;
+}
+
+.form-message {
+    min-height: 22px;
+    margin: 0;
+    color: var(--muted);
+    font-size: 13px;
+}
+
+.auth-switch {
+    margin: 18px 0 0;
+    color: var(--muted);
+    text-align: center;
+}
+
+.dashboard-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 24px;
+    margin-bottom: 28px;
+}
+
+.dashboard-grid {
+    display: grid;
+    grid-template-columns: minmax(0, .85fr) minmax(0, 1.15fr);
+    gap: 18px;
+}
+
+.dashboard-list {
+    display: grid;
+    gap: 12px;
+}
+
+.dashboard-order {
+    display: grid;
+    gap: 5px;
+    padding: 15px;
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    background: oklch(99% 0.004 245);
+}
+
+.dashboard-order span,
+.dashboard-order small {
+    color: var(--muted);
+}
+
+.dashboard-order b {
+    width: fit-content;
+    padding: 3px 8px;
+    border-radius: 999px;
+    background: color-mix(in srgb, var(--brand) 12%, transparent);
+    color: var(--brand);
+    font-size: 12px;
+}
+
 .settings-panel input:focus,
 .settings-panel textarea:focus,
 .settings-panel select:focus {
@@ -1919,8 +2004,16 @@ main {
 
 @media (max-width: 640px) {
     main,
-    .site-footer {
+    .site-footer,
+    .auth-shell,
+    .dashboard-shell {
         width: min(100% - 24px, 1180px);
+    }
+
+    .dashboard-header,
+    .dashboard-grid {
+        grid-template-columns: 1fr;
+        flex-direction: column;
     }
 
     .site-nav {
@@ -1941,11 +2034,34 @@ main {
         gap: 28px;
     }
 
+    .hero-section > * {
+        min-width: 0;
+        max-width: 100%;
+    }
+
+    .hero-copy h1,
+    .hero-subtitle {
+        max-width: 100%;
+        overflow-wrap: anywhere;
+    }
+
+    .typewriter-inline {
+        min-width: 0;
+        max-width: 100%;
+        overflow-wrap: anywhere;
+        white-space: normal;
+    }
+
     .hero-actions,
     .form-actions,
     .site-footer {
         align-items: stretch;
         flex-direction: column;
+    }
+
+    .site-footer nav {
+        flex-wrap: wrap;
+        gap: 10px 18px;
     }
 
     .section-heading,

@@ -1,0 +1,22 @@
+services:
+  mongo:
+    image: mongo:8
+    restart: unless-stopped
+    volumes:
+      - horari-mongo:/data/db
+
+  app:
+    build: .
+    restart: unless-stopped
+    env_file: .env
+    environment:
+      PORT: 3002
+      MONGODB_URI: mongodb://mongo:27017
+      MONGODB_DB: horari_service
+    depends_on:
+      - mongo
+    ports:
+      - "3002:3002"
+
+volumes:
+  horari-mongo:

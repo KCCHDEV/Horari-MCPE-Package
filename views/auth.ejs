@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="th">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title><%= title %> | <%= settings.shopName %></title>
+    <link rel="stylesheet" href="/css/styles.css?v=<%= assets.css %>">
+</head>
+<body>
+    <main class="auth-shell">
+        <section class="auth-card settings-panel">
+            <a href="/" class="text-link">← กลับหน้าเว็บ</a>
+            <p class="eyebrow">Horari Customer Account</p>
+            <h1><%= title %></h1>
+            <p class="section-lead"><%= register ? 'สร้างบัญชีเพื่อสั่งซื้อและดูเครื่องของคุณ' : 'เข้าสู่ระบบเพื่อจัดการคำสั่งซื้อและเซิร์ฟเวอร์' %></p>
+            <form id="authForm" class="settings-form">
+                <% if (register) { %>
+                    <label><span>ชื่อที่ใช้ติดต่อ</span><input name="name" required maxlength="100" autocomplete="name"></label>
+                <% } %>
+                <label><span>อีเมล</span><input type="email" name="email" required autocomplete="email"></label>
+                <label><span>รหัสผ่าน</span><input type="password" name="password" required minlength="8" autocomplete="<%= register ? 'new-password' : 'current-password' %>"></label>
+                <button class="primary-button" type="submit"><%= register ? 'สร้างบัญชี' : 'เข้าสู่ระบบ' %></button>
+                <p id="authMessage" class="form-message" role="status"></p>
+            </form>
+            <p class="auth-switch"><%= register ? 'มีบัญชีแล้ว?' : 'ยังไม่มีบัญชี?' %> <a href="/<%= register ? 'login' : 'register' %>"><%= register ? 'เข้าสู่ระบบ' : 'สมัครสมาชิก' %></a></p>
+        </section>
+    </main>
+    <script>
+        document.getElementById('authForm').addEventListener('submit', async (event) => {
+            event.preventDefault();
+            const form = new FormData(event.currentTarget);
+            const message = document.getElementById('authMessage');
+            message.textContent = 'กำลังดำเนินการ...';
+            const response = await fetch('<%= register ? "/api/auth/register" : "/api/auth/login" %>', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(Object.fromEntries(form)) });
+            const data = await response.json().catch(() => ({}));
+            if (!response.ok) { message.textContent = data.error || 'ดำเนินการไม่สำเร็จ'; return; }
+            location.href = '/dashboard';
+        });
+    </script>
+</body>
+</html>

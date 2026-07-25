@@ -136,6 +136,21 @@ function selectPackage(pkg) {
     });
 }
 
+function setupPackageCards() {
+    document.querySelectorAll('[data-select-package]').forEach((card) => {
+        card.addEventListener('click', () => {
+            if (card.dataset.package) selectPackage(card.dataset.package);
+        });
+    });
+
+    document.querySelectorAll('[data-order-package]').forEach((button) => {
+        button.addEventListener('click', (event) => {
+            event.stopPropagation();
+            orderPackageFromButton(button);
+        });
+    });
+}
+
 let selectedOrderPackage = null;
 let selectedDiscordContact = null;
 
@@ -216,6 +231,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     startEventCountdown();
     setupBillingToggle();
+    setupPackageCards();
     setupOrderModal();
     initTypewriter('typewriterText', null, { typeSpeed: 70, deleteSpeed: 35, pauseEnd: 2500 });
     setupNavToggle();
