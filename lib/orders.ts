@@ -1,11 +1,11 @@
 import { getDb, ObjectId } from './db.ts';
-import { findPackage } from './catalog.ts';
+import { findPackageAsync } from './catalog.ts';
 import { createServer } from './pterodactyl.ts';
 
 export type OrderStatus = 'pending_payment' | 'payment_confirmed' | 'provisioning' | 'active' | 'failed';
 
 export async function createOrder(userId: string, type: string, packageId: string, serverName: string) {
-  const pkg = findPackage(type, packageId);
+  const pkg: any = await findPackageAsync(type, packageId);
   if (!pkg) throw new Error('ไม่พบแพ็กเกจที่เลือก');
   const cleanName = String(serverName || `${pkg.name} Server`).trim().replace(/[^\p{L}\p{N} ._-]/gu, '').slice(0, 60);
   if (cleanName.length < 3) throw new Error('กรุณาระบุชื่อเซิร์ฟเวอร์อย่างน้อย 3 ตัวอักษร');
@@ -78,7 +78,7 @@ export async function provisionOrder(orderId: string) {
   try {
     const owner = await db.collection('users').findOne({ _id: order.userId });
     if (!owner?.email) throw new Error('ไม่พบข้อมูลผู้ใช้ของคำสั่งซื้อ');
-    const pkg = findPackage(String(order.serviceType), String(order.packageId));
+    const pkg: any = await findPackageAsync(String(order.serviceType), String(order.packageId));
     if (!pkg) throw new Error('แพ็กเกจในคำสั่งซื้อไม่อยู่ใน catalog แล้ว');
     const server = await createServer({ externalId: String(order.externalId), name: String(order.serverName), user: { email: String(owner.email), name: String(owner.name) }, pkg });
     await db.collection('orders').updateOne({ _id: id }, {

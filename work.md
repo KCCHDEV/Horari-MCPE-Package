@@ -2,14 +2,14 @@
 
 ## Current Status
 
-- State: blocked-awaiting-provider-config
-- Last updated: 2026-07-24
-- Current task: ทำระบบสมาชิก คำสั่งซื้อ payment webhook และ Pterodactyl provisioning
+- State: active
+- Last updated: 2026-07-31
+- Current task: ปรับ UI มือถือและเพิ่มภาพการตลาด/Discord social preview
 - Main goal: ลูกค้าสมัคร/ล็อกอิน สั่งซื้อผ่านเว็บ ชำระเงินแล้วได้เครื่อง Pterodactyl อัตโนมัติ
 
 ## User Request
 
-ทำระบบ auto สั่งซื้อผ่าน Website มี login, MongoDB และสร้างเครื่องจาก Pterodactyl ทั้งหมด
+แก้ UI บนมือถือ เพิ่มภาพแพ็กเกจ/แบนเนอร์ และให้ Discord แสดงภาพเมื่อแชร์ลิงก์
 
 ## Active Plan
 
@@ -33,6 +33,16 @@
 - [x] เพิ่ม customer panel access instructions และ login email ใน order state
 - [x] เพิ่ม automated payment/Pterodactyl contract tests
 - [x] เพิ่ม external_id reconciliation และ order provisioning claim กัน duplicate webhook/retry
+- [x] เพิ่ม catalog/settings persistence ใน MongoDB พร้อม fallback JSON
+- [x] เพิ่ม `/admin` และ API หลังบ้านสำหรับราคา/ส่วนลด/event
+- [x] แก้ no-JavaScript package visibility และ static route trailing slash บนมือถือ
+- [x] ติดตั้ง Next.js 16.2.12 และ React 19.2
+- [x] เพิ่ม App Router pages, API catch-all route, auth/admin guards และ Next runtime config
+- [ ] ลบ/แยก legacy Bun server หลัง Next QA ผ่านครบ
+- [x] เพิ่มภาพ hero และภาพตัวอย่างแพ็กเกจจริง
+- [x] ตั้ง Open Graph/Twitter social card สำหรับ Discord
+- [x] ตรวจ responsive ใน browser ที่ 390px
+- [x] กันหน้า mobile ว่างเมื่อ browser หน่วง/ปิด animation
 - [x] ตรวจหน่วยเงิน THB ของ Stripe และเพิ่ม production controlled-purchase checklist
 - [ ] ผูก payment gateway จริงและตรวจ webhook จริง
 - [ ] ทดสอบ MongoDB + Pterodactyl ด้วย credentials ของร้าน
@@ -63,6 +73,23 @@
 | `.env.example` | created | runtime configuration contract |
 | `README.md` | edited | setup and production requirements |
 | `package.json`, `package-lock.json` | edited | MongoDB dependency and server checks |
+| `lib/catalog.ts` | edited | MongoDB catalog seed, effective discount price, admin updates |
+| `lib/db.ts` | edited | catalog/settings indexes |
+| `lib/orders.ts` | edited | อ่านราคาจาก catalog ที่อยู่ใน MongoDB |
+| `server.ts` | edited | async Mongo-backed rendering and admin routes |
+| `views/admin.ejs` | created | price/event control panel |
+| `public/css/styles.css` | edited | package content remains visible without JS |
+| `netlify.toml` | edited | mobile/static service route redirects |
+| `app/` | created | Next.js App Router pages, API, healthz, favicon |
+| `components/ejs-page.tsx` | created | preserves existing UI while migrating runtime |
+| `lib/next-render.ts`, `lib/next-auth.ts` | created | Next server rendering/auth bridge |
+| `next.config.ts`, `tsconfig.json`, `next-env.d.ts` | created | Next.js 16 configuration |
+| `Dockerfile`, `package.json`, `package-lock.json` | edited | Node/Next runtime scripts |
+| `public/images/horari-minecraft-hero.png` | created | ภาพ hero/social preview ที่สร้างใหม่ |
+| `public/images/horari-minecraft-package.png` | created | ภาพประกอบแพ็กเกจ Minecraft |
+| `public/images/horari-webhosting-package.png` | created | ภาพประกอบแพ็กเกจ Web/Code hosting |
+| `views/index.ejs`, `public/css/styles.css` | edited | landing มีภาพและ mobile layout ที่อ่านง่ายขึ้น |
+| `app/layout.tsx` | edited | Open Graph/Twitter preview image สำหรับ Discord |
 
 ## Commands Run
 
@@ -90,6 +117,26 @@
 | `npm test` latest | pass | 4 tests, 13 assertions, including duplicate external_id reconciliation |
 | `Stripe THB amount review` | pass | adapter uses minor units (`amount * 100`) for THB prices |
 | `HTTP / /login /register` | pass | 200 from Bun server |
+| `bun build server.ts --target bun` | pass | admin/catalog changes compile |
+| `npm run build` | pass | static package pages generated |
+| `npm test` latest | pass | 4 tests, 13 assertions |
+| `HTTP smoke / /minecraft /admin/login /healthz` | pass/expected | `/minecraft` 200 with 24 package buttons; `/admin` 503 without MongoDB; `/healthz` 503 without providers |
+| `git diff --check` | pass | no whitespace errors |
+| `npm run build` | pending | Next.js 16 migration |
+| `npm run test` | pending | regression check after migration |
+| `npm run build` | pass | Next.js 16.2.12 production build and route manifest |
+| `npm test` | pass | 4 tests, 13 assertions |
+| `Next runtime smoke` | pass | `/minecraft` 200, `/admin/login` 200, auth redirects and `/api/orders` 401 |
+| `MongoDB Atlas ping` | pass | connected to `horari_service`; `users` count 0; no data written |
+| `npm run typecheck && npm run build && npm test` | pass | Next build, typecheck, and 4 tests / 13 assertions |
+| `git diff --check` | pass | no whitespace errors |
+| `bun build server.ts --target bun` | pending | run after admin/catalog changes |
+| `npm run build` | pending | run after admin/catalog changes |
+| `npm run typecheck && npm run build` | pass | Next build/typecheck หลังเพิ่มภาพและ social metadata |
+| Browser QA: `/` at 390px | pass | hero/card images โหลดครบ, menu แสดง, ไม่มี horizontal overflow |
+| Browser QA: `/minecraft` at 390px | pass | card 360px, filter 366px, ไม่มี horizontal overflow |
+| Open Graph metadata | pass | `summary_large_image` และ `og:image` ชี้ภาพใน `/images/` |
+| Mobile animation fallback | implemented | content ไม่รอ animation ก่อนแสดงบนจอ <=640px และ Reduce Motion |
 
 ## Audit Findings
 
@@ -119,13 +166,22 @@
 - Deployment: `compose.yaml` provides Bun app + MongoDB, but Docker is not installed in this workspace so container startup is not locally executed
 - Live readiness: no `.env`, MongoDB, Pterodactyl or Stripe variables exist in this workspace; `/healthz` correctly returns `503` with all three checks false
 - Concurrency: provisioning claims `payment_confirmed` atomically and treats stale provisioning locks as retryable after 15 minutes
+- Admin requires an existing MongoDB user with `role: "admin"`; no admin password/secret is hardcoded or auto-created
+- Static Netlify build cannot receive live MongoDB changes; live price/event updates require deploying the Bun runtime route
+- Discord ใช้ Open Graph จาก `app/layout.tsx`; production ต้องตั้ง `APP_URL` เป็น HTTPS public domain ก่อนแชร์ เพื่อให้ Discord ดึงภาพได้
+- Mobile: เดิม `.hero-entry`/`.card-entry` เริ่มต้น `opacity: 0`; เพิ่ม fallback ให้แสดงทันทีบนมือถือและทุก browser ที่เปิด Reduce Motion
+- User supplied a MongoDB Atlas URI; the real credential was intentionally not written to repo or `.env`.
+- Added `docs/NETLIFY_ENV.md` with safe environment-variable handoff and the Netlify static/runtime limitation.
+- Next.js 16 uses App Router and a catch-all API route; existing EJS is rendered inside the App Router to preserve the supplied UI during migration.
+- First MongoDB user now bootstraps as `admin`; later registrations remain `customer`.
+- MongoDB Atlas read-only smoke check passed with `horari_service`; current user count is 0, so the next successful registration will be the first admin.
 
 ## Next Steps
 
 - [x] รันเว็บ local
 - [x] ตรวจ desktop/mobile ทุก route
 - [ ] หากต้อง harden production เพิ่ม: self-host fonts/icons/images และตรวจ CDN outage fallback
-- [ ] Set `.env` from `.env.example` on runtime host
+- [ ] Set `.env` from `.env.example` on runtime host and promote one user to `role: "admin"`
 - [ ] Create a real paid checkout and webhook mapping
 - [ ] Run one controlled test purchase and verify Pterodactyl user/server/start state
 - [ ] Confirm the actual payment provider choice; generic webhook cannot create a checkout without provider credentials/API contract

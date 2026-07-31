@@ -1,5 +1,5 @@
 import { createHash, pbkdf2Sync, randomBytes, timingSafeEqual } from 'node:crypto';
-import { getDb, ObjectId } from './db.ts';
+import { getDb, mongoConfigured, ObjectId } from './db.ts';
 
 const SESSION_COOKIE = 'horari_session';
 const SESSION_DAYS = 30;
@@ -47,15 +47,18 @@ export async function createUser(name: string, email: string, password: string) 
   const existing = await db.collection('users').findOne({ email: normalizedEmail });
   if (existing) throw new Error('อีเมลนี้มีบัญชีอยู่แล้ว');
 
+  // Bootstrap the first account as admin; later accounts remain customers.
+  const role = (await db.collection('users').countDocuments({})) === 0 ? 'admin' : 'customer';
+
   const result = await db.collection('users').insertOne({
     name: name.trim().slice(0, 100),
     email: normalizedEmail,
     passwordHash: hashPassword(password),
-    role: 'customer',
+    role,
     createdAt: new Date(),
     updatedAt: new Date()
   });
-  return { id: result.insertedId.toString(), name: name.trim(), email: normalizedEmail };
+  return { id: result.insertedId.toString(), name: name.trim(), email: normalizedEmail, role };
 }
 
 export async function loginUser(email: string, password: string) {

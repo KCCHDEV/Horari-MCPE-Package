@@ -51,6 +51,7 @@
             transition: transform 220ms ease, border-color 220ms ease, box-shadow 220ms ease;
             text-decoration: none;
             color: inherit;
+            overflow: hidden;
         }
 
         .service-card:hover {
@@ -65,6 +66,32 @@
             height: 32px;
             color: var(--brand);
         }
+
+        .service-visual {
+            width: calc(100% + 56px);
+            height: 148px;
+            margin: -28px -28px 6px;
+            object-fit: cover;
+            border-bottom: 1px solid color-mix(in srgb, var(--line) 80%, transparent);
+            background: linear-gradient(135deg, #0b1635, #2563eb);
+        }
+
+        .service-card .service-visual + .iconify { margin-top: 6px; }
+
+        .hero-visual {
+            position: relative;
+            z-index: 1;
+            min-width: 0;
+            overflow: hidden;
+            border: 1px solid color-mix(in srgb, var(--brand-2) 40%, var(--line));
+            border-radius: 20px;
+            background: #06142e;
+            box-shadow: 0 30px 70px color-mix(in srgb, var(--brand-2) 22%, transparent);
+        }
+
+        .hero-visual img { display: block; width: 100%; aspect-ratio: 16 / 11; object-fit: cover; }
+        .hero-visual::after { content: ''; position: absolute; inset: 0; background: linear-gradient(180deg, transparent 55%, rgba(3, 12, 33, .72)); pointer-events: none; }
+        .hero-visual-label { position: absolute; z-index: 1; left: 18px; bottom: 16px; color: #fff; font-size: 12px; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; }
 
         .service-card strong {
             font-size: 20px;
@@ -97,6 +124,8 @@
             .landing-grid {
                 grid-template-columns: 1fr;
             }
+            .hero-visual { order: -1; border-radius: 16px; }
+            .hero-visual img { aspect-ratio: 16 / 9; }
         }
     </style>
 </head>
@@ -163,6 +192,10 @@
                     </a>
                 </div>
             </div>
+            <div class="hero-visual hero-entry hero-entry-3" aria-label="Minecraft server hosting visual">
+                <img src="/images/horari-minecraft-hero.png" alt="ภาพประกอบบริการ Minecraft Server Hosting" fetchpriority="high">
+                <span class="hero-visual-label">Minecraft hosting • NVMe • Ptero panel</span>
+            </div>
 
         </section>
 
@@ -175,6 +208,7 @@
 
         <section class="landing-grid reveal reveal-delay-2" id="services">
             <a class="service-card landing-minecraft card-entry card-entry-1" href="/minecraft">
+                <img class="service-visual" src="/images/horari-minecraft-package.png" alt="ภาพตัวอย่างแพ็กเกจ Minecraft Server">
                 <span class="iconify" data-icon="mdi:grass"></span>
                 <strong>Minecraft Server Hosting</strong>
                 <p>เช่าเซิร์ฟเวอร์ Minecraft PE/BE พร้อม Ptero game panel, NVMe SSD, backup และทีมดูแลหลังการขาย เริ่มต้นเพียง ฿50/เดือน</p>
@@ -182,6 +216,7 @@
             </a>
 
             <a class="service-card landing-webhosting card-entry card-entry-2" href="/webhosting">
+                <img class="service-visual" src="/images/horari-webhosting-package.png" alt="ภาพตัวอย่างแพ็กเกจ Web Hosting" loading="lazy">
                 <span class="iconify" data-icon="mdi:web"></span>
                 <strong>Web Hosting</strong>
                 <p>โฮสต์เว็บไซต์ PHP/HTML รองรับ MySQL, หลายโดเมน, SSL ฟรี พร้อม PHP 8.x สำหรับเว็บส่วนตัวและธุรกิจ</p>
@@ -189,6 +224,7 @@
             </a>
 
             <a class="service-card landing-codehosting card-entry card-entry-3" href="/codehosting">
+                <img class="service-visual" src="/images/horari-webhosting-package.png" alt="ภาพตัวอย่างบริการ Code Hosting" loading="lazy">
                 <span class="iconify" data-icon="mdi:code-tags"></span>
                 <strong>Code Hosting</strong>
                 <p>รัน backend, API, bot หรือ script รองรับ Node.js, Python, PHP, Go, Rust, Java พร้อม concurrent processes</p>
@@ -196,6 +232,7 @@
             </a>
 
             <a class="service-card landing-codeserver card-entry card-entry-4" href="/codeserver">
+                <img class="service-visual" src="/images/horari-minecraft-hero.png" alt="ภาพตัวอย่างบริการ Code Server" loading="lazy">
                 <span class="iconify" data-icon="mdi:laptop"></span>
                 <strong>Code Server</strong>
                 <p>VS Code ในเบราว์เซอร์ พร้อม extensions, terminal, git integration ทำงานคนเดียวหรือร่วมกันเป็นทีมได้ทุกที่</p>

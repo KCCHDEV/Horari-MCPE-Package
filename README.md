@@ -1,6 +1,15 @@
 # Horari Service Online
 
-เว็บสั่งซื้อบริการโฮสติ้งแบบมีบัญชีลูกค้าและ provisioning ผ่าน Pterodactyl
+เว็บ Next.js 16 สำหรับสั่งซื้อบริการโฮสติ้งแบบมีบัญชีลูกค้าและ provisioning ผ่าน Pterodactyl
+
+## Next.js 16 runtime
+
+```bash
+npm install
+npm run dev
+```
+
+เปิด `http://localhost:3000` โดย Next.js App Router เป็นตัวรันหลัก และ API อยู่ใน `app/api/[...path]/route.ts` ใช้ Node.js 20.9+ ตามข้อกำหนดของ Next.js 16
 
 ## Flow หลัก
 
@@ -21,7 +30,19 @@ bun install
 bun run dev
 ```
 
-เปิด `http://localhost:3002/register`
+เปิด `http://localhost:3000/register`
+
+## หลังบ้านจัดการราคาและ Event
+
+เมื่อเชื่อม MongoDB แล้ว ให้สมัครบัญชีแรกผ่าน `/register` บัญชีแรกจะได้ `role=admin` อัตโนมัติ จากนั้นเข้า `/admin` ได้ทันที บัญชีถัดไปจะเป็น `customer`
+
+```js
+db.users.updateOne({ email: "อีเมลแอดมิน" }, { $set: { role: "admin" } })
+```
+
+เข้า `/admin` เพื่อแก้ชื่อ/วันสิ้นสุด Event, เปิด/ปิด Event, ราคาปกติ, ราคาลด หรือเปอร์เซ็นต์ส่วนลดของทุกแพ็กเกจ ระบบจะ seed แพ็กเกจจาก `data/*.json` เข้า collection `catalog_packages` ครั้งแรก และหลังจากนั้นใช้ค่าจาก MongoDB เป็นหลัก
+
+หมายเหตุ: หน้า static ที่ build ด้วย Netlify ใช้ข้อมูลจาก `data/*.json` ตอน build จึงไม่รับราคาใหม่แบบ realtime; ถ้าต้องการให้แก้จากหลังบ้านแล้วหน้าแพ็กเกจเปลี่ยนทันที ต้องเปิดเว็บผ่าน Bun runtime ที่เชื่อม MongoDB
 
 ## Docker + MongoDB
 
@@ -36,7 +57,7 @@ curl http://localhost:3002/healthz
 
 ## Production requirements
 
-- ต้อง deploy เป็น Bun/Node runtime ที่รัน `server.ts` ได้ ไม่ใช่ static-only Netlify publish
+- ต้อง deploy เป็น Next.js Node runtime/Netlify Next.js runtime ไม่ใช่ static-only publish
 - MongoDB ต้อง reachable จาก runtime
 - Pterodactyl Application API token ต้องมีสิทธิ์สร้าง users และ servers
 - Payment gateway ต้องตั้ง webhook ให้ส่ง `x-payment-signature` เป็น HMAC-SHA256 ของ raw JSON body

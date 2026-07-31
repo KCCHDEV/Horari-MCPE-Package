@@ -1,10 +1,11 @@
-FROM oven/bun:1.3.14
+FROM node:20.9-bookworm-slim
 
 WORKDIR /app
-COPY package.json bun.lock ./
-RUN bun install --frozen-lockfile
+COPY package.json package-lock.json ./
+RUN npm ci
 
 COPY . .
 ENV NODE_ENV=production
+RUN npm run build
 EXPOSE 3002
-CMD ["bun", "run", "server.ts"]
+CMD ["npm", "run", "start"]

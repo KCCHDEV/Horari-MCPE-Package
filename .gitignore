@@ -85,6 +85,8 @@ web_modules/
 
 # Next.js build output
 .next
+.tmp-check/
+.server-build/
 out
 
 # Nuxt.js build / generate output

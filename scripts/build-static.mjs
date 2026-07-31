@@ -60,7 +60,7 @@ function escapeSvg(value) {
 function buildPackageGroups(packages) {
   if (Array.isArray(packages)) {
     return packages.reduce((groups, pkg) => {
-      const cpuModel = pkg.specs?.find((spec) => spec.label === 'CPU Model')?.value || 'Unknown CPU';
+      const cpuModel = pkg.cpuModel || pkg.specs?.find((spec) => spec.label === 'CPU Model')?.value || 'Unknown CPU';
       groups[cpuModel] ||= [];
 
       groups[cpuModel].push({

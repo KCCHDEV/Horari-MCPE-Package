@@ -1,0 +1,1106 @@
+<!doctype html>
+<html lang="th">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="รีวิวจากลูกค้า Horari Service Online" />
+  <meta name="theme-color" content="#f7f9fc" />
+  <title>รีวิวจากลูกค้า | Horari Service Online</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Kanit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" />
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+  <style>
+    :root {
+      --orange: #ff6b00;
+      --orange-2: #ff8a2a;
+      --orange-soft: #fff0e7;
+      --ink: #0c111b;
+      --muted: #606b7a;
+      --line: #dbe2ea;
+      --line-dark: #cbd5df;
+      --surface: #ffffff;
+      --page: #f6f8fb;
+      --blue: #3169ef;
+      --green: #16994f;
+      --purple: #8c5aa2;
+      --shadow-sm: 0 8px 24px rgba(19, 31, 51, .07);
+      --shadow-md: 0 18px 50px rgba(19, 31, 51, .10);
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      color: var(--ink);
+      background: var(--page);
+      font-family: "Kanit", "Inter", sans-serif;
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+    }
+    button, input, textarea, select { font: inherit; }
+    button { cursor: pointer; }
+    a { color: inherit; text-decoration: none; }
+    img { max-width: 100%; display: block; }
+
+    .container {
+      width: min(1260px, calc(100% - 40px));
+      margin-inline: auto;
+    }
+
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 60;
+      background: rgba(249, 251, 254, .93);
+      border-bottom: 1px solid var(--line);
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+    }
+
+    .nav-wrap {
+      min-height: 82px;
+      display: grid;
+      grid-template-columns: minmax(255px, 1fr) auto auto;
+      align-items: center;
+      gap: 24px;
+    }
+
+    .brand {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      min-width: 0;
+    }
+    .brand-logo {
+      width: 48px;
+      height: 48px;
+      border-radius: 10px;
+      flex: 0 0 48px;
+      color: white;
+      background: #050505;
+      border: 1px solid #141414;
+      box-shadow: 0 8px 22px rgba(0,0,0,.14);
+      position: relative;
+      display: grid;
+      place-items: center;
+      overflow: hidden;
+    }
+    .brand-logo::before,
+    .brand-logo::after {
+      content: "";
+      position: absolute;
+      border: 1px solid rgba(255,255,255,.18);
+      border-radius: 50%;
+    }
+    .brand-logo::before { width: 42px; height: 42px; }
+    .brand-logo::after { width: 28px; height: 28px; }
+    .brand-logo strong {
+      z-index: 1;
+      font: 800 8px/1 Inter, sans-serif;
+      letter-spacing: .8px;
+    }
+    .brand-copy { min-width: 0; line-height: 1.15; }
+    .brand-name { font-size: 18px; font-weight: 700; white-space: nowrap; }
+    .brand-sub {
+      margin-top: 4px;
+      max-width: 290px;
+      font-size: 12px;
+      line-height: 1.3;
+      color: var(--muted);
+    }
+
+    .desktop-nav {
+      display: flex;
+      align-items: center;
+      gap: 2px;
+      padding: 4px;
+      border: 1px solid var(--line-dark);
+      border-radius: 10px;
+      background: rgba(255,255,255,.6);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.8);
+    }
+    .nav-link {
+      padding: 9px 11px;
+      border-radius: 8px;
+      color: #4c5664;
+      font-size: 13px;
+      font-weight: 500;
+      white-space: nowrap;
+      transition: .18s ease;
+    }
+    .nav-link:hover { color: var(--ink); background: #f3f5f8; }
+    .nav-link.active {
+      color: var(--ink);
+      background: var(--orange-soft);
+      box-shadow: 0 1px 0 rgba(255,255,255,.9), 0 4px 12px rgba(255,107,0,.08);
+      font-weight: 600;
+    }
+
+    .contact-btn,
+    .primary-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 9px;
+      min-height: 46px;
+      padding: 0 18px;
+      border: 0;
+      border-radius: 10px;
+      color: white;
+      background: linear-gradient(135deg, var(--orange), #ff7a13);
+      box-shadow: 0 12px 28px rgba(255,107,0,.22);
+      font-weight: 600;
+      transition: transform .2s ease, box-shadow .2s ease;
+    }
+    .contact-btn:hover,
+    .primary-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 16px 34px rgba(255,107,0,.28);
+    }
+    .secondary-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 9px;
+      min-height: 46px;
+      padding: 0 18px;
+      border-radius: 10px;
+      border: 1px solid var(--line-dark);
+      background: rgba(255,255,255,.78);
+      color: var(--ink);
+      font-weight: 600;
+      transition: .2s ease;
+    }
+    .secondary-btn:hover { background: white; transform: translateY(-2px); box-shadow: var(--shadow-sm); }
+
+    .mobile-menu-btn {
+      display: none;
+      width: 44px;
+      height: 44px;
+      border: 1px solid var(--line-dark);
+      border-radius: 10px;
+      background: white;
+      color: var(--ink);
+    }
+    .mobile-panel {
+      display: none;
+      padding: 0 0 16px;
+    }
+    .mobile-panel.open { display: grid; }
+    .mobile-panel .nav-link { padding: 12px 14px; }
+
+    .review-hero {
+      position: relative;
+      isolation: isolate;
+      border-bottom: 1px solid rgba(203,213,223,.72);
+      background:
+        radial-gradient(circle at 16% 18%, rgba(255,126,47,.13), transparent 31%),
+        radial-gradient(circle at 84% 74%, rgba(69,123,244,.13), transparent 34%),
+        linear-gradient(rgba(166,178,192,.22) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(166,178,192,.22) 1px, transparent 1px),
+        #f7f9fc;
+      background-size: auto, auto, 40px 40px, 40px 40px, auto;
+      overflow: hidden;
+    }
+    .review-hero::before {
+      content: "";
+      position: absolute;
+      width: 620px;
+      height: 620px;
+      right: -170px;
+      top: -300px;
+      border: 1px solid rgba(255,126,47,.13);
+      border-radius: 50%;
+      z-index: -1;
+    }
+    .review-hero::after {
+      content: "";
+      position: absolute;
+      width: 430px;
+      height: 430px;
+      right: -70px;
+      bottom: -250px;
+      border: 1px solid rgba(49,105,239,.12);
+      border-radius: 50%;
+      z-index: -1;
+    }
+
+    .hero-grid {
+      min-height: 555px;
+      padding: 88px 0 80px;
+      display: grid;
+      grid-template-columns: 1.05fr .75fr;
+      align-items: center;
+      gap: 72px;
+    }
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--orange);
+      font-weight: 600;
+      font-size: 13px;
+      letter-spacing: .1px;
+    }
+    .eyebrow::before {
+      content: "";
+      width: 26px;
+      height: 2px;
+      border-radius: 999px;
+      background: var(--orange);
+    }
+    .hero-title {
+      margin: 20px 0 20px;
+      max-width: 780px;
+      font-size: clamp(44px, 5.8vw, 76px);
+      line-height: .99;
+      letter-spacing: -2.2px;
+      font-weight: 800;
+    }
+    .gradient-title {
+      display: block;
+      padding-bottom: 4px;
+      background: linear-gradient(100deg, #ef6c31 0%, #a56385 48%, #3169ef 100%);
+      color: transparent;
+      -webkit-background-clip: text;
+      background-clip: text;
+    }
+    .hero-description {
+      max-width: 680px;
+      margin: 0;
+      color: #596474;
+      font-size: 18px;
+      line-height: 1.75;
+      font-weight: 400;
+    }
+    .hero-actions {
+      margin-top: 31px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+    .hero-note {
+      margin-top: 20px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 18px;
+      color: #697483;
+      font-size: 13px;
+    }
+    .hero-note span { display: inline-flex; align-items: center; gap: 7px; }
+    .hero-note i { color: var(--green); }
+
+    .summary-card {
+      background: rgba(255,255,255,.86);
+      border: 1px solid var(--line-dark);
+      border-radius: 18px;
+      box-shadow: var(--shadow-md);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      overflow: hidden;
+    }
+    .summary-head {
+      padding: 25px 26px 22px;
+      display: grid;
+      grid-template-columns: 140px 1fr;
+      gap: 22px;
+      align-items: center;
+      border-bottom: 1px solid var(--line);
+    }
+    .score-block {
+      text-align: center;
+      padding-right: 20px;
+      border-right: 1px solid var(--line);
+    }
+    .score-number { font: 800 62px/.95 Inter, sans-serif; letter-spacing: -4px; }
+    .score-stars { margin-top: 10px; color: #ff9900; font-size: 15px; letter-spacing: 1px; }
+    .score-caption { margin-top: 7px; color: var(--muted); font-size: 12px; }
+    .summary-copy h2 { margin: 0 0 7px; font-size: 20px; }
+    .summary-copy p { margin: 0; color: var(--muted); font-size: 13px; line-height: 1.55; }
+    .verified-line {
+      margin-top: 13px;
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      color: var(--green);
+      font-size: 12px;
+      font-weight: 600;
+    }
+    .rating-bars { padding: 20px 26px 24px; }
+    .rating-row {
+      display: grid;
+      grid-template-columns: 42px 1fr 28px;
+      align-items: center;
+      gap: 10px;
+      margin-top: 10px;
+      color: #626d7b;
+      font-size: 12px;
+    }
+    .rating-row:first-child { margin-top: 0; }
+    .bar-track { height: 7px; border-radius: 999px; overflow: hidden; background: #edf0f4; }
+    .bar-fill { height: 100%; border-radius: inherit; background: linear-gradient(90deg, #ff6b00, #ff9a43); }
+
+    .section {
+      padding: 80px 0;
+    }
+    .section.soft { background: #f9fafc; }
+    .section-head {
+      display: flex;
+      align-items: end;
+      justify-content: space-between;
+      gap: 24px;
+      margin-bottom: 30px;
+    }
+    .section-title { margin: 8px 0 0; font-size: clamp(32px, 4vw, 48px); line-height: 1.12; letter-spacing: -1px; }
+    .section-description { margin: 8px 0 0; max-width: 640px; color: var(--muted); line-height: 1.65; }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+      margin-bottom: 28px;
+    }
+    .stat-card {
+      padding: 19px 21px;
+      background: white;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      box-shadow: 0 6px 18px rgba(19,31,51,.04);
+    }
+    .stat-icon {
+      width: 38px;
+      height: 38px;
+      display: grid;
+      place-items: center;
+      border-radius: 10px;
+      background: var(--orange-soft);
+      color: var(--orange);
+      margin-bottom: 14px;
+    }
+    .stat-number { font: 800 25px/1 Inter, sans-serif; }
+    .stat-label { margin-top: 7px; color: var(--muted); font-size: 13px; }
+
+    .toolbar {
+      margin-bottom: 26px;
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 18px;
+      align-items: center;
+      padding: 14px;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      background: white;
+      box-shadow: 0 6px 18px rgba(19,31,51,.04);
+    }
+    .filter-group { display: flex; flex-wrap: wrap; gap: 7px; }
+    .filter-btn {
+      min-height: 38px;
+      padding: 0 13px;
+      border: 1px solid transparent;
+      border-radius: 9px;
+      color: #5c6674;
+      background: #f5f7f9;
+      transition: .18s ease;
+    }
+    .filter-btn:hover { color: var(--ink); background: #eef1f5; }
+    .filter-btn.active {
+      color: #fff;
+      border-color: var(--orange);
+      background: var(--orange);
+      box-shadow: 0 8px 18px rgba(255,107,0,.18);
+    }
+    .toolbar-right { display: flex; gap: 8px; }
+    .input-wrap { position: relative; }
+    .input-wrap i {
+      position: absolute;
+      left: 13px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: #8a94a2;
+      font-size: 13px;
+      pointer-events: none;
+    }
+    .search-input,
+    .sort-select,
+    .form-control {
+      min-height: 40px;
+      border: 1px solid var(--line-dark);
+      border-radius: 9px;
+      background: white;
+      color: var(--ink);
+      outline: none;
+      transition: .18s ease;
+    }
+    .search-input { width: 210px; padding: 0 12px 0 36px; }
+    .sort-select { padding: 0 34px 0 12px; }
+    .search-input:focus,
+    .sort-select:focus,
+    .form-control:focus {
+      border-color: rgba(255,107,0,.7);
+      box-shadow: 0 0 0 4px rgba(255,107,0,.09);
+    }
+
+    .reviews-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 18px;
+    }
+    .review-card {
+      position: relative;
+      padding: 22px;
+      min-height: 285px;
+      display: flex;
+      flex-direction: column;
+      background: white;
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      box-shadow: 0 8px 24px rgba(19,31,51,.05);
+      overflow: hidden;
+      transition: transform .22s ease, box-shadow .22s ease, border-color .22s ease;
+    }
+    .review-card::before {
+      content: "";
+      position: absolute;
+      inset: 0 auto 0 0;
+      width: 4px;
+      background: var(--accent, var(--orange));
+    }
+    .review-card:hover {
+      transform: translateY(-4px);
+      border-color: #cbd4de;
+      box-shadow: var(--shadow-md);
+    }
+    .review-top { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+    .user { display: flex; align-items: center; gap: 11px; min-width: 0; }
+    .avatar {
+      width: 42px;
+      height: 42px;
+      flex: 0 0 42px;
+      display: grid;
+      place-items: center;
+      border-radius: 12px;
+      color: white;
+      font-weight: 700;
+      background: linear-gradient(135deg, var(--accent, var(--orange)), #1f2937);
+    }
+    .user-name { display: flex; align-items: center; gap: 6px; font-size: 15px; font-weight: 600; white-space: nowrap; }
+    .verified-badge { color: var(--blue); font-size: 13px; }
+    .review-date { margin-top: 3px; color: #8b95a2; font-size: 11px; }
+    .service-badge {
+      flex: 0 0 auto;
+      padding: 6px 9px;
+      border: 1px solid color-mix(in srgb, var(--accent, var(--orange)) 24%, white);
+      border-radius: 999px;
+      color: var(--accent, var(--orange));
+      background: color-mix(in srgb, var(--accent, var(--orange)) 8%, white);
+      font-size: 11px;
+      font-weight: 500;
+    }
+    .review-stars { margin-top: 19px; color: #ff9800; letter-spacing: 1px; font-size: 14px; }
+    .review-title { margin: 12px 0 7px; font-size: 18px; line-height: 1.35; }
+    .review-text {
+      margin: 0;
+      color: #65707e;
+      font-size: 14px;
+      line-height: 1.75;
+      display: -webkit-box;
+      -webkit-box-orient: vertical;
+      -webkit-line-clamp: 4;
+      overflow: hidden;
+    }
+    .review-footer {
+      margin-top: auto;
+      padding-top: 18px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      border-top: 1px solid #edf0f3;
+    }
+    .order-badge { display: inline-flex; align-items: center; gap: 6px; color: var(--green); font-size: 11px; font-weight: 500; }
+    .helpful-btn {
+      padding: 7px 9px;
+      border: 0;
+      border-radius: 8px;
+      background: #f4f6f8;
+      color: #66717f;
+      font-size: 11px;
+      transition: .18s ease;
+    }
+    .helpful-btn:hover,
+    .helpful-btn.active { color: var(--orange); background: var(--orange-soft); }
+
+    .empty-state {
+      grid-column: 1 / -1;
+      padding: 64px 24px;
+      text-align: center;
+      border: 1px dashed var(--line-dark);
+      border-radius: 16px;
+      background: white;
+      color: var(--muted);
+    }
+    .empty-state i { display: block; margin-bottom: 14px; font-size: 34px; color: #b0b8c3; }
+
+    .cta-panel {
+      position: relative;
+      display: grid;
+      grid-template-columns: 1fr auto;
+      align-items: center;
+      gap: 30px;
+      padding: 42px;
+      color: white;
+      border-radius: 20px;
+      background:
+        radial-gradient(circle at 92% 10%, rgba(255,255,255,.15), transparent 28%),
+        linear-gradient(135deg, #151a23, #252b36);
+      overflow: hidden;
+      box-shadow: var(--shadow-md);
+    }
+    .cta-panel::before {
+      content: "";
+      position: absolute;
+      width: 250px;
+      height: 250px;
+      right: 100px;
+      bottom: -180px;
+      border: 1px solid rgba(255,255,255,.13);
+      border-radius: 50%;
+    }
+    .cta-panel h2 { margin: 0; font-size: clamp(28px, 3vw, 42px); line-height: 1.15; }
+    .cta-panel p { margin: 9px 0 0; max-width: 670px; color: #c8ced7; line-height: 1.65; }
+
+    footer {
+      padding: 42px 0;
+      background: white;
+      border-top: 1px solid var(--line);
+    }
+    .footer-grid {
+      display: grid;
+      grid-template-columns: 1.4fr repeat(3, 1fr);
+      gap: 40px;
+    }
+    .footer-title { margin-bottom: 13px; font-size: 14px; font-weight: 600; }
+    .footer-links { display: grid; gap: 8px; color: var(--muted); font-size: 13px; }
+    .footer-links a:hover { color: var(--orange); }
+    .copyright {
+      margin-top: 32px;
+      padding-top: 21px;
+      border-top: 1px solid var(--line);
+      display: flex;
+      justify-content: space-between;
+      gap: 20px;
+      color: #7a8492;
+      font-size: 12px;
+    }
+
+    .modal {
+      position: fixed;
+      inset: 0;
+      z-index: 100;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      background: rgba(13,18,26,.62);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+    }
+    .modal.open { display: flex; }
+    .modal-card {
+      width: min(620px, 100%);
+      max-height: calc(100vh - 40px);
+      overflow-y: auto;
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      background: white;
+      box-shadow: 0 28px 80px rgba(0,0,0,.25);
+    }
+    .modal-head {
+      position: sticky;
+      top: 0;
+      z-index: 2;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 20px 22px;
+      border-bottom: 1px solid var(--line);
+      background: rgba(255,255,255,.95);
+      backdrop-filter: blur(10px);
+    }
+    .modal-head h2 { margin: 0; font-size: 21px; }
+    .close-btn {
+      width: 38px;
+      height: 38px;
+      border: 0;
+      border-radius: 9px;
+      color: #65707e;
+      background: #f2f4f7;
+    }
+    .modal-body { padding: 22px; }
+    .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+    .field { display: grid; gap: 7px; }
+    .field.full { grid-column: 1 / -1; }
+    .field label { font-size: 13px; font-weight: 500; }
+    .form-control { width: 100%; padding: 11px 12px; }
+    textarea.form-control { min-height: 125px; resize: vertical; }
+    .star-picker { display: flex; gap: 5px; }
+    .star-picker button {
+      padding: 0;
+      border: 0;
+      background: transparent;
+      color: #d7dde5;
+      font-size: 27px;
+      transition: transform .12s ease, color .12s ease;
+    }
+    .star-picker button:hover { transform: scale(1.12); }
+    .star-picker button.active { color: #ff9800; }
+    .form-hint { color: #8993a0; font-size: 11px; line-height: 1.5; }
+    .modal-actions { margin-top: 20px; display: flex; justify-content: flex-end; gap: 10px; }
+
+    @media (max-width: 1120px) {
+      .nav-wrap { grid-template-columns: 1fr auto; }
+      .desktop-nav { display: none; }
+      .contact-btn { display: none; }
+      .mobile-menu-btn { display: inline-grid; place-items: center; }
+      .hero-grid { grid-template-columns: 1fr .8fr; gap: 38px; }
+      .reviews-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+
+    @media (max-width: 860px) {
+      .container { width: min(100% - 28px, 1260px); }
+      .nav-wrap { min-height: 72px; gap: 12px; }
+      .brand-sub { display: none; }
+      .brand-logo { width: 44px; height: 44px; flex-basis: 44px; }
+      .hero-grid { grid-template-columns: 1fr; padding: 68px 0 62px; gap: 38px; }
+      .summary-card { max-width: 620px; }
+      .stats-grid { grid-template-columns: repeat(2, 1fr); }
+      .toolbar { grid-template-columns: 1fr; }
+      .toolbar-right { justify-content: stretch; }
+      .input-wrap { flex: 1; }
+      .search-input { width: 100%; }
+      .cta-panel { grid-template-columns: 1fr; padding: 34px; }
+      .cta-panel .primary-btn { justify-self: start; }
+      .footer-grid { grid-template-columns: 1fr 1fr; }
+    }
+
+    @media (max-width: 620px) {
+      .hero-title { font-size: 48px; letter-spacing: -1.5px; }
+      .hero-description { font-size: 16px; }
+      .hero-actions { display: grid; grid-template-columns: 1fr; }
+      .hero-actions > * { width: 100%; }
+      .summary-head { grid-template-columns: 1fr; }
+      .score-block { padding: 0 0 18px; border-right: 0; border-bottom: 1px solid var(--line); }
+      .section { padding: 62px 0; }
+      .section-head { display: grid; align-items: start; }
+      .section-head .primary-btn { justify-self: start; }
+      .stats-grid { grid-template-columns: 1fr 1fr; gap: 10px; }
+      .stat-card { padding: 16px; }
+      .toolbar-right { display: grid; grid-template-columns: 1fr; }
+      .reviews-grid { grid-template-columns: 1fr; }
+      .service-badge { display: none; }
+      .cta-panel { padding: 28px 24px; }
+      .footer-grid { grid-template-columns: 1fr; gap: 27px; }
+      .copyright { display: grid; }
+      .form-grid { grid-template-columns: 1fr; }
+      .field.full { grid-column: auto; }
+    }
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <div class="container">
+      <div class="nav-wrap">
+        <a href="#" class="brand" aria-label="Horari Service Online">
+          <span class="brand-logo" aria-hidden="true"><strong>HORARI</strong></span>
+          <span class="brand-copy">
+            <span class="brand-name">Horari Service Online</span>
+            <span class="brand-sub">บริการเช่าเซิร์ฟเวอร์ Minecraft PE/BE — Web Hosting — Code Hosting — Code Server</span>
+          </span>
+        </a>
+
+        <nav class="desktop-nav" aria-label="เมนูหลัก">
+          <a class="nav-link" href="https://horari-mcpe-package.netlify.app/">หน้าแรก</a>
+          <a class="nav-link" href="https://horari-mcpe-package.netlify.app/minecraft">Minecraft</a>
+          <a class="nav-link" href="https://horari-mcpe-package.netlify.app/webhosting">WebHosting</a>
+          <a class="nav-link" href="https://horari-mcpe-package.netlify.app/codehosting">CodeHosting</a>
+          <a class="nav-link" href="https://horari-mcpe-package.netlify.app/codeserver">CodeServer</a>
+          <a class="nav-link" href="#reviews">เซิร์ฟเวอร์</a>
+          <a class="nav-link active" href="#reviews">รีวิว</a>
+          <a class="nav-link" href="#">ข้อตกลง</a>
+          <a class="nav-link" href="#">ความเป็นส่วนตัว</a>
+          <a class="nav-link" href="#contact">ติดต่อ</a>
+        </nav>
+
+        <a class="contact-btn" href="#contact"><i class="fa-regular fa-message"></i> ติดต่อสั่งซื้อ</a>
+        <button id="mobileMenuButton" class="mobile-menu-btn" type="button" aria-label="เปิดเมนู" aria-expanded="false"><i class="fa-solid fa-bars"></i></button>
+      </div>
+
+      <nav id="mobileMenu" class="mobile-panel" aria-label="เมนูมือถือ">
+        <a class="nav-link" href="https://horari-mcpe-package.netlify.app/">หน้าแรก</a>
+        <a class="nav-link" href="https://horari-mcpe-package.netlify.app/minecraft">Minecraft</a>
+        <a class="nav-link" href="https://horari-mcpe-package.netlify.app/webhosting">WebHosting</a>
+        <a class="nav-link" href="https://horari-mcpe-package.netlify.app/codehosting">CodeHosting</a>
+        <a class="nav-link" href="https://horari-mcpe-package.netlify.app/codeserver">CodeServer</a>
+        <a class="nav-link active" href="#reviews">รีวิว</a>
+        <a class="nav-link" href="#contact">ติดต่อ</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="review-hero">
+      <div class="container hero-grid">
+        <div>
+          <span class="eyebrow">ประสบการณ์จากผู้ใช้บริการจริง</span>
+          <h1 class="hero-title">
+            <span class="gradient-title">Horari Service</span>
+            รีวิวจากลูกค้า
+          </h1>
+          <p class="hero-description">รวมความคิดเห็นจากลูกค้าที่ใช้งาน Minecraft Server, Web Hosting, Code Hosting และ Code Server เพื่อช่วยให้คุณเลือกบริการที่เหมาะกับโปรเจกต์ได้ง่ายขึ้น</p>
+          <div class="hero-actions">
+            <button class="primary-btn" type="button" data-open-review><i class="fa-regular fa-pen-to-square"></i> เขียนรีวิวของคุณ</button>
+            <a class="secondary-btn" href="#reviews"><i class="fa-regular fa-comments"></i> อ่านรีวิวทั้งหมด</a>
+          </div>
+          <div class="hero-note">
+            <span><i class="fa-solid fa-circle-check"></i> รีวิวจากผู้ใช้งานจริง</span>
+            <span><i class="fa-solid fa-shield-halved"></i> ตรวจสอบคำสั่งซื้อก่อนแสดงผล</span>
+          </div>
+        </div>
+
+        <aside class="summary-card" aria-label="สรุปคะแนนรีวิว">
+          <div class="summary-head">
+            <div class="score-block">
+              <div id="averageRating" class="score-number">4.9</div>
+              <div class="score-stars" aria-label="4.9 จาก 5 ดาว"><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i></div>
+              <div class="score-caption">จาก <span id="totalReviews">128</span> รีวิว</div>
+            </div>
+            <div class="summary-copy">
+              <h2>ลูกค้าพึงพอใจในบริการ</h2>
+              <p>คะแนนส่วนใหญ่มาจากความเสถียรของระบบ การตอบกลับของทีมงาน และการจัดการผ่าน Panel ที่ใช้งานง่าย</p>
+              <span class="verified-line"><i class="fa-solid fa-badge-check"></i> Verified Customer Reviews</span>
+            </div>
+          </div>
+          <div class="rating-bars">
+            <div class="rating-row"><span>5 ดาว</span><div class="bar-track"><div class="bar-fill" style="width:88%"></div></div><b>112</b></div>
+            <div class="rating-row"><span>4 ดาว</span><div class="bar-track"><div class="bar-fill" style="width:10%"></div></div><b>13</b></div>
+            <div class="rating-row"><span>3 ดาว</span><div class="bar-track"><div class="bar-fill" style="width:2%"></div></div><b>3</b></div>
+            <div class="rating-row"><span>2 ดาว</span><div class="bar-track"><div class="bar-fill" style="width:0%"></div></div><b>0</b></div>
+            <div class="rating-row"><span>1 ดาว</span><div class="bar-track"><div class="bar-fill" style="width:0%"></div></div><b>0</b></div>
+          </div>
+        </aside>
+      </div>
+    </section>
+
+    <section id="reviews" class="section">
+      <div class="container">
+        <div class="section-head">
+          <div>
+            <span class="eyebrow">รีวิวล่าสุดจากลูกค้า</span>
+            <h2 class="section-title">ประสบการณ์ใช้งาน Horari</h2>
+            <p class="section-description">ค้นหาและกรองรีวิวตามบริการที่คุณสนใจ ข้อมูลตัวอย่างในไฟล์นี้สามารถเปลี่ยนเป็น API หรือฐานข้อมูลจริงได้ภายหลัง</p>
+          </div>
+          <button class="primary-btn" type="button" data-open-review><i class="fa-solid fa-plus"></i> เพิ่มรีวิว</button>
+        </div>
+
+        <div class="stats-grid">
+          <article class="stat-card"><div class="stat-icon"><i class="fa-solid fa-server"></i></div><div class="stat-number">99.9%</div><div class="stat-label">ความเสถียรโดยรวม</div></article>
+          <article class="stat-card"><div class="stat-icon"><i class="fa-regular fa-clock"></i></div><div class="stat-number">&lt; 10 นาที</div><div class="stat-label">เวลาตอบกลับโดยเฉลี่ย</div></article>
+          <article class="stat-card"><div class="stat-icon"><i class="fa-solid fa-repeat"></i></div><div class="stat-number">92%</div><div class="stat-label">ลูกค้ากลับมาใช้บริการต่อ</div></article>
+          <article class="stat-card"><div class="stat-icon"><i class="fa-solid fa-thumbs-up"></i></div><div class="stat-number">97%</div><div class="stat-label">แนะนำให้เพื่อนใช้บริการ</div></article>
+        </div>
+
+        <div class="toolbar">
+          <div id="filterGroup" class="filter-group" aria-label="ตัวกรองรีวิว">
+            <button class="filter-btn active" type="button" data-filter="all">ทั้งหมด</button>
+            <button class="filter-btn" type="button" data-filter="Minecraft">Minecraft</button>
+            <button class="filter-btn" type="button" data-filter="Web Hosting">Web Hosting</button>
+            <button class="filter-btn" type="button" data-filter="Code Hosting">Code Hosting</button>
+            <button class="filter-btn" type="button" data-filter="Code Server">Code Server</button>
+          </div>
+          <div class="toolbar-right">
+            <div class="input-wrap"><i class="fa-solid fa-magnifying-glass"></i><input id="searchInput" class="search-input" type="search" placeholder="ค้นหารีวิว..." autocomplete="off" /></div>
+            <select id="sortSelect" class="sort-select" aria-label="เรียงรีวิว">
+              <option value="newest">ล่าสุดก่อน</option>
+              <option value="rating">คะแนนสูงสุด</option>
+              <option value="helpful">มีประโยชน์มากสุด</option>
+            </select>
+          </div>
+        </div>
+
+        <div id="reviewsGrid" class="reviews-grid" aria-live="polite"></div>
+      </div>
+    </section>
+
+    <section class="section soft">
+      <div class="container">
+        <div class="cta-panel">
+          <div>
+            <h2>กำลังมองหา Hosting สำหรับโปรเจกต์ของคุณ?</h2>
+            <p>คุยกับทีม Horari เพื่อเลือกแพ็กเกจที่เหมาะสม ตั้งค่าระบบ ย้ายข้อมูล และรับคำแนะนำก่อนเริ่มใช้งาน</p>
+          </div>
+          <a class="primary-btn" href="#contact"><i class="fa-regular fa-message"></i> ปรึกษาทีมงาน</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer id="contact">
+    <div class="container">
+      <div class="footer-grid">
+        <div>
+          <a href="#" class="brand">
+            <span class="brand-logo" aria-hidden="true"><strong>HORARI</strong></span>
+            <span class="brand-copy"><span class="brand-name">Horari Service Online</span><span class="brand-sub">บริการโฮสติ้งครบวงจร Minecraft · Web · Code</span></span>
+          </a>
+        </div>
+        <div><div class="footer-title">บริการ</div><div class="footer-links"><a href="#">Minecraft Server</a><a href="#">Web Hosting</a><a href="#">Code Hosting</a><a href="#">Code Server</a></div></div>
+        <div><div class="footer-title">ข้อมูล</div><div class="footer-links"><a href="#reviews">รีวิวจากลูกค้า</a><a href="#">ข้อตกลงบริการ</a><a href="#">นโยบายความเป็นส่วนตัว</a></div></div>
+        <div><div class="footer-title">ติดต่อ</div><div class="footer-links"><a href="#">Facebook Page</a><a href="#">Discord Community</a><a href="#">ติดต่อสั่งซื้อ</a></div></div>
+      </div>
+      <div class="copyright"><span>© 2026 Horari Service Online. All rights reserved.</span><span>ออกแบบให้เข้ากับ UI เว็บไซต์หลัก</span></div>
+    </div>
+  </footer>
+
+  <div id="reviewModal" class="modal" role="dialog" aria-modal="true" aria-labelledby="reviewModalTitle">
+    <div class="modal-card">
+      <div class="modal-head">
+        <h2 id="reviewModalTitle">เขียนรีวิวบริการ</h2>
+        <button id="closeModalButton" class="close-btn" type="button" aria-label="ปิดหน้าต่าง"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+      <form id="reviewForm" class="modal-body">
+        <div class="form-grid">
+          <div class="field"><label for="reviewerName">ชื่อที่แสดง</label><input id="reviewerName" class="form-control" type="text" maxlength="40" placeholder="เช่น NayGolf" required /></div>
+          <div class="field"><label for="reviewService">บริการที่ใช้งาน</label><select id="reviewService" class="form-control" required><option value="">เลือกบริการ</option><option>Minecraft</option><option>Web Hosting</option><option>Code Hosting</option><option>Code Server</option></select></div>
+          <div class="field full"><label>คะแนนบริการ</label><div id="starPicker" class="star-picker" aria-label="เลือกคะแนน"><button type="button" data-star="1"><i class="fa-solid fa-star"></i></button><button type="button" data-star="2"><i class="fa-solid fa-star"></i></button><button type="button" data-star="3"><i class="fa-solid fa-star"></i></button><button type="button" data-star="4"><i class="fa-solid fa-star"></i></button><button type="button" data-star="5"><i class="fa-solid fa-star"></i></button></div><div class="form-hint">เลือกตั้งแต่ 1–5 ดาว</div></div>
+          <div class="field full"><label for="reviewTitle">หัวข้อรีวิว</label><input id="reviewTitle" class="form-control" type="text" maxlength="70" placeholder="สรุปประสบการณ์สั้น ๆ" required /></div>
+          <div class="field full"><label for="reviewMessage">รายละเอียด</label><textarea id="reviewMessage" class="form-control" maxlength="600" placeholder="เล่าประสบการณ์ใช้งาน ความเสถียร หรือการดูแลของทีมงาน" required></textarea><div class="form-hint">รีวิวที่เพิ่มในไฟล์ Demo จะถูกบันทึกไว้ในเบราว์เซอร์เครื่องนี้</div></div>
+        </div>
+        <div class="modal-actions"><button id="cancelModalButton" class="secondary-btn" type="button">ยกเลิก</button><button class="primary-btn" type="submit"><i class="fa-solid fa-paper-plane"></i> ส่งรีวิว</button></div>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    "use strict";
+
+    const SERVICE_ACCENTS = {
+      "Minecraft": "#16994f",
+      "Web Hosting": "#3169ef",
+      "Code Hosting": "#8c5aa2",
+      "Code Server": "#ff6b00"
+    };
+
+    const demoReviews = [
+      { id: 101, name: "Poom Studio", service: "Minecraft", rating: 5, title: "เซิร์ฟเวอร์นิ่งและเปิดใช้งานไว", message: "ย้ายโลกเดิมมาให้ครบ ทีมงานตอบเร็วมาก Panel ใช้งานง่ายและเปิดรีสตาร์ทเซิร์ฟเวอร์เองได้ตลอด", date: "2026-07-21", helpful: 24, verified: true },
+      { id: 102, name: "Beam Network", service: "Web Hosting", rating: 5, title: "เว็บโหลดเร็วกว่าโฮสต์เดิมชัดเจน", message: "SSL ติดตั้งให้อัตโนมัติ จัดการโดเมนไม่ยุ่งยาก และตอนมีปัญหาเรื่องฐานข้อมูลทีมงานช่วยตรวจให้ทันที", date: "2026-07-19", helpful: 18, verified: true },
+      { id: 103, name: "Neko Bot", service: "Code Hosting", rating: 5, title: "เหมาะกับรันบอทและ API มาก", message: "Deploy Node.js ได้ง่าย มีหน้า Console และดู Log ได้สะดวก ใช้งานต่อเนื่องแล้วยังไม่เจอปัญหาหลุด", date: "2026-07-17", helpful: 15, verified: true },
+      { id: 104, name: "Dev Khun", service: "Code Server", rating: 4, title: "เปิด VS Code ผ่านเบราว์เซอร์ได้ทุกที่", message: "เหมาะกับเวลาต้องแก้งานจากเครื่องอื่น Terminal และ Git ใช้งานได้จริง ถ้าเพิ่ม Template โปรเจกต์อีกจะครบมาก", date: "2026-07-14", helpful: 11, verified: true },
+      { id: 105, name: "SMP Together", service: "Minecraft", rating: 5, title: "ทีมซัพพอร์ตช่วยตั้งค่าให้ละเอียด", message: "ตอนเริ่มเซิร์ฟเวอร์ไม่ค่อยเข้าใจเรื่องปลั๊กอิน ทีมงานช่วยตั้งค่าและอธิบายให้ ใช้งานมาหลายสัปดาห์แล้วเสถียรดี", date: "2026-07-10", helpful: 29, verified: true },
+      { id: 106, name: "Mint Portfolio", service: "Web Hosting", rating: 5, title: "เหมาะกับเว็บส่วนตัวและเว็บลูกค้า", message: "หน้าเว็บเร็ว จัดการไฟล์ง่าย และรองรับหลายโดเมนในแพ็กเกจเดียว ช่วยประหยัดเวลาตอนส่งงานให้ลูกค้า", date: "2026-07-08", helpful: 13, verified: true }
+    ];
+
+    const state = {
+      reviews: [],
+      filter: "all",
+      search: "",
+      sort: "newest",
+      rating: 0,
+      helpfulClicked: new Set(JSON.parse(localStorage.getItem("horari_helpful") || "[]"))
+    };
+
+    const els = {
+      grid: document.getElementById("reviewsGrid"),
+      filterGroup: document.getElementById("filterGroup"),
+      search: document.getElementById("searchInput"),
+      sort: document.getElementById("sortSelect"),
+      modal: document.getElementById("reviewModal"),
+      form: document.getElementById("reviewForm"),
+      close: document.getElementById("closeModalButton"),
+      cancel: document.getElementById("cancelModalButton"),
+      starPicker: document.getElementById("starPicker"),
+      mobileButton: document.getElementById("mobileMenuButton"),
+      mobileMenu: document.getElementById("mobileMenu")
+    };
+
+    function escapeHtml(value) {
+      return String(value)
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
+    }
+
+    function loadReviews() {
+      let saved = [];
+      try { saved = JSON.parse(localStorage.getItem("horari_reviews") || "[]"); }
+      catch { saved = []; }
+      state.reviews = [...saved, ...demoReviews];
+    }
+
+    function formatDate(dateValue) {
+      const date = new Date(dateValue);
+      return new Intl.DateTimeFormat("th-TH", { day: "numeric", month: "short", year: "numeric" }).format(date);
+    }
+
+    function stars(rating) {
+      return Array.from({ length: 5 }, (_, i) => `<i class="${i < rating ? "fa-solid" : "fa-regular"} fa-star"></i>`).join("");
+    }
+
+    function initials(name) {
+      return String(name).trim().slice(0, 2).toUpperCase() || "HS";
+    }
+
+    function visibleReviews() {
+      const term = state.search.trim().toLowerCase();
+      return state.reviews
+        .filter(review => state.filter === "all" || review.service === state.filter)
+        .filter(review => !term || `${review.name} ${review.title} ${review.message} ${review.service}`.toLowerCase().includes(term))
+        .sort((a, b) => {
+          if (state.sort === "rating") return b.rating - a.rating || new Date(b.date) - new Date(a.date);
+          if (state.sort === "helpful") return b.helpful - a.helpful;
+          return new Date(b.date) - new Date(a.date);
+        });
+    }
+
+    function reviewCard(review) {
+      const accent = SERVICE_ACCENTS[review.service] || SERVICE_ACCENTS["Code Server"];
+      const clicked = state.helpfulClicked.has(review.id);
+      return `
+        <article class="review-card" style="--accent:${accent}">
+          <div class="review-top">
+            <div class="user">
+              <div class="avatar">${escapeHtml(initials(review.name))}</div>
+              <div>
+                <div class="user-name">${escapeHtml(review.name)} ${review.verified ? '<i class="fa-solid fa-circle-check verified-badge" title="Verified Customer"></i>' : ""}</div>
+                <div class="review-date">${formatDate(review.date)}</div>
+              </div>
+            </div>
+            <span class="service-badge">${escapeHtml(review.service)}</span>
+          </div>
+          <div class="review-stars" aria-label="${review.rating} ดาว">${stars(review.rating)}</div>
+          <h3 class="review-title">${escapeHtml(review.title)}</h3>
+          <p class="review-text">${escapeHtml(review.message)}</p>
+          <div class="review-footer">
+            <span class="order-badge"><i class="fa-solid fa-shield-halved"></i> ยืนยันการใช้บริการ</span>
+            <button class="helpful-btn ${clicked ? "active" : ""}" type="button" data-helpful="${review.id}"><i class="fa-regular fa-thumbs-up"></i> มีประโยชน์ <span>${review.helpful}</span></button>
+          </div>
+        </article>`;
+    }
+
+    function renderReviews() {
+      const reviews = visibleReviews();
+      if (!reviews.length) {
+        els.grid.innerHTML = '<div class="empty-state"><i class="fa-regular fa-folder-open"></i><strong>ไม่พบรีวิวที่ตรงกับการค้นหา</strong><div>ลองเปลี่ยนคำค้นหาหรือตัวกรองบริการ</div></div>';
+        return;
+      }
+      els.grid.innerHTML = reviews.map(reviewCard).join("");
+    }
+
+    function openModal() {
+      els.modal.classList.add("open");
+      document.body.style.overflow = "hidden";
+      setTimeout(() => document.getElementById("reviewerName").focus(), 50);
+    }
+
+    function closeModal() {
+      els.modal.classList.remove("open");
+      document.body.style.overflow = "";
+    }
+
+    function updateStars(value) {
+      state.rating = value;
+      els.starPicker.querySelectorAll("button").forEach(button => {
+        button.classList.toggle("active", Number(button.dataset.star) <= value);
+      });
+    }
+
+    document.querySelectorAll("[data-open-review]").forEach(button => button.addEventListener("click", openModal));
+    els.close.addEventListener("click", closeModal);
+    els.cancel.addEventListener("click", closeModal);
+    els.modal.addEventListener("click", event => { if (event.target === els.modal) closeModal(); });
+    document.addEventListener("keydown", event => { if (event.key === "Escape") closeModal(); });
+
+    els.filterGroup.addEventListener("click", event => {
+      const button = event.target.closest("[data-filter]");
+      if (!button) return;
+      state.filter = button.dataset.filter;
+      els.filterGroup.querySelectorAll(".filter-btn").forEach(item => item.classList.toggle("active", item === button));
+      renderReviews();
+    });
+
+    els.search.addEventListener("input", event => { state.search = event.target.value; renderReviews(); });
+    els.sort.addEventListener("change", event => { state.sort = event.target.value; renderReviews(); });
+
+    els.starPicker.addEventListener("click", event => {
+      const button = event.target.closest("[data-star]");
+      if (button) updateStars(Number(button.dataset.star));
+    });
+
+    els.grid.addEventListener("click", event => {
+      const button = event.target.closest("[data-helpful]");
+      if (!button) return;
+      const id = Number(button.dataset.helpful);
+      const review = state.reviews.find(item => item.id === id);
+      if (!review) return;
+      if (state.helpfulClicked.has(id)) {
+        state.helpfulClicked.delete(id);
+        review.helpful = Math.max(0, review.helpful - 1);
+      } else {
+        state.helpfulClicked.add(id);
+        review.helpful += 1;
+      }
+      localStorage.setItem("horari_helpful", JSON.stringify([...state.helpfulClicked]));
+      renderReviews();
+    });
+
+    els.form.addEventListener("submit", event => {
+      event.preventDefault();
+      if (!state.rating) {
+        Swal.fire({ icon: "warning", title: "กรุณาเลือกคะแนน", text: "เลือกคะแนนตั้งแต่ 1–5 ดาวก่อนส่งรีวิว", confirmButtonColor: "#ff6b00" });
+        return;
+      }
+
+      const review = {
+        id: Date.now(),
+        name: document.getElementById("reviewerName").value.trim(),
+        service: document.getElementById("reviewService").value,
+        rating: state.rating,
+        title: document.getElementById("reviewTitle").value.trim(),
+        message: document.getElementById("reviewMessage").value.trim(),
+        date: new Date().toISOString(),
+        helpful: 0,
+        verified: false
+      };
+
+      if (!review.name || !review.service || !review.title || !review.message) return;
+
+      let saved = [];
+      try { saved = JSON.parse(localStorage.getItem("horari_reviews") || "[]"); }
+      catch { saved = []; }
+      saved.unshift(review);
+      localStorage.setItem("horari_reviews", JSON.stringify(saved));
+      state.reviews.unshift(review);
+      els.form.reset();
+      updateStars(0);
+      closeModal();
+      renderReviews();
+      Swal.fire({ icon: "success", title: "บันทึกรีวิวแล้ว", text: "รีวิว Demo ถูกเก็บในเบราว์เซอร์ของคุณ", confirmButtonColor: "#ff6b00" });
+    });
+
+    els.mobileButton.addEventListener("click", () => {
+      const open = els.mobileMenu.classList.toggle("open");
+      els.mobileButton.setAttribute("aria-expanded", String(open));
+      els.mobileButton.innerHTML = `<i class="fa-solid ${open ? "fa-xmark" : "fa-bars"}"></i>`;
+    });
+
+    loadReviews();
+    renderReviews();
+  </script>
+</body>
+</html>

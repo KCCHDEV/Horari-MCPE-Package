@@ -31,7 +31,9 @@ async function ensureIndexes(db: Db) {
     db.collection('sessions').createIndex({ expiresAt: 1 }, { expireAfterSeconds: 0 }),
     db.collection('orders').createIndex({ userId: 1, createdAt: -1 }),
     db.collection('orders').createIndex({ externalId: 1 }, { unique: true }),
-    db.collection('orders').createIndex({ paymentId: 1 }, { sparse: true })
+    db.collection('orders').createIndex({ paymentId: 1 }, { sparse: true }),
+    db.collection('catalog_packages').createIndex({ serviceType: 1, packageId: 1 }, { unique: true }),
+    db.collection('site_settings').createIndex({ _id: 1 }, { unique: true })
   ]);
 }
 

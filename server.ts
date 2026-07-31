@@ -5,13 +5,13 @@ import { join } from 'path';
 import ejs from 'ejs';
 import { mongoConfigured } from './lib/db.ts';
 import { createUser, getCurrentUser, loginUser, logoutUser } from './lib/auth.ts';
-import { catalogFor } from './lib/catalog.ts';
+import { catalogForAsync, getStoredSettings, listCatalogAdmin, updateCatalogPackage, updateStoredSettings } from './lib/catalog.ts';
 import { confirmPayment, createOrder, listOrders, provisionOrder } from './lib/orders.ts';
 import { attachCheckoutSession } from './lib/orders.ts';
 import { createStripeCheckout, stripePaymentEvent, verifyStripeWebhook } from './lib/payment.ts';
 import { pterodactylConfigured } from './lib/pterodactyl.ts';
 
-const root = import.meta.dir;
+const root = process.cwd();
 const viewsDir = join(root, 'views');
 const publicDir = join(root, 'public');
 const dataDir = join(root, 'data');
@@ -48,7 +48,7 @@ function buildAssets() {
 function buildPackageGroups(packages: Array<Record<string, any>> | Record<string, Array<Record<string, any>>>) {
   if (Array.isArray(packages)) {
     return packages.reduce<Record<string, Array<Record<string, any>>>>((groups, pkg) => {
-      const cpuModel = pkg.specs?.find((spec: Record<string, string>) => spec.label === 'CPU Model')?.value || 'Unknown CPU';
+      const cpuModel = pkg.cpuModel || pkg.specs?.find((spec: Record<string, string>) => spec.label === 'CPU Model')?.value || 'Unknown CPU';
 
       if (!groups[cpuModel]) {
         groups[cpuModel] = [];
@@ -152,8 +152,13 @@ function readJSON(path: string, fallback: any) {
   }
 }
 
-function readSettings() {
+function readSettingsFile() {
   return { ...defaultSettings, ...readJSON(settingsPath, {}) };
+}
+
+async function readSettings() {
+  const fallback = readSettingsFile();
+  return mongoConfigured() ? getStoredSettings(fallback) : fallback;
 }
 
 async function jsonBody(req: Request) {
@@ -168,9 +173,9 @@ function errorResponse(error: unknown, status = 400) {
   return jsonResponse({ error: error instanceof Error ? error.message : String(error || 'เกิดข้อผิดพลาด') }, status);
 }
 
-function catalogForDashboard() {
+async function catalogForDashboard() {
   const labels: Record<string, string> = { minecraft: 'Minecraft Server', webhosting: 'Web Hosting', codehosting: 'Code Hosting', codeserver: 'Code Server' };
-  return Object.entries(labels).map(([type, label]) => ({ type, label, packages: catalogFor(type) }));
+  return Promise.all(Object.entries(labels).map(async ([type, label]) => ({ type, label, packages: mongoConfigured() ? await catalogForAsync(type) : [] })));
 }
 
 function paymentCheckoutUrl(orderId: string) {
@@ -227,8 +232,8 @@ function escapeSvg(value: string) {
     .replace(/"/g, '&quot;');
 }
 
-function renderFavicon() {
-  const settings = readSettings();
+async function renderFavicon() {
+  const settings = await readSettings();
   const logoText = escapeSvg(settings.logoText || 'MC').slice(0, 4);
   const primary = /^#[0-9a-fA-F]{6}$/.test(settings.primaryColor) ? settings.primaryColor : '#f97316';
   const secondary = /^#[0-9a-fA-F]{6}$/.test(settings.secondaryColor) ? settings.secondaryColor : '#2563eb';
@@ -245,8 +250,8 @@ function renderFavicon() {
 </svg>`;
 }
 
-function renderOgCard() {
-  const settings = readSettings();
+async function renderOgCard() {
+  const settings = await readSettings();
   const primary = /^#[0-9a-fA-F]{6}$/.test(settings.primaryColor) ? settings.primaryColor : '#f97316';
   const secondary = /^#[0-9a-fA-F]{6}$/.test(settings.secondaryColor) ? settings.secondaryColor : '#2563eb';
   const title = escapeSvg(settings.shopName || 'Minecraft Server Hosting');
@@ -281,37 +286,37 @@ function renderOgCard() {
 </svg>`;
 }
 
-function renderIndex(origin: string) {
+async function renderIndex(origin: string) {
   const templatePath = join(viewsDir, 'index.ejs');
   const template = readFileSync(templatePath, 'utf8');
-  const settings = readSettings();
+  const settings = await readSettings();
   const meta = buildMeta(settings, origin, '/', `${settings.shopName} | Online Services`, settings.heroSubtitle);
   return ejs.render(template, { settings, meta, assets: buildAssets() });
 }
 
-function renderMinecraft(origin: string) {
+async function renderMinecraft(origin: string) {
   const templatePath = join(viewsDir, 'minecraft.ejs');
   const template = readFileSync(templatePath, 'utf8');
-  const packages = readJSON(join(dataDir, 'packages.json'), []);
+  const packages = mongoConfigured() ? await catalogForAsync('minecraft') : readJSON(join(dataDir, 'packages.json'), []);
   const packageGroups = buildPackageGroups(packages);
-  const settings = readSettings();
+  const settings = await readSettings();
   const meta = buildMeta(settings, origin, '/minecraft', `${settings.shopName} | Minecraft Server Hosting`, 'เช่าเซิร์ฟเวอร์ Minecraft PE/BE พร้อมดูแล');
   return ejs.render(template, { packages, packageGroups, settings, meta, assets: buildAssets() });
 }
 
-function renderServers(origin: string) {
+async function renderServers(origin: string) {
   const templatePath = join(viewsDir, 'servers.ejs');
   const template = readFileSync(templatePath, 'utf8');
   const servers = readJSON(join(dataDir, 'servers.json'), []);
-  const settings = readSettings();
+  const settings = await readSettings();
   const meta = buildMeta(settings, origin, '/servers', `รายการเซิร์ฟเวอร์ | ${settings.shopName}`, 'ตรวจสอบสเปกเครื่องหลักที่ใช้รองรับแพ็กเกจ Minecraft Server Hosting');
   return ejs.render(template, { servers, settings, meta, serversJSON: JSON.stringify(servers, null, 2), assets: buildAssets() });
 }
 
-function renderContentPage(kind: 'terms' | 'privacy', origin: string) {
+async function renderContentPage(kind: 'terms' | 'privacy', origin: string) {
   const templatePath = join(viewsDir, 'content-page.ejs');
   const template = readFileSync(templatePath, 'utf8');
-  const settings = readSettings();
+  const settings = await readSettings();
   const page = kind === 'terms'
     ? { title: settings.termsTitle, content: settings.termsContent, eyebrow: 'Terms of Service' }
     : { title: settings.privacyTitle, content: settings.privacyContent, eyebrow: 'Privacy Policy' };
@@ -320,32 +325,32 @@ function renderContentPage(kind: 'terms' | 'privacy', origin: string) {
   return ejs.render(template, { settings, page, meta, activePath: `/${kind}`, assets: buildAssets() });
 }
 
-function renderContact(origin: string) {
+async function renderContact(origin: string) {
   const templatePath = join(viewsDir, 'contact.ejs');
   const template = readFileSync(templatePath, 'utf8');
-  const settings = readSettings();
+  const settings = await readSettings();
   const meta = buildMeta(settings, origin, '/contact', `${settings.contactPageTitle} | ${settings.shopName}`, settings.contactPageIntro);
   return ejs.render(template, { settings, meta, assets: buildAssets() });
 }
 
-function renderAuth(origin: string, register = false) {
+async function renderAuth(origin: string, register = false) {
   const template = readFileSync(join(viewsDir, 'auth.ejs'), 'utf8');
-  const settings = readSettings();
+  const settings = await readSettings();
   return ejs.render(template, { settings, register, title: register ? 'สมัครสมาชิก' : 'เข้าสู่ระบบ', meta: buildMeta(settings, origin, register ? '/register' : '/login'), assets: buildAssets() });
 }
 
-function renderDashboard(origin: string, user: Record<string, string>) {
+async function renderDashboard(origin: string, user: Record<string, string>) {
   const template = readFileSync(join(viewsDir, 'dashboard.ejs'), 'utf8');
-  const settings = readSettings();
-  return ejs.render(template, { settings, user, catalog: catalogForDashboard(), meta: buildMeta(settings, origin, '/dashboard'), assets: buildAssets() });
+  const settings = await readSettings();
+  return ejs.render(template, { settings, user, catalog: await catalogForDashboard(), meta: buildMeta(settings, origin, '/dashboard'), assets: buildAssets() });
 }
 
-function renderServicePage(kind: 'webhosting' | 'codehosting' | 'codeserver', origin: string) {
+async function renderServicePage(kind: 'webhosting' | 'codehosting' | 'codeserver', origin: string) {
   const templatePath = join(viewsDir, `${kind}.ejs`);
   const template = readFileSync(templatePath, 'utf8');
-  const packages = readJSON(join(dataDir, `${kind}.json`), {});
+  const packages = mongoConfigured() ? await catalogForAsync(kind) : readJSON(join(dataDir, `${kind}.json`), {});
   const packageGroups = buildPackageGroups(packages);
-  const settings = readSettings();
+  const settings = await readSettings();
   const labels: Record<string, { title: string; description: string }> = {
     webhosting: { title: 'Web Hosting', description: 'บริการเช่า Web Hosting รองรับ PHP/HTML' },
     codehosting: { title: 'Code Hosting', description: 'บริการ Code Hosting สำหรับรัน backend, API, bot' },
@@ -354,6 +359,18 @@ function renderServicePage(kind: 'webhosting' | 'codehosting' | 'codeserver', or
   const label = labels[kind];
   const meta = buildMeta(settings, origin, `/${kind}`, `${label.title} | ${settings.shopName}`, label.description);
   return ejs.render(template, { packages, packageGroups, settings, meta, assets: buildAssets() });
+}
+
+async function adminUser(req: Request) {
+  const user = await getCurrentUser(req);
+  if (!user || user.role !== 'admin') return null;
+  return user;
+}
+
+async function renderAdmin(origin: string, user: Record<string, string>, packages: any[]) {
+  const template = readFileSync(join(viewsDir, 'admin.ejs'), 'utf8');
+  const settings = await readSettings();
+  return ejs.render(template, { settings, user, packages, meta: buildMeta(settings, origin, '/admin'), assets: buildAssets() });
 }
 
 const server = serve({
@@ -370,7 +387,7 @@ const server = serve({
     }
 
     if (url.pathname === '/favicon.svg') {
-      return new Response(renderFavicon(), {
+      return new Response(await renderFavicon(), {
         headers: {
           'Content-Type': 'image/svg+xml; charset=utf-8',
           'Cache-Control': 'public, max-age=3600'
@@ -379,7 +396,7 @@ const server = serve({
     }
 
     if (url.pathname === '/og-card.svg') {
-      return new Response(renderOgCard(), {
+      return new Response(await renderOgCard(), {
         headers: {
           'Content-Type': 'image/svg+xml; charset=utf-8',
           'Cache-Control': 'public, max-age=3600'
@@ -388,12 +405,12 @@ const server = serve({
     }
 
     if (url.pathname === '/') {
-      const html = renderIndex(url.origin);
+      const html = await renderIndex(url.origin);
       return new Response(html, { headers: { 'Content-Type': 'text/html; charset=utf-8' } });
     }
 
     if (url.pathname === '/login' || url.pathname === '/register') {
-      const html = renderAuth(url.origin, url.pathname === '/register');
+      const html = await renderAuth(url.origin, url.pathname === '/register');
       return new Response(html, { headers: { 'Content-Type': 'text/html; charset=utf-8' } });
     }
 
@@ -402,9 +419,35 @@ const server = serve({
       try {
         const user = await getCurrentUser(req);
         if (!user) return Response.redirect(`${url.origin}/login`, 302);
-        const html = renderDashboard(url.origin, user);
+        const html = await renderDashboard(url.origin, user);
         return new Response(html, { headers: { 'Content-Type': 'text/html; charset=utf-8' } });
       } catch (error) { return new Response(error instanceof Error ? error.message : 'Database unavailable', { status: 503 }); }
+    }
+
+    if (url.pathname === '/admin/login') {
+      const html = await renderAuth(url.origin, false);
+      return new Response(html.replace('Horari Customer Account', 'Horari Admin Login').replace('เข้าสู่ระบบเพื่อจัดการคำสั่งซื้อและเซิร์ฟเวอร์', 'เข้าสู่ระบบด้วยบัญชีที่มีสิทธิ์ admin'), { headers: { 'Content-Type': 'text/html; charset=utf-8' } });
+    }
+
+    if (url.pathname === '/admin' && req.method === 'GET') {
+      if (!mongoConfigured()) return new Response('ระบบหลังบ้านต้องเชื่อมต่อ MongoDB ก่อน', { status: 503 });
+      const user = await adminUser(req);
+      if (!user) return Response.redirect(`${url.origin}/admin/login`, 302);
+      try { return new Response(await renderAdmin(url.origin, user, await listCatalogAdmin()), { headers: { 'Content-Type': 'text/html; charset=utf-8' } }); }
+      catch (error) { return new Response(error instanceof Error ? error.message : 'Database unavailable', { status: 503 }); }
+    }
+
+    if (url.pathname === '/api/admin/settings' && req.method === 'PATCH') {
+      if (!await adminUser(req)) return errorResponse('ไม่มีสิทธิ์ผู้ดูแลระบบ', 403);
+      try { await updateStoredSettings(await jsonBody(req)); return jsonResponse({ ok: true }); }
+      catch (error) { return errorResponse(error, 400); }
+    }
+
+    const adminPackageMatch = url.pathname.match(/^\/api\/admin\/packages\/([a-f0-9]{24})$/i);
+    if (adminPackageMatch && req.method === 'PATCH') {
+      if (!await adminUser(req)) return errorResponse('ไม่มีสิทธิ์ผู้ดูแลระบบ', 403);
+      try { await updateCatalogPackage(adminPackageMatch[1], await jsonBody(req)); return jsonResponse({ ok: true }); }
+      catch (error) { return errorResponse(error, 400); }
     }
 
     if (url.pathname === '/api/auth/register' && req.method === 'POST') {
@@ -494,33 +537,33 @@ const server = serve({
     }
 
     if (url.pathname === '/minecraft') {
-      const html = renderMinecraft(url.origin);
+      const html = await renderMinecraft(url.origin);
       return new Response(html, { headers: { 'Content-Type': 'text/html; charset=utf-8' } });
     }
 
     if (url.pathname === '/servers') {
-      const html = renderServers(url.origin);
+      const html = await renderServers(url.origin);
       return new Response(html, { headers: { 'Content-Type': 'text/html; charset=utf-8' } });
     }
 
     if (url.pathname === '/terms') {
-      const html = renderContentPage('terms', url.origin);
+      const html = await renderContentPage('terms', url.origin);
       return new Response(html, { headers: { 'Content-Type': 'text/html; charset=utf-8' } });
     }
 
     if (url.pathname === '/privacy') {
-      const html = renderContentPage('privacy', url.origin);
+      const html = await renderContentPage('privacy', url.origin);
       return new Response(html, { headers: { 'Content-Type': 'text/html; charset=utf-8' } });
     }
 
     if (url.pathname === '/contact') {
-      const html = renderContact(url.origin);
+      const html = await renderContact(url.origin);
       return new Response(html, { headers: { 'Content-Type': 'text/html; charset=utf-8' } });
     }
 
     if (url.pathname === '/webhosting' || url.pathname === '/codehosting' || url.pathname === '/codeserver') {
       const kind = url.pathname.slice(1) as 'webhosting' | 'codehosting' | 'codeserver';
-      const html = renderServicePage(kind, url.origin);
+      const html = await renderServicePage(kind, url.origin);
       return new Response(html, { headers: { 'Content-Type': 'text/html; charset=utf-8' } });
     }
 

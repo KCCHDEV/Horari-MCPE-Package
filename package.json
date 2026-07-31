@@ -4,15 +4,29 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "build": "node scripts/build-static.mjs",
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "typecheck": "tsc --noEmit",
+    "legacy:build": "node scripts/build-static.mjs",
     "build:server": "bun build server.ts --target bun --outdir .server-build",
     "check": "bun build server.ts --target bun --outdir .tmp-check",
     "test": "bun test",
-    "dev": "bun run server.ts",
-    "start": "bun run server.ts"
+    "legacy:dev": "bun run server.ts"
   },
   "dependencies": {
     "ejs": "^3.1.10",
-    "mongodb": "^6.17.0"
+    "mongodb": "^6.17.0",
+    "next": "^16.2.12",
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0"
+  },
+  "devDependencies": {
+    "@netlify/plugin-nextjs": "^5.15.12",
+    "@types/ejs": "^3.1.5",
+    "@types/node": "^26.1.1",
+    "@types/react": "^19.2.17",
+    "@types/react-dom": "^19.2.3",
+    "typescript": "^6.0.3"
   }
 }
