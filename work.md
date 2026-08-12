@@ -2,14 +2,14 @@
 
 ## Current Status
 
-- State: product-images-ready-push-blocked
+- State: cpu-package-comparison-ready-push-blocked
 - Last updated: 2026-08-12
-- Current task: ปรับภาพสินค้าใหม่ให้แต่ละบริการมีภาพเฉพาะและเข้าชุดกัน
+- Current task: ปรับระบบเลือกแพ็กเกจและเพิ่มการเปรียบเทียบ CPU/Package
 - Main goal: ลูกค้าสมัคร/ล็อกอิน สั่งซื้อผ่านเว็บ ชำระเงินแล้วได้เครื่อง Pterodactyl อัตโนมัติ
 
 ## User Request
 
-ปรับปรุงรูปสินค้าใหม่ โดยยังคงหน้าเว็บและ flow เดิม
+ปรับปรุงระบบ และทำระบบเปรียบเทียบ CPU และ Package
 
 ## Active Plan
 
@@ -52,6 +52,11 @@
 - [x] สร้างภาพสินค้าใหม่ 4 ภาพสำหรับ Minecraft, Web Hosting, Code Hosting และ Code Server
 - [x] เปลี่ยนการ์ดให้ใช้ภาพเฉพาะบริการโดยไม่ทับไฟล์เดิม
 - [x] ตรวจภาพจริงบนหน้าเว็บและรัน build
+- [x] ตรวจข้อมูล CPU และแพ็กเกจจริงทั้ง 24 รายการ
+- [x] เพิ่มสรุปเปรียบเทียบ CPU จากช่วงราคาและทรัพยากรจริง
+- [x] เพิ่มตัวกรอง CPU
+- [x] เพิ่มระบบเลือกเทียบแพ็กเกจสูงสุด 3 รายการ
+- [x] ตรวจ keyboard/mobile/desktop และ order flow เดิม
 - [ ] ผูก payment gateway จริงและตรวจ webhook จริง
 - [ ] ทดสอบ MongoDB + Pterodactyl ด้วย credentials ของร้าน
 
@@ -103,6 +108,9 @@
 | `archive/ARCHIVE_LOG.md` | created | บันทึกสาเหตุและวิธีกู้คืน |
 | `public/images/horari-*-package-v2.webp` | created | ภาพสินค้าใหม่ 4 บริการ แบบ 4:3 และบีบอัด WebP |
 | `views/index.ejs` | edited | เปลี่ยนการ์ดสินค้าให้ใช้ภาพเฉพาะ พร้อมกำหนดขนาดภาพลด layout shift |
+| `views/minecraft.ejs` | edited | เพิ่มสรุป CPU, ตัวกรอง และพื้นที่ตารางเปรียบเทียบแพ็กเกจ |
+| `public/js/app.js` | edited | เพิ่ม compare state/table/limit/order flow และแก้ initialization หลัง Next.js โหลดหน้าแล้ว |
+| `public/css/styles.css` | edited | เพิ่ม responsive UI สำหรับ CPU cards, compare controls และตารางแนวนอนบนมือถือ |
 
 ## Commands Run
 
@@ -162,6 +170,13 @@
 | Browser QA 390px | pass | ภาพทั้ง 4 โหลดครบ, การ์ดกว้างพอดี และ `scrollWidth=390` |
 | Browser QA 1280px | pass | ภาพทั้ง 4 โหลดครบในการ์ด 2 คอลัมน์ และไม่มี horizontal overflow |
 | `npm run typecheck && npm test && npm run build` | pass | 4 tests / 13 assertions และ Next.js production build ผ่าน |
+| CPU/package data audit | pass | 24 แพ็กเกจ, 4 กลุ่ม CPU; แสดงเฉพาะราคาและทรัพยากรจาก catalog จริง |
+| Browser CPU shortcut | pass | เลือก XEON แล้วเหลือ 7/24 แพ็กเกจและซ่อนกลุ่มอื่น |
+| Browser package comparison | pass | เลือกได้ 3 รายการ, รายการที่ 4 ถูกปฏิเสธพร้อมข้อความ, ลบและล้างได้ |
+| Browser comparison order | pass | ปุ่มจากตารางเปิด modal พร้อมชื่อ ราคา และ CPU model เดิมถูกต้อง |
+| Browser QA 390px/1280px | pass | ไม่มี horizontal page overflow; ตารางเลื่อนภายในได้และ CPU grid 1/4 คอลัมน์ตาม viewport |
+| Next late-script initialization | fixed | filter/ราคา/modal/compare เริ่มทำงานแม้ app.js โหลดหลัง `DOMContentLoaded` |
+| Final `node --check`, typecheck, test, build | pass | JavaScript syntax, TypeScript, 4 tests/13 assertions และ production build ผ่าน |
 
 ## Audit Findings
 
@@ -201,6 +216,8 @@
 - First MongoDB user now bootstraps as `admin`; later registrations remain `customer`.
 - MongoDB Atlas read-only smoke check passed with `horari_service`; current user count is 0, so the next successful registration will be the first admin.
 - Production routing: Netlify forced `/minecraft` → `/minecraft/` while Next.js normalized the same route, causing an infinite `301` loop; remove the four manual redirects and let Next.js own route canonicalization.
+- Next.js loaded `/js/app.js` with `afterInteractive`; the old DOMContentLoaded-only listener could miss initialization entirely. `initializeApp()` now runs immediately when the document is already ready and remains single-run.
+- CPU comparison deliberately uses catalog facts (starting price and maximum package resources) and explicitly avoids invented benchmark scores.
 
 ## Next Steps
 
@@ -215,6 +232,7 @@
 - [ ] Follow `docs/PRODUCTION_SETUP.md` for test-mode purchase before live mode
 - [ ] Deploy commit containing the Netlify redirect fix
 - [ ] Verify `/minecraft`, `/webhosting`, `/codehosting`, and `/codeserver` return 200 without redirects looping
+- [ ] Push and deploy CPU/package comparison, then repeat comparison/order QA on the public URL
 
 ## Current Blocker
 

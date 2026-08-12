@@ -141,6 +141,12 @@ function setupPackageCards() {
         card.addEventListener('click', () => {
             if (card.dataset.package) selectPackage(card.dataset.package);
         });
+
+        card.addEventListener('keydown', (event) => {
+            if (event.target !== card || !['Enter', ' '].includes(event.key)) return;
+            event.preventDefault();
+            if (card.dataset.package) selectPackage(card.dataset.package);
+        });
     });
 
     document.querySelectorAll('[data-order-package]').forEach((button) => {
@@ -223,7 +229,12 @@ function setupFaqAccordion() {
     });
 }
 
-document.addEventListener('DOMContentLoaded', () => {
+let appInitialized = false;
+
+function initializeApp() {
+    if (appInitialized) return;
+    appInitialized = true;
+
     const selectedCard = document.querySelector('.pkg-card.selected') || document.querySelector('.pkg-card');
     if (selectedCard) {
         selectPackage(selectedCard.dataset.package);
@@ -238,11 +249,18 @@ document.addEventListener('DOMContentLoaded', () => {
     setupScrollReveal();
     setupBackToTop();
     setupPackageFilter();
+    setupPackageComparison();
     setupFaqAccordion();
     highlightKeySpecs();
     initPriceCounter();
     setupLazyImages();
-});
+}
+
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initializeApp, { once: true });
+} else {
+    initializeApp();
+}
 
 function startEventCountdown() {
     const countdown = document.querySelector('[data-countdown-date]');
@@ -604,6 +622,11 @@ function setupPackageFilter() {
                     const [min, max] = value.split('-').map(Number);
                     if (!isNaN(min) && price < min) { match = false; break; }
                     if (!isNaN(max) && price > max) { match = false; break; }
+                } else if (key === 'cpuModel') {
+                    if (card.dataset.cpuModel !== value) {
+                        match = false;
+                        break;
+                    }
                 } else {
                     const specVal = getSpecValue(card, key);
                     if (!specVal.toLowerCase().includes(value.toLowerCase())) {
@@ -615,6 +638,11 @@ function setupPackageFilter() {
 
             card.classList.toggle('filter-hidden', !match);
             if (match) visibleCount++;
+        });
+
+        document.querySelectorAll('.package-group').forEach((group) => {
+            const hasVisibleCard = group.querySelector('.pkg-card:not(.filter-hidden)');
+            group.classList.toggle('filter-hidden', !hasVisibleCard);
         });
 
         if (countEl) countEl.textContent = `${visibleCount} จาก ${cards.length} แพ็กเกจ`;
@@ -632,6 +660,169 @@ function setupPackageFilter() {
     }
 
     applyFilters();
+}
+
+function setupPackageComparison() {
+    const panel = document.getElementById('packageComparison');
+    if (!panel) return;
+
+    const maxPackages = 3;
+    const selected = new Map();
+    const compareButtons = document.querySelectorAll('[data-compare-package]');
+    const emptyState = panel.querySelector('[data-comparison-empty]');
+    const tableWrap = panel.querySelector('[data-comparison-table-wrap]');
+    const tableHead = panel.querySelector('[data-comparison-head]');
+    const tableBody = panel.querySelector('[data-comparison-body]');
+    const count = panel.querySelector('[data-comparison-count]');
+    const clearButton = panel.querySelector('[data-comparison-clear]');
+
+    function packageFromButton(button) {
+        const card = button.closest('.pkg-card');
+        const orderButton = card?.querySelector('[data-order-package]');
+        if (!card || !orderButton) return null;
+
+        let specs = [];
+        try {
+            specs = JSON.parse(orderButton.dataset.packageSpecs || '[]');
+        } catch {
+            specs = [];
+        }
+        const specMap = Object.fromEntries(specs.map((spec) => [spec.label, spec.value]));
+
+        return {
+            id: orderButton.dataset.packageId || card.dataset.package,
+            name: orderButton.dataset.packageName || '-',
+            subtitle: card.querySelector('.pkg-top p')?.textContent?.trim() || '-',
+            cpuModel: orderButton.dataset.packageCpuModel || card.dataset.cpuModel || '-',
+            cpu: specMap.CPU || orderButton.dataset.packageCpu || '-',
+            ram: specMap.RAM || orderButton.dataset.packageRam || '-',
+            storage: specMap.SSD || specMap.Storage || orderButton.dataset.packageSsd || '-',
+            backup: specMap.Backup || orderButton.dataset.packageBackup || '-',
+            monthlyPrice: Number(orderButton.dataset.packageMonthlyPrice || 0),
+            card,
+            compareButton: button,
+            orderButton
+        };
+    }
+
+    function appendCell(row, text, tag = 'td') {
+        const cell = document.createElement(tag);
+        cell.textContent = text;
+        row.appendChild(cell);
+        return cell;
+    }
+
+    function render() {
+        const packages = [...selected.values()];
+        const hasSelection = packages.length > 0;
+
+        if (count) count.textContent = `${packages.length}/${maxPackages}`;
+        if (clearButton) clearButton.disabled = !hasSelection;
+        if (emptyState) emptyState.hidden = hasSelection;
+        if (tableWrap) tableWrap.hidden = !hasSelection;
+
+        compareButtons.forEach((button) => {
+            const pkg = packageFromButton(button);
+            const isSelected = pkg ? selected.has(pkg.id) : false;
+            button.setAttribute('aria-pressed', isSelected ? 'true' : 'false');
+            button.querySelector('[data-compare-label]').textContent = isSelected ? 'เลือกแล้ว · กดเพื่อนำออก' : 'เพิ่มเพื่อเปรียบเทียบ';
+            pkg?.card.classList.toggle('compare-selected', isSelected);
+        });
+
+        if (!tableHead || !tableBody) return;
+        tableHead.replaceChildren();
+        tableBody.replaceChildren();
+        if (!hasSelection) return;
+
+        const headRow = document.createElement('tr');
+        appendCell(headRow, 'หัวข้อ', 'th');
+        packages.forEach((pkg) => {
+            const cell = document.createElement('th');
+            const wrap = document.createElement('div');
+            wrap.className = 'comparison-package-head';
+            const name = document.createElement('span');
+            name.textContent = pkg.name;
+            const remove = document.createElement('button');
+            remove.type = 'button';
+            remove.className = 'comparison-remove';
+            remove.setAttribute('aria-label', `นำ ${pkg.name} ออกจากตารางเปรียบเทียบ`);
+            remove.textContent = '×';
+            remove.addEventListener('click', () => {
+                selected.delete(pkg.id);
+                render();
+            });
+            wrap.append(name, remove);
+            cell.appendChild(wrap);
+            headRow.appendChild(cell);
+        });
+        tableHead.appendChild(headRow);
+
+        const rows = [
+            ['CPU Model', (pkg) => pkg.cpuModel],
+            ['CPU', (pkg) => pkg.cpu],
+            ['RAM', (pkg) => pkg.ram],
+            ['SSD', (pkg) => pkg.storage],
+            ['Backup', (pkg) => pkg.backup],
+            ['ราคา/เดือน', (pkg) => `฿${formatPrice(pkg.monthlyPrice)}`],
+            ['เหมาะสำหรับ', (pkg) => pkg.subtitle]
+        ];
+
+        rows.forEach(([label, getValue]) => {
+            const row = document.createElement('tr');
+            appendCell(row, label, 'th');
+            packages.forEach((pkg) => appendCell(row, getValue(pkg)));
+            tableBody.appendChild(row);
+        });
+
+        const orderRow = document.createElement('tr');
+        appendCell(orderRow, 'สั่งซื้อ', 'th');
+        packages.forEach((pkg) => {
+            const cell = document.createElement('td');
+            const button = document.createElement('button');
+            button.type = 'button';
+            button.className = 'comparison-order';
+            button.textContent = `เลือก ${pkg.name}`;
+            button.addEventListener('click', () => orderPackageFromButton(pkg.orderButton));
+            cell.appendChild(button);
+            orderRow.appendChild(cell);
+        });
+        tableBody.appendChild(orderRow);
+    }
+
+    compareButtons.forEach((button) => {
+        button.addEventListener('click', (event) => {
+            event.stopPropagation();
+            const pkg = packageFromButton(button);
+            if (!pkg) return;
+
+            if (selected.has(pkg.id)) {
+                selected.delete(pkg.id);
+            } else if (selected.size >= maxPackages) {
+                showToast(`เลือกเปรียบเทียบได้สูงสุด ${maxPackages} แพ็กเกจ`, 'error');
+                return;
+            } else {
+                selected.set(pkg.id, pkg);
+            }
+            render();
+        });
+    });
+
+    clearButton?.addEventListener('click', () => {
+        selected.clear();
+        render();
+    });
+
+    document.querySelectorAll('[data-cpu-shortcut]').forEach((button) => {
+        button.addEventListener('click', () => {
+            const cpuFilter = document.getElementById('filterCpu');
+            if (!cpuFilter) return;
+            cpuFilter.value = button.dataset.cpuShortcut || '';
+            cpuFilter.dispatchEvent(new Event('change', { bubbles: true }));
+            document.querySelector('.pkg-filter-bar')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        });
+    });
+
+    render();
 }
 
 function highlightKeySpecs() {

@@ -217,8 +217,70 @@
                 <h2>เลือกเครื่องตามสเปกและงบประมาณ</h2>
             </div>
 
+            <%
+                const readNumber = (value) => Number.parseFloat(String(value || '').replace(/[^0-9.]/g, '')) || 0;
+                const cpuSummaries = Object.entries(packageGroups).map(([cpuModel, packages]) => {
+                    const rows = packages.map((pkg) => ({
+                        price: Number(pkg.price) || 0,
+                        specs: Object.fromEntries((pkg.specs || []).map((spec) => [spec.label, spec.value]))
+                    }));
+                    return {
+                        cpuModel,
+                        packageCount: packages.length,
+                        startingPrice: Math.min(...rows.map((row) => row.price)),
+                        maxCpu: Math.max(...rows.map((row) => readNumber(row.specs.CPU))),
+                        maxRam: Math.max(...rows.map((row) => readNumber(row.specs.RAM))),
+                        maxSsd: Math.max(...rows.map((row) => readNumber(row.specs.SSD))),
+                        maxBackup: Math.max(...rows.map((row) => readNumber(row.specs.Backup)))
+                    };
+                });
+            %>
+
+            <section class="cpu-compare-overview" aria-labelledby="cpuCompareTitle">
+                <div class="compare-section-heading">
+                    <div>
+                        <p>เปรียบเทียบ CPU</p>
+                        <h3 id="cpuCompareTitle">ดูความต่างจากแพ็กเกจที่เปิดขายจริง</h3>
+                    </div>
+                    <span>ไม่ใช้คะแนน benchmark สมมติ</span>
+                </div>
+                <div class="cpu-compare-grid">
+                    <% cpuSummaries.forEach((summary) => { %>
+                        <article class="cpu-compare-card">
+                            <div class="cpu-compare-card-head">
+                                <span class="iconify" data-icon="mdi:cpu-64-bit"></span>
+                                <div>
+                                    <h4><%= summary.cpuModel %></h4>
+                                    <p><%= summary.packageCount %> แพ็กเกจ · เริ่ม ฿<%= summary.startingPrice %>/เดือน</p>
+                                </div>
+                            </div>
+                            <dl>
+                                <div><dt>CPU สูงสุด</dt><dd><%= summary.maxCpu %> Cores</dd></div>
+                                <div><dt>RAM สูงสุด</dt><dd><%= summary.maxRam %> GB</dd></div>
+                                <div><dt>SSD สูงสุด</dt><dd><%= summary.maxSsd %> GB</dd></div>
+                                <div><dt>Backup สูงสุด</dt><dd><%= summary.maxBackup %> slots</dd></div>
+                            </dl>
+                            <button type="button" class="cpu-filter-shortcut" data-cpu-shortcut="<%= summary.cpuModel %>">
+                                ดูแพ็กเกจ CPU นี้
+                                <span class="iconify" data-icon="mdi:arrow-down"></span>
+                            </button>
+                        </article>
+                    <% }); %>
+                </div>
+                <p class="cpu-compare-note">ข้อมูลด้านบนสรุปทรัพยากรสูงสุดของแพ็กเกจแต่ละกลุ่ม ไม่ใช่คะแนนวัดความแรงของ CPU</p>
+            </section>
+
             <div class="pkg-filter-bar">
                 <span class="iconify" data-icon="mdi:filter-variant"></span>
+                <div class="pkg-filter-group">
+                    <label for="filterCpu">CPU</label>
+                    <select class="pkg-filter-select" id="filterCpu" data-filter="cpuModel">
+                        <option value="">ทั้งหมด</option>
+                        <% Object.keys(packageGroups).forEach((cpuModel) => { %>
+                            <option value="<%= cpuModel %>"><%= cpuModel %></option>
+                        <% }); %>
+                    </select>
+                </div>
                 <div class="pkg-filter-group">
                     <label for="filterRam">RAM</label>
                     <select class="pkg-filter-select" id="filterRam" data-filter="RAM">
@@ -264,10 +326,37 @@
                 <p class="billing-hint" id="billingHint">
                     <span class="iconify" data-icon="mdi:tag-heart-outline"></span>
                     <span id="billingHintText">รายเดือนถูกกว่ารายวัน — เหมาะสำหรับใช้งานต่อเนื่อง</span>
-                        </p>
-                        </div>
+                </p>
+            </div>
+
+            <section class="package-comparison" id="packageComparison" aria-labelledby="packageComparisonTitle" aria-live="polite">
+                <div class="package-comparison-head">
+                    <div>
+                        <p>เปรียบเทียบ Package</p>
+                        <h3 id="packageComparisonTitle">เลือกเทียบได้สูงสุด 3 แพ็กเกจ</h3>
+                    </div>
+                    <div class="package-comparison-actions">
+                        <span class="comparison-count" data-comparison-count>0/3</span>
+                        <button type="button" class="comparison-clear" data-comparison-clear disabled>
+                            <span class="iconify" data-icon="mdi:delete-sweep-outline"></span>
+                            ล้างทั้งหมด
+                        </button>
                     </div>
                 </div>
+                <div class="comparison-empty" data-comparison-empty>
+                    <span class="iconify" data-icon="mdi:compare-horizontal"></span>
+                    <div>
+                        <strong>ยังไม่ได้เลือกแพ็กเกจ</strong>
+                        <p>กด “เพิ่มเพื่อเปรียบเทียบ” บนการ์ดที่สนใจ แล้วระบบจะจัดตารางให้ทันที</p>
+                    </div>
+                </div>
+                <div class="comparison-table-wrap" data-comparison-table-wrap hidden>
+                    <table class="comparison-table">
+                        <thead data-comparison-head></thead>
+                        <tbody data-comparison-body></tbody>
+                    </table>
+                </div>
+            </section>
 
             <div class="package-groups">
                 <% Object.entries(packageGroups).forEach(([cpuModel, groupPackages], index) => { %>
@@ -285,7 +374,7 @@
                                 const packageKey = `${cpuModel}-${pkg.id}`;
                                 const specMap = Object.fromEntries((pkg.specs || []).map((spec) => [spec.label, spec.value]));
                             %>
-                                <article class="pkg-card fade-in delay-<%= pkgIndex + 1 %> <%= pkg.defaultSelected ? 'selected' : '' %>" data-package="<%= packageKey %>" data-select-package>
+                                <article class="pkg-card fade-in delay-<%= pkgIndex + 1 %> <%= pkg.defaultSelected ? 'selected' : '' %>" data-package="<%= packageKey %>" data-cpu-model="<%= cpuModel %>" data-select-package tabindex="0" aria-label="แพ็กเกจ <%= pkg.name %> บน <%= cpuModel %>">
                                     <% if (pkg.popular) { %>
                                         <div class="popular-badge">ยอดนิยม</div>
                                     <% } %>
@@ -314,6 +403,11 @@
                                             </div>
                                         <% }); %>
                                     </div>
+
+                                    <button type="button" class="btn-compare" data-compare-package aria-pressed="false">
+                                        <span class="iconify" data-icon="mdi:compare-horizontal"></span>
+                                        <span data-compare-label>เพิ่มเพื่อเปรียบเทียบ</span>
+                                    </button>
 
                                     <button
                                         class="btn-cta <%= pkg.defaultSelected ? 'btn-cta-orange' : '' %>"
@@ -601,9 +695,8 @@
             </div>
 
             <div class="discord-order-panel" id="discordOrderPanel" hidden>
-                <div class="faq-item">
-                    <button class="faq-question" type="button" aria-expanded="false">
-                        <span>เลือก Discord</h3>
+                <div>
+                    <h3>เลือก Discord</h3>
                     <div class="discord-list" id="discordList"></div>
                 </div>
 
