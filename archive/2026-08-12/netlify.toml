@@ -19,6 +19,30 @@
   [headers.values]
     Cache-Control = "public, max-age=3600, must-revalidate"
 
+[[redirects]]
+  from = "/minecraft"
+  to = "/minecraft/"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/webhosting"
+  to = "/webhosting/"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/codehosting"
+  to = "/codehosting/"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/codeserver"
+  to = "/codeserver/"
+  status = 301
+  force = true
+
 [[headers]]
   for = "/js/*"
   [headers.values]

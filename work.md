@@ -2,14 +2,14 @@
 
 ## Current Status
 
-- State: active
-- Last updated: 2026-07-31
-- Current task: ปรับ UI มือถือและเพิ่มภาพการตลาด/Discord social preview
+- State: blocked-push-auth
+- Last updated: 2026-08-12
+- Current task: แก้หน้า service บน Netlify ใช้งานไม่ได้จาก redirect loop
 - Main goal: ลูกค้าสมัคร/ล็อกอิน สั่งซื้อผ่านเว็บ ชำระเงินแล้วได้เครื่อง Pterodactyl อัตโนมัติ
 
 ## User Request
 
-แก้ UI บนมือถือ เพิ่มภาพแพ็กเกจ/แบนเนอร์ และให้ Discord แสดงภาพเมื่อแชร์ลิงก์
+แก้เว็บ production ที่กดเข้า `/minecraft`, `/webhosting`, `/codehosting`, `/codeserver` ไม่ได้หลังแก้โค้ด
 
 ## Active Plan
 
@@ -44,6 +44,11 @@
 - [x] ตรวจ responsive ใน browser ที่ 390px
 - [x] กันหน้า mobile ว่างเมื่อ browser หน่วง/ปิด animation
 - [x] ตรวจหน่วยเงิน THB ของ Stripe และเพิ่ม production controlled-purchase checklist
+- [x] ยืนยัน Netlify redirect loop บน service routes
+- [x] archive `netlify.toml` ก่อนแก้
+- [x] ลบ forced trailing-slash redirects ที่ชนกับ Next.js
+- [x] รัน typecheck/build/test และตรวจ route แบบ local
+- [ ] deploy แล้วตรวจ production routes ซ้ำ
 - [ ] ผูก payment gateway จริงและตรวจ webhook จริง
 - [ ] ทดสอบ MongoDB + Pterodactyl ด้วย credentials ของร้าน
 
@@ -90,6 +95,9 @@
 | `public/images/horari-webhosting-package.png` | created | ภาพประกอบแพ็กเกจ Web/Code hosting |
 | `views/index.ejs`, `public/css/styles.css` | edited | landing มีภาพและ mobile layout ที่อ่านง่ายขึ้น |
 | `app/layout.tsx` | edited | Open Graph/Twitter preview image สำหรับ Discord |
+| `netlify.toml` | edited | ลบ forced trailing-slash redirects ที่ทำให้ Next.js redirect วนซ้ำ |
+| `archive/2026-08-12/netlify.toml` | archived | สำรอง Netlify config ก่อนแก้ |
+| `archive/ARCHIVE_LOG.md` | created | บันทึกสาเหตุและวิธีกู้คืน |
 
 ## Commands Run
 
@@ -137,6 +145,13 @@
 | Browser QA: `/minecraft` at 390px | pass | card 360px, filter 366px, ไม่มี horizontal overflow |
 | Open Graph metadata | pass | `summary_large_image` และ `og:image` ชี้ภาพใน `/images/` |
 | Mobile animation fallback | implemented | content ไม่รอ animation ก่อนแสดงบนจอ <=640px และ Reduce Motion |
+| Production route probe | fail confirmed | 4 service routes วน `301` เกิน 8 redirects เพราะ Netlify บังคับ `/` ชนกับ Next.js |
+| `npm run typecheck` | pass | TypeScript ผ่านหลังแก้ Netlify config |
+| `npm test` | pass | 4 tests, 13 assertions |
+| `npm run build` | pass | Next.js 16 production build ผ่านและมี service routes ครบ |
+| Local route probe | pass | ทั้ง 4 service routes ตอบ 200; URL มี `/` ท้ายถูก normalize เพียง 1 ครั้ง |
+| `git commit` | pass | local commit `fix: stop Netlify service route redirect loop` |
+| `git push origin main` | fail | GitHub HTTPS credential ไม่พร้อม (`could not read Username`); production ยังไม่ได้ deploy |
 
 ## Audit Findings
 
@@ -175,6 +190,7 @@
 - Next.js 16 uses App Router and a catch-all API route; existing EJS is rendered inside the App Router to preserve the supplied UI during migration.
 - First MongoDB user now bootstraps as `admin`; later registrations remain `customer`.
 - MongoDB Atlas read-only smoke check passed with `horari_service`; current user count is 0, so the next successful registration will be the first admin.
+- Production routing: Netlify forced `/minecraft` → `/minecraft/` while Next.js normalized the same route, causing an infinite `301` loop; remove the four manual redirects and let Next.js own route canonicalization.
 
 ## Next Steps
 
@@ -187,9 +203,12 @@
 - [ ] Confirm the actual payment provider choice; generic webhook cannot create a checkout without provider credentials/API contract
 - [ ] Run `docker compose up -d --build` on the deployment host and make `/healthz` return 200
 - [ ] Follow `docs/PRODUCTION_SETUP.md` for test-mode purchase before live mode
+- [ ] Deploy commit containing the Netlify redirect fix
+- [ ] Verify `/minecraft`, `/webhosting`, `/codehosting`, and `/codeserver` return 200 without redirects looping
 
 ## Current Blocker
 
+- GitHub ในเครื่องยังไม่ authenticated และไม่มี GitHub CLI จึง push commit ขึ้น `origin/main` ไม่ได้; ตาม GitHub publish workflow ต้องให้ owner ติดตั้ง/ล็อกอิน `gh` ก่อน
 - ไม่มี `.env`, MongoDB URI, Stripe keys หรือ Pterodactyl Application API config ใน workspace
 - จึงยังทำ controlled purchase จริงและยืนยัน server `active` ใน Panel ไม่ได้
 - ห้ามใช้ mock data เป็นหลักฐานแทน provider จริง
@@ -202,4 +221,4 @@
 
 ## Resume Prompt
 
-อ่าน `work.md` แล้วต่อจากการตั้งค่า provider จริง: เติม MongoDB/Pterodactyl/payment env, ทดสอบ webhook แบบ signed, ทำ controlled purchase และตรวจว่า server active ใน panel ก่อนประกาศใช้งานจริง
+อ่าน `work.md` แล้วเริ่มจาก authenticate GitHub (`gh auth login`), push commit แก้ redirect loop ขึ้น `main`, รอ Netlify deploy และตรวจ 4 service routes ให้ได้ 200 จากนั้นค่อยต่อ provider E2E ตามรายการเดิม
