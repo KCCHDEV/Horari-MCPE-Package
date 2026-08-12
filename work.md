@@ -2,14 +2,14 @@
 
 ## Current Status
 
-- State: blocked-push-auth
+- State: product-images-ready-push-blocked
 - Last updated: 2026-08-12
-- Current task: แก้หน้า service บน Netlify ใช้งานไม่ได้จาก redirect loop
+- Current task: ปรับภาพสินค้าใหม่ให้แต่ละบริการมีภาพเฉพาะและเข้าชุดกัน
 - Main goal: ลูกค้าสมัคร/ล็อกอิน สั่งซื้อผ่านเว็บ ชำระเงินแล้วได้เครื่อง Pterodactyl อัตโนมัติ
 
 ## User Request
 
-แก้เว็บ production ที่กดเข้า `/minecraft`, `/webhosting`, `/codehosting`, `/codeserver` ไม่ได้หลังแก้โค้ด
+ปรับปรุงรูปสินค้าใหม่ โดยยังคงหน้าเว็บและ flow เดิม
 
 ## Active Plan
 
@@ -49,6 +49,9 @@
 - [x] ลบ forced trailing-slash redirects ที่ชนกับ Next.js
 - [x] รัน typecheck/build/test และตรวจ route แบบ local
 - [ ] deploy แล้วตรวจ production routes ซ้ำ
+- [x] สร้างภาพสินค้าใหม่ 4 ภาพสำหรับ Minecraft, Web Hosting, Code Hosting และ Code Server
+- [x] เปลี่ยนการ์ดให้ใช้ภาพเฉพาะบริการโดยไม่ทับไฟล์เดิม
+- [x] ตรวจภาพจริงบนหน้าเว็บและรัน build
 - [ ] ผูก payment gateway จริงและตรวจ webhook จริง
 - [ ] ทดสอบ MongoDB + Pterodactyl ด้วย credentials ของร้าน
 
@@ -98,6 +101,8 @@
 | `netlify.toml` | edited | ลบ forced trailing-slash redirects ที่ทำให้ Next.js redirect วนซ้ำ |
 | `archive/2026-08-12/netlify.toml` | archived | สำรอง Netlify config ก่อนแก้ |
 | `archive/ARCHIVE_LOG.md` | created | บันทึกสาเหตุและวิธีกู้คืน |
+| `public/images/horari-*-package-v2.webp` | created | ภาพสินค้าใหม่ 4 บริการ แบบ 4:3 และบีบอัด WebP |
+| `views/index.ejs` | edited | เปลี่ยนการ์ดสินค้าให้ใช้ภาพเฉพาะ พร้อมกำหนดขนาดภาพลด layout shift |
 
 ## Commands Run
 
@@ -152,6 +157,11 @@
 | Local route probe | pass | ทั้ง 4 service routes ตอบ 200; URL มี `/` ท้ายถูก normalize เพียง 1 ครั้ง |
 | `git commit` | pass | local commit `fix: stop Netlify service route redirect loop` |
 | `git push origin main` | fail | GitHub HTTPS credential ไม่พร้อม (`could not read Username`); production ยังไม่ได้ deploy |
+| Image generation | pass | สร้างภาพ 4:3 แยกตามบริการด้วย built-in image generation; ไม่มีข้อความ โลโก้ หรือลายน้ำ |
+| WebP optimization | pass | ภาพ 1448×1086 เหลือ 82–117 KB ต่อไฟล์ |
+| Browser QA 390px | pass | ภาพทั้ง 4 โหลดครบ, การ์ดกว้างพอดี และ `scrollWidth=390` |
+| Browser QA 1280px | pass | ภาพทั้ง 4 โหลดครบในการ์ด 2 คอลัมน์ และไม่มี horizontal overflow |
+| `npm run typecheck && npm test && npm run build` | pass | 4 tests / 13 assertions และ Next.js production build ผ่าน |
 
 ## Audit Findings
 
