@@ -2,14 +2,14 @@
 
 ## Current Status
 
-- State: cpu-package-comparison-ready-push-blocked
+- State: asset-cache-fix-committed-push-blocked
 - Last updated: 2026-08-12
-- Current task: ปรับระบบเลือกแพ็กเกจและเพิ่มการเปรียบเทียบ CPU/Package
+- Current task: แก้ production โหลด HTML ใหม่คู่กับ CSS/JS เก่าบน Safari
 - Main goal: ลูกค้าสมัคร/ล็อกอิน สั่งซื้อผ่านเว็บ ชำระเงินแล้วได้เครื่อง Pterodactyl อัตโนมัติ
 
 ## User Request
 
-ปรับปรุงระบบ และทำระบบเปรียบเทียบ CPU และ Package
+แก้หน้าระบบเปรียบเทียบที่แสดงเป็นข้อความไม่มี layout ตามภาพ Safari ของผู้ใช้
 
 ## Active Plan
 
@@ -57,6 +57,10 @@
 - [x] เพิ่มตัวกรอง CPU
 - [x] เพิ่มระบบเลือกเทียบแพ็กเกจสูงสุด 3 รายการ
 - [x] ตรวจ keyboard/mobile/desktop และ order flow เดิม
+- [x] ยืนยัน production CSS/JS ปัจจุบันตรงกับ local ทุก byte
+- [x] ระบุสาเหตุเป็น asset URL เดิมและ browser/CDN cache 1 ชั่วโมง
+- [x] ผูก asset URL กับ Netlify commit/deploy ID และบังคับ revalidate
+- [x] ทดสอบ build และ production assets ปัจจุบัน
 - [ ] ผูก payment gateway จริงและตรวจ webhook จริง
 - [ ] ทดสอบ MongoDB + Pterodactyl ด้วย credentials ของร้าน
 
@@ -111,6 +115,8 @@
 | `views/minecraft.ejs` | edited | เพิ่มสรุป CPU, ตัวกรอง และพื้นที่ตารางเปรียบเทียบแพ็กเกจ |
 | `public/js/app.js` | edited | เพิ่ม compare state/table/limit/order flow และแก้ initialization หลัง Next.js โหลดหน้าแล้ว |
 | `public/css/styles.css` | edited | เพิ่ม responsive UI สำหรับ CPU cards, compare controls และตารางแนวนอนบนมือถือ |
+| `app/layout.tsx` | edited | เพิ่ม deploy-version query ให้ CSS/JS เพื่อกัน HTML ใหม่จับคู่ asset เก่า |
+| `netlify.toml` | edited | เปลี่ยน CSS/JS เป็น revalidate ทุกครั้งแทน cache ค้าง 1 ชั่วโมง |
 
 ## Commands Run
 
@@ -177,6 +183,12 @@
 | Browser QA 390px/1280px | pass | ไม่มี horizontal page overflow; ตารางเลื่อนภายในได้และ CPU grid 1/4 คอลัมน์ตาม viewport |
 | Next late-script initialization | fixed | filter/ราคา/modal/compare เริ่มทำงานแม้ app.js โหลดหลัง `DOMContentLoaded` |
 | Final `node --check`, typecheck, test, build | pass | JavaScript syntax, TypeScript, 4 tests/13 assertions และ production build ผ่าน |
+| Production asset checksum | pass | CSS 52,777 bytes และ JS 34,101 bytes ตรงกับ local ทุก byte; ยืนยันปัญหาเป็น stale browser cache ไม่ใช่ไฟล์ deploy ขาด |
+| Versioned asset HTML | pass | local production HTML ชี้ `styles.css?v=<deploy>` และ `app.js?v=<deploy>` |
+| Cache header fix | implemented | Netlify CSS/JS เปลี่ยนเป็น `max-age=0, must-revalidate` หลัง deploy รอบถัดไป |
+| Cache-fix typecheck/test/build | pass | TypeScript, 4 tests/13 assertions และ Next.js production build ผ่าน |
+| Cache-fix commit | pass | local commit created — version deployed CSS and JavaScript assets |
+| Cache-fix push | fail | GitHub HTTPS credential ไม่พร้อม; commit ล่าสุดยังไม่ถึง Netlify |
 
 ## Audit Findings
 
@@ -218,6 +230,7 @@
 - Production routing: Netlify forced `/minecraft` → `/minecraft/` while Next.js normalized the same route, causing an infinite `301` loop; remove the four manual redirects and let Next.js own route canonicalization.
 - Next.js loaded `/js/app.js` with `afterInteractive`; the old DOMContentLoaded-only listener could miss initialization entirely. `initializeApp()` now runs immediately when the document is already ready and remains single-run.
 - CPU comparison deliberately uses catalog facts (starting price and maximum package resources) and explicitly avoids invented benchmark scores.
+- Safari screenshot showed new comparison HTML with old CSS. Production CSS/JS later matched local checksums, confirming a mixed-version browser cache; deploy-version query strings now make each Netlify deploy use a distinct asset URL.
 
 ## Next Steps
 

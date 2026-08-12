@@ -3,6 +3,7 @@ import type { Metadata } from 'next';
 import './next.css';
 
 const siteUrl = process.env.APP_URL || 'http://localhost:3000';
+const assetVersion = process.env.COMMIT_REF || process.env.DEPLOY_ID || '2026-08-12-cpu-compare';
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
@@ -19,11 +20,11 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return <html lang="th"><body>
-    <link rel="stylesheet" href="/css/styles.css" />
+    <link rel="stylesheet" href={`/css/styles.css?v=${encodeURIComponent(assetVersion)}`} />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+Thai:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" />
     <Script src="https://code.iconify.design/3/3.1.0/iconify.min.js" strategy="afterInteractive" />
-    <Script src="/js/app.js" strategy="afterInteractive" />
+    <Script src={`/js/app.js?v=${encodeURIComponent(assetVersion)}`} strategy="afterInteractive" />
     {children}
   </body></html>;
 }
